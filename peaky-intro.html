@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#060A12">
+  <title>The Command Brief — Automotive CEO</title>
+  <style>
+    :root{--night:#060A12;--graphite:#0E1726;--blue:#58A6FF;--ice:#EAF3FF;--alloy:#9EAEBD;--amber:#F5A524;--line:rgba(158,174,189,.2);--panel:rgba(14,23,38,.8)}
+    *{box-sizing:border-box} html{background:var(--night)} body{margin:0;min-height:100vh;background:radial-gradient(900px 560px at 84% -8%,#143867 0%,transparent 62%),radial-gradient(600px 440px at 4% 88%,#102b4a 0%,transparent 70%),var(--night);color:var(--ice);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden}
+    button,a{font:inherit}.skip{position:fixed;z-index:10;right:22px;top:20px;color:var(--alloy);font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.13em;text-decoration:none;text-transform:uppercase;padding:11px 13px;border:1px solid var(--line);background:#080e18c7;backdrop-filter:blur(12px)}.skip:hover{color:var(--ice);border-color:var(--blue)}
+    .command-brief{min-height:100vh;display:grid;grid-template-columns:230px minmax(0,1fr);position:relative}.command-brief:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.55;background-image:linear-gradient(rgba(88,166,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(88,166,255,.045) 1px,transparent 1px);background-size:46px 46px;mask-image:linear-gradient(to bottom,black,transparent 72%)}
+    .rail{position:relative;z-index:1;min-height:100vh;padding:28px 24px;border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(180deg,#0b1421b8,#060a12a3)}.brand{font:700 13px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.15em}.brand b{display:inline-grid;place-items:center;width:19px;height:19px;margin-right:8px;color:var(--night);background:var(--blue);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}.rail-label{color:var(--alloy);font:600 10px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.15em;text-transform:uppercase}.rail-status{display:grid;gap:10px}.status-row{display:flex;align-items:center;gap:9px;color:#cbd8e8;font:600 10px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em}.dot{width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 14px var(--blue)}.dot.amber{background:var(--amber);box-shadow:0 0 14px var(--amber)}.rail-footer{color:#76889d;font:500 10px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em}
+    .stage{position:relative;z-index:1;min-width:0;padding:clamp(84px,12vh,130px) clamp(26px,7vw,110px) 44px;display:flex;flex-direction:column}.eyebrow{margin:0 0 18px;color:var(--blue);font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.2em;text-transform:uppercase}.screen{max-width:980px;animation:arrive .55s cubic-bezier(.2,.8,.2,1) both}.screen[hidden]{display:none}.screen h1,.screen h2{margin:0;outline:none;font-family:Georgia,"Times New Roman",serif;font-weight:600;letter-spacing:-.055em}.screen h1{max-width:850px;font-size:clamp(48px,7vw,104px);line-height:.9}.screen h2{font-size:clamp(36px,5vw,68px);line-height:.95}.lead{max-width:560px;margin:26px 0 0;color:var(--alloy);font-size:clamp(16px,1.5vw,20px);line-height:1.55}.data-strip{display:flex;flex-wrap:wrap;gap:9px;margin:46px 0 30px}.metric{min-width:145px;padding:12px 14px;border:1px solid var(--line);background:linear-gradient(135deg,#0e1726cf,#0e172664)}.metric span{display:block;color:#778ca6;font:600 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.14em}.metric b{display:block;margin-top:8px;font:600 13px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.04em}.metric b.blue{color:var(--blue)}.metric b.amber{color:var(--amber)}
+    .action{border:1px solid var(--blue);padding:15px 20px;min-height:52px;cursor:pointer;font:700 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;text-decoration:none;text-transform:uppercase;transition:transform .18s ease,background .18s ease,color .18s ease,opacity .18s ease}.action-primary{background:var(--blue);color:#06111f}.action-primary:hover{transform:translateY(-2px);background:#8ac0ff}.action-secondary{display:inline-flex;align-items:center;justify-content:center;background:transparent;color:var(--ice);border-color:var(--line)}.action-secondary:hover{border-color:var(--blue);color:var(--blue)}.action:disabled{cursor:not-allowed;opacity:.42;transform:none}.action-row{display:flex;gap:12px;align-items:center;margin-top:30px}.key{color:#8296ae;font:600 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em}
+    .action-hero{padding:26px 42px;min-height:auto;font-size:14px;letter-spacing:.17em;box-shadow:0 0 0 1px #58a6ff40,0 18px 46px rgba(88,166,255,.22);animation:heroPulse 2.6s ease-in-out infinite}.action-hero:hover{box-shadow:0 0 0 1px #58a6ff66,0 22px 54px rgba(88,166,255,.32)}
+    @keyframes heroPulse{0%,100%{box-shadow:0 0 0 1px #58a6ff40,0 18px 46px rgba(88,166,255,.22)}50%{box-shadow:0 0 0 1px #58a6ff75,0 18px 54px rgba(88,166,255,.4)}}
+    .horizon{width:min(100%,920px);height:134px;margin-top:auto;overflow:visible}.horizon .axis{stroke:rgba(158,174,189,.3);stroke-width:1}.horizon .trace{fill:none;stroke:var(--blue);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 7px #58a6ff80);stroke-dasharray:900;animation:draw 3.5s ease-in-out infinite}.horizon .ghost{fill:none;stroke:#eaf3ff3d;stroke-width:1}.horizon .node{fill:var(--night);stroke:var(--blue);stroke-width:2;filter:drop-shadow(0 0 6px #58a6ff)}
+    .mandate-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:30px}.mandate-head .lead{margin:0;max-width:430px;font-size:15px}.mandate-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:1050px}.company-card{position:relative;min-height:146px;padding:18px;background:linear-gradient(145deg,#101c2d,#0b1320);border:1px solid var(--line);color:var(--ice);text-align:left;cursor:pointer;overflow:hidden;transition:transform .18s ease,border-color .18s ease,background .18s ease}.company-card:before{content:"";position:absolute;inset:0;opacity:0;background:linear-gradient(125deg,#58a6ff24,transparent 54%);transition:opacity .18s}.company-card:hover{transform:translateY(-3px);border-color:#58a6ff80}.company-card:hover:before,.company-card.is-selected:before{opacity:1}.company-card.is-selected{border-color:var(--blue);box-shadow:inset 3px 0 var(--blue),0 0 0 1px #58a6ff33}.company-card.is-selected:after{content:"selected";position:absolute;right:13px;top:13px;color:var(--blue);font:700 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase}.company-logo{position:relative;display:block;color:var(--blue);font-size:23px}.company-name{position:relative;display:block;margin-top:20px;font:600 16px/1.1 Georgia,"Times New Roman",serif}.company-brief{position:relative;display:block;margin-top:8px;color:var(--alloy);font-size:12px;line-height:1.35}.accept-offer{display:none;position:relative;z-index:1;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:14px;padding:10px 12px;background:var(--blue);color:#06111f;border:1px solid var(--blue);font:700 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;animation:arrive .25s ease both}.accept-offer:hover{background:#8ac0ff}.company-card.is-selected .accept-offer{display:flex}.mandate-actions{display:flex;align-items:center;justify-content:space-between;gap:18px;max-width:1050px;margin-top:27px}.selection-note{margin:0;color:var(--alloy);font-size:13px}
+    .confirmation{max-width:800px;padding-top:clamp(42px,10vh,115px)}.appointment{display:inline-flex;align-items:center;gap:10px;margin-bottom:26px;color:var(--blue);font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.17em;text-transform:uppercase}.seal{display:grid;place-items:center;width:22px;height:22px;border:1px solid var(--blue);transform:rotate(45deg)}.seal:after{content:"";width:7px;height:7px;background:var(--blue)}.appointed{color:var(--blue)}.confirmation-card{position:relative;max-width:690px;margin-top:38px;padding:24px;border:1px solid var(--line);background:linear-gradient(135deg,#0e1726,#09111d)}.confirmation-card:before{content:"";position:absolute;left:0;top:0;height:2px;width:58%;background:linear-gradient(90deg,var(--blue),transparent)}.confirmation-card p{margin:0;color:var(--alloy);line-height:1.6}.confirmation-card strong{color:var(--ice)}
+    .screen:focus{outline:none}@keyframes arrive{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}@keyframes draw{0%,100%{stroke-dashoffset:850;opacity:.3}48%,60%{stroke-dashoffset:0;opacity:1}}
+    :focus-visible{outline:2px solid var(--ice);outline-offset:4px}.company-card:focus-visible{outline-offset:-4px}.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media (max-width:860px){.command-brief{grid-template-columns:1fr}.rail{min-height:0;padding:18px 20px;display:flex;flex-direction:row;align-items:center;border-right:0;border-bottom:1px solid var(--line)}.rail-status,.rail-footer{display:none}.stage{padding:74px 22px 34px}.mandate-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.horizon{margin-top:58px}}
+    @media (max-width:540px){.skip{right:13px;top:13px;padding:9px 10px;font-size:9px}.stage{padding-top:95px}.screen h1{font-size:clamp(42px,14vw,66px)}.mandate-head{display:block}.mandate-head .lead{margin-top:17px}.mandate-grid{grid-template-columns:1fr}.company-card{min-height:120px}.mandate-actions{align-items:stretch;flex-direction:column}.mandate-actions .action{width:100%}.action-row{align-items:stretch;flex-direction:column}.horizon{height:100px}.metric{flex:1;min-width:130px}}
+    @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="automotive-ceo-game-v5.html">Skip intro</a>
+  <main class="command-brief">
+    <aside class="rail" aria-label="Command Brief status">
+      <div class="brand"><b>◆</b>ORBITAL</div>
+      <div class="rail-status">
+        <p class="rail-label">Executive channel</p>
+        <div class="status-row"><i class="dot"></i>ENCRYPTED UPLINK</div>
+        <div class="status-row"><i class="dot amber"></i>DECISION WINDOW OPEN</div>
+      </div>
+      <p class="rail-footer">© 2026 ORBITAL NETWORK<br>ALL SYSTEMS NOMINAL</p>
+    </aside>
+    <div class="stage">
+      <p class="visually-hidden" id="briefStatus" aria-live="polite">Secure brief received.</p>
+
+      <section class="screen" data-screen="brief">
+        <p class="eyebrow">Executive succession / secure channel</p>
+        <h1 tabindex="-1">A leadership vacancy has been confirmed.</h1>
+        <p class="lead">The board has opened a private mandate. Twelve automotive futures are waiting for someone willing to own the next decision.</p>
+        <div class="data-strip" aria-label="Briefing telemetry">
+          <div class="metric"><span>MARKET SIGNAL</span><b class="blue">UNSTABLE / 74.2</b></div>
+          <div class="metric"><span>BOARD QUORUM</span><b>12 / 12 ONLINE</b></div>
+          <div class="metric"><span>DECISION WINDOW</span><b class="amber">OPEN NOW</b></div>
+        </div>
+        <div class="action-row"><button class="action action-primary action-hero" type="button" data-action="open-mandate">Access the brief</button><span class="key">CONFIDENTIAL / LEVEL 07</span></div>
+        <svg class="horizon" viewBox="0 0 900 134" role="img" aria-label="Live automotive decision telemetry">
+          <path class="axis" d="M0 110H900M0 71H900M0 32H900"/><path class="ghost" d="M0 92L74 74L135 89L208 46L295 69L372 36L464 82L540 58L622 75L724 24L814 53L900 17"/><path class="trace" d="M0 106L74 91L135 98L208 57L295 74L372 42L464 89L540 63L622 82L724 30L814 58L900 21"/><circle class="node" cx="724" cy="30" r="5"/>
+        </svg>
+      </section>
+
+      <section class="screen" data-screen="mandate" hidden>
+        <div class="mandate-head"><div><p class="eyebrow">Step 01 / Select your mandate</p><h2 tabindex="-1">Choose the company<br>you will lead.</h2></div><p class="lead">Every mandate starts with a different pressure point. Choose the one you want to turn into an advantage.</p></div>
+        <section class="mandate-grid" id="companyGrid" role="radiogroup" aria-label="Choose the company you will lead"></section>
+        <div class="mandate-actions"><p class="selection-note" id="selectionNote">Select a mandate to unlock command authority.</p><button class="action action-primary" id="assumeCommand" type="button" disabled>Assume command</button></div>
+      </section>
+
+      <section class="screen confirmation" data-screen="confirmation" hidden>
+        <p class="appointment"><span class="seal"></span>Command authority granted</p>
+        <p class="eyebrow">Appointment confirmed</p>
+        <h2 tabindex="-1">You are now leading<br><span class="appointed" id="appointedCompany">—</span>.</h2>
+        <div class="confirmation-card"><p><strong>The mandate is yours.</strong> Your first board cycle begins the moment you enter the command center. The industry will respond to what you decide there.</p></div>
+        <div class="action-row"><a class="action action-primary" id="enterGame" href="automotive-ceo-game-v4.html">Enter the command center</a><button class="action action-secondary" type="button" data-action="change-mandate">Change mandate</button></div>
+      </section>
+    </div>
+  </main>
+  <script>
+    const COMPANIES = [
+      {key:"tesla",name:"Tesla",logo:"⚡",brief:"EV scale under investor scrutiny"},
+      {key:"mercedes",name:"Mercedes-Benz",logo:"◈",brief:"Luxury engineering at an electric crossroads"},
+      {key:"tata",name:"Tata Motors",logo:"◆",brief:"A global portfolio ready to compound"},
+      {key:"mahindra",name:"Mahindra & Mahindra",logo:"▲",brief:"A challenger brand with room to accelerate"},
+      {key:"byd",name:"BYD",logo:"▰",brief:"Battery scale meets global ambition"},
+      {key:"toyota",name:"Toyota",logo:"◎",brief:"Production mastery facing a technology pivot"},
+      {key:"honda",name:"Honda",logo:"H",brief:"Engineering heritage seeking its next edge"},
+      {key:"gm",name:"General Motors",logo:"✦",brief:"A legacy giant rebuilding for the future"},
+      {key:"ford",name:"Ford",logo:"F",brief:"An iconic name under transformation pressure"},
+      {key:"stellantis",name:"Stellantis",logo:"✧",brief:"A multi-brand empire in need of focus"},
+      {key:"vw",name:"Volkswagen Group",logo:"V",brief:"Industrial scale with a decisive road ahead"},
+      {key:"bmw",name:"BMW Group",logo:"◉",brief:"Performance DNA navigating a new era"}
+    ];
+    const screenNames = ['brief','mandate','confirmation'];
+    let selectedCompanyKey = '';
+    const grid = document.getElementById('companyGrid');
+    const assumeCommand = document.getElementById('assumeCommand');
+
+    function showScreen(screenName){
+      if(!screenNames.includes(screenName)) return;
+      document.querySelectorAll('[data-screen]').forEach((screen)=>{screen.hidden=screen.dataset.screen!==screenName;});
+      document.getElementById('briefStatus').textContent=screenName==='mandate'?'Mandate selection opened.':screenName==='confirmation'?'Command appointment confirmed.':'Secure brief received.';
+      const heading=document.querySelector(`[data-screen="${screenName}"] h1, [data-screen="${screenName}"] h2`);
+      requestAnimationFrame(()=>heading?.focus());
+    }
+
+    function selectCompany(companyKey){
+      const company=COMPANIES.find((entry)=>entry.key===companyKey);
+      if(!company) return;
+      selectedCompanyKey=companyKey;
+      document.querySelectorAll('[data-company-key]').forEach((card)=>{
+        const selected=card.dataset.companyKey===companyKey;
+        card.classList.toggle('is-selected',selected);
+        card.setAttribute('aria-checked',String(selected));
+      });
+      assumeCommand.disabled=false;
+      document.getElementById('selectionNote').textContent=`${company.name} selected — command authority unlocked.`;
+      document.getElementById('briefStatus').textContent=`${company.name} mandate selected.`;
+    }
+
+    function confirmCommand(){
+      const company=COMPANIES.find((entry)=>entry.key===selectedCompanyKey);
+      if(!company) return;
+      document.getElementById('appointedCompany').textContent=company.name;
+      document.getElementById('enterGame').href=`automotive-ceo-game-v5.html?company=${company.key}`;
+      showScreen('confirmation');
+    }
+
+    COMPANIES.forEach((company)=>{
+      const card=document.createElement('div');
+      card.className='company-card'; card.setAttribute('role','radio'); card.setAttribute('aria-checked','false'); card.tabIndex=0; card.dataset.companyKey=company.key;
+      card.innerHTML=`<span class="company-logo" aria-hidden="true">${company.logo}</span><span class="company-name">${company.name}</span><span class="company-brief">${company.brief}</span><button type="button" class="accept-offer">Accept offer →</button>`;
+      card.addEventListener('click',(e)=>{
+        if(e.target.closest('.accept-offer')){ e.stopPropagation(); selectCompany(company.key); confirmCommand(); return; }
+        selectCompany(company.key);
+      });
+      card.addEventListener('keydown',(e)=>{
+        if(e.target.closest('.accept-offer')) return;
+        if(e.key==='Enter'||e.key===' '){ e.preventDefault(); selectCompany(company.key); }
+      });
+      grid.appendChild(card);
+    });
+    document.querySelector('[data-action="open-mandate"]').addEventListener('click',()=>showScreen('mandate'));
+    document.querySelector('[data-action="change-mandate"]').addEventListener('click',()=>showScreen('mandate'));
+    assumeCommand.addEventListener('click',confirmCommand);
+  </script>
+</body>
+</html>

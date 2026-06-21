@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRIVE — An Automotive CEO Saga · v3</title>
+<style>
+  :root{
+    --bg:#07090d; --bg2:#0b0f16; --panel:#10151f; --panel2:#171e2b; --border:#26304200;
+    --line:#263042; --text:#e9eef5; --dim:#8a94a6; --accent:#5aa7ff; --gold:#d9b25f;
+    --good:#41c46a; --bad:#ff5f56; --warn:#e0a93e;
+    --co:#5aa7ff; --co-glow:rgba(90,167,255,.18);
+  }
+  body.theme-tesla{ --co:#e82127; --co-glow:rgba(232,33,39,.16); }
+  body.theme-mercedes{ --co:#c7cdd6; --co-glow:rgba(199,205,214,.13); }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(1200px 600px at 80% -10%, var(--co-glow), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(90,167,255,.07), transparent 60%),
+      var(--bg);
+    color:var(--text); font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    transition:background 1s;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:20px 16px 80px;min-height:100vh}
+  h1,h2,.display{font-family:Georgia,'Times New Roman',serif;letter-spacing:.3px}
+  h1{font-size:1.9rem;font-weight:700}
+  h2{font-size:1.35rem;margin-bottom:6px}
+  .dim{color:var(--dim)}
+  .kicker{font-size:.74rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--co);font-weight:700}
+
+  /* screens & transitions */
+  .screen{animation:rise .45s cubic-bezier(.2,.7,.3,1) both}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);
+    border-radius:14px;padding:24px;margin-top:16px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .card.glow{border-color:color-mix(in srgb, var(--co) 45%, var(--line));box-shadow:0 0 40px var(--co-glow),0 10px 30px rgba(0,0,0,.35)}
+
+  .btn{display:block;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);
+    color:var(--text);border-radius:11px;padding:14px 16px;margin-top:10px;cursor:pointer;font-size:.95rem;
+    line-height:1.5;transition:transform .12s, border-color .15s, background .15s, box-shadow .2s;font-family:inherit}
+  .btn:hover{border-color:var(--co);background:#1d2636;transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.3)}
+  .btn:active{transform:translateY(0)}
+  .btn .t{font-weight:650;display:block;margin-bottom:3px}
+  .btn.ghost{background:transparent;text-align:center}
+  .btn.primary{border-color:var(--co)}
+
+  .pill{display:inline-block;background:var(--panel2);border:1px solid var(--line);border-radius:99px;
+    padding:3px 12px;font-size:.76rem;color:var(--dim);margin:0 6px 6px 0}
+  .pill b{color:var(--text)}
+
+  /* HUD */
+  .hud{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .kpi{flex:1;min-width:150px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;position:relative;overflow:hidden}
+  .kpi .name{font-size:.7rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px}
+  .kpi .val{font-size:1.35rem;font-weight:750;margin:3px 0}
+  .kpi.hit{animation:shake .4s}
+  @keyframes shake{25%{transform:translateX(-3px)}50%{transform:translateX(3px)}75%{transform:translateX(-2px)}}
+  .bar{height:6px;background:#060a10;border-radius:99px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:99px;transition:width .7s cubic-bezier(.2,.7,.3,1)}
+  .delta{font-size:.78rem;margin-left:6px;font-weight:600}
+  .good{color:var(--good)} .bad{color:var(--bad)} .warn{color:var(--warn)} .goldc{color:var(--gold)}
+
+  .stockbox{flex:1.2;min-width:190px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .stockbox svg{display:block;width:100%;height:34px;margin-top:6px}
+
+  /* ticker */
+  .ticker{margin-top:14px;border:1px solid var(--line);border-radius:10px;background:#0a0e15;overflow:hidden;white-space:nowrap;position:relative}
+  .ticker .inner{display:inline-block;padding:7px 0;font-size:.78rem;color:var(--dim);animation:tick 28s linear infinite;padding-left:100%}
+  @keyframes tick{to{transform:translateX(-100%)}}
+  .ticker b{color:var(--co);font-weight:700;margin:0 6px 0 18px}
+
+  .year{font-size:.82rem;color:var(--co);font-weight:700;letter-spacing:2px}
+  .scen-text{margin-top:10px;line-height:1.7;color:#c7cfdb}
+  .voice{margin-top:14px;font-size:.9rem;color:var(--dim);border-left:2px solid var(--co);padding:4px 0 4px 14px;font-style:italic;line-height:1.55}
+  .outcome{border-left:3px solid var(--co);padding:13px 16px;background:var(--panel2);border-radius:0 11px 11px 0;margin-top:14px;line-height:1.6}
+  .echo{margin-top:10px;padding:10px 14px;border-left:3px solid var(--gold);background:#191507;border-radius:0 11px 11px 0;font-size:.88rem;line-height:1.55;color:#e3c77a;animation:rise .5s .15s both}
+  .hist{margin-top:12px;font-size:.85rem;color:var(--dim);font-style:italic;line-height:1.5;border-top:1px dashed var(--line);padding-top:10px}
+  .news{margin-top:14px;border:1px solid #4a3413;background:#181206;border-radius:11px;padding:14px 16px;animation:rise .4s both}
+  .news .tag{font-size:.7rem;letter-spacing:2px;color:var(--warn);font-weight:700}
+
+  .center{text-align:center}
+  .big{font-size:2.4rem;margin:8px 0}
+  .logo{font-size:2.6rem}
+  p{line-height:1.65}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr}}
+  .ach{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin-top:8px;background:var(--panel2)}
+  .ach.locked{opacity:.38;filter:grayscale(1)}
+  .ach .ic{font-size:1.3rem}
+  .ach .nm{font-weight:650;font-size:.9rem}
+  .ach .ds{font-size:.78rem;color:var(--dim)}
+  .stat{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);text-align:center}
+  .stat .v{font-size:1.5rem;font-weight:750;font-family:Georgia,serif}
+  .stat .l{font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px}
+  .boardrow{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:.8rem;color:var(--dim)}
+  .boardrow .bar{flex:1;height:5px}
+  .fade-seq>*{opacity:0;animation:rise .6s forwards}
+  .fade-seq>*:nth-child(1){animation-delay:.05s}.fade-seq>*:nth-child(2){animation-delay:.25s}
+  .fade-seq>*:nth-child(3){animation-delay:.45s}.fade-seq>*:nth-child(4){animation-delay:.65s}
+  .fade-seq>*:nth-child(5){animation-delay:.85s}.fade-seq>*:nth-child(6){animation-delay:1.05s}
+  .muted-toggle{position:fixed;top:12px;right:14px;background:var(--panel2);border:1px solid var(--line);color:var(--dim);
+    border-radius:99px;padding:5px 12px;font-size:.75rem;cursor:pointer;z-index:9}
+</style>
+</head>
+<body>
+<button class="muted-toggle" id="mute" onclick="toggleSound()">🔊 sound</button>
+<div class="wrap"><div id="app"></div></div>
+<script>
+"use strict";
+const DATA = {};
+</script>
+<script>
+DATA.tesla = {
+ name:"Tesla", short:"Tesla", logo:"⚡", theme:"theme-tesla", ipo:17,
+ pitch:"A scrappy EV startup that has never made an annual profit. High risk, history-making upside.",
+ kpis:[
+  {key:"cash", label:"Cash Runway", desc:"Liquidity. Hit zero and Tesla goes bankrupt."},
+  {key:"prod", label:"Production", desc:"Ability to actually build and ship cars."},
+  {key:"conf", label:"Confidence", desc:"Brand heat, trust and access to capital markets."}
+ ],
+ eras:{
+  a:{
+   name:"Survival Era", years:"2008–2013", start:{cash:28, prod:35, conf:50}, deep:true, stock0:3,
+   intro:"October 2008. Lehman is dead, credit markets are frozen, and Tesla has delivered fewer than 50 Roadsters — each one costing more to build than its sticker price. Payroll clears for three more weeks. Your divorce is in the papers, SpaceX has just had its third rocket failure, and somewhere in Detroit, executives are laughing at you. Every choice you make from here ripples forward. Nothing is forgotten.",
+   scenarios:[
+    {id:"xmas", year:"DEC 2008", title:"Christmas Eve",
+     text:"Your CFO's spreadsheet has a cell highlighted in red: the date Tesla dies. It's in December. You have roughly $40M left from the PayPal fortune — but SpaceX needs money too, and it just won a NASA contract it can't execute while broke. Your existing investors are waiting to see if YOU still believe.",
+     voice:"Antonio Gracias, board member: \"Whatever you put in, they'll match. But they're watching your hands, not your mouth.\"",
+     choices:[
+      {label:"Split nothing. Every last personal dollar into Tesla, and dare investors to match it", fx:{cash:+18,conf:+14}, set:["allin"],
+       result:"You borrow money for rent. The round closes at 6pm on Christmas Eve — hours before insolvency. Word spreads through the Valley: this founder will go down with the ship, so the ship probably won't go down.",
+       hist:"Real: Musk closed Tesla's Series E on Dec 24, 2008, putting in essentially everything he had left."},
+      {label:"Quietly shop Tesla to the giants — Daimler, Toyota, anyone", fx:{cash:+8,conf:-15}, set:["desperate"],
+       result:"The bankers promise discretion. Bankers always do.",
+       hist:""},
+      {label:"Amputate to survive: cut a third of staff, halt Roadster, hibernate", fx:{cash:+10,prod:-15,conf:-8}, set:["gutted"],
+       result:"The company lives, smaller and colder. Roadster deposit-holders — who paid $100k for cars that don't exist — start a forum thread titled 'Where is my money?'. It gets long.",
+       hist:""}
+     ]},
+    {id:"leak", year:"JAN 2009", title:"The Leak", cond:"desperate",
+     text:"It took eleven days. 'TESLA SEEKS BUYER' is on the front page of the Journal. Suppliers move you to cash-on-delivery overnight. Three VPs have headhunter lunches this week. The sale process you started is now a public deathwatch — and the only bid on the table values Tesla at less than its deposits liability.",
+     voice:"Your comms chief: \"We can't kill the story. We can only change what the story is about.\"",
+     choices:[
+      {label:"Kill the process publicly: 'Tesla is not for sale, and here's my own money to prove it'", fx:{cash:+6,conf:+10}, set:["allin"],
+       result:"Expensive theater — you have to actually write the check to make the words true. But the deathwatch ends, and you've accidentally learned the first rule of this job: conviction is a currency."},
+      {label:"Take the lowball bid before it gets worse", fx:{cash:+12,conf:-20}, set:["sold_soul"],
+       result:"You're now a division president with a retention package. The mission survives on a corporate slide deck, somewhere after 'synergies'."},
+      {label:"Leak a counter-story: secret strategic investor in late-stage talks", fx:{conf:+4},
+       result:"It buys two weeks. It had better become true within three — you've now made the Daimler conversation existential."}
+     ]},
+    {id:"daimler", year:"MAY 2009", title:"The Germans Are in the Lobby",
+     text:"Daimler — the company that invented the automobile — wants 10% of yours for $50M, plus battery packs for the electric Smart. Their engineers spent two days crawling through your Roadster pack and left impressed, which Germans signal by frowning slightly less. Your board is split: it's validation, or it's letting a predator study you from the inside.",
+     alt:[{if:"desperate", text:"Daimler is back — but they've read the headlines. The offer is now $50M for 10%, take it or keep explaining your funeral coverage to suppliers. Their lead negotiator orders the same lunch every day and never once mentions your troubles, which is somehow worse."}],
+     voice:"JB Straubel, CTO: \"Their battery program is years behind ours. They need us more than they'll ever say out loud.\"",
+     choices:[
+      {label:"Take the money and the partnership — credibility compounds", fx:{cash:+15,prod:+5,conf:+15}, set:["daimler"],
+       result:"The press release lands like a defibrillator. Suppliers reopen credit lines the same week. A 120-year-old empire just told the world your battery tech is real.",
+       hist:"Real: Daimler's May 2009 investment is the deal Musk credits with saving Tesla."},
+      {label:"Counter hard: less equity, bigger supply contract — make them a customer, not an owner", fx:{cash:+8,prod:+10,conf:+6}, set:["daimler"],
+       result:"They respect the audacity, barely. Less cash now, but building packs to Stuttgart's tolerances forces a manufacturing discipline your startup never had. That education will pay off somewhere unexpected."},
+      {label:"Walk away — nobody studies our cell architecture from the inside", fx:{cash:-8,conf:-5}, set:["no_daimler"],
+       result:"Independence has a burn rate. Yours is now measured in weeks again, and the 'walking dead' whispers resume."}
+     ]},
+    {id:"fumes", year:"AUG 2009", title:"Running on Fumes", cond:"no_daimler",
+     text:"This is what turning down $50M feels like: you're personally guaranteeing supplier invoices, and your head of HR asks — gently — whether the next payroll is 'fully certain'. The mission doesn't pay salaries. Something has to give this month.",
+     choices:[
+      {label:"License Roadster powertrain IP to an Asian OEM for fast cash", fx:{cash:+12,conf:-4,prod:-3},
+       result:"The money lands. So does the knowledge transfer — in three years, a suspiciously familiar battery architecture will appear at a Shanghai auto show."},
+      {label:"Convert customer deposits into discounted equity — make owners shareholders", fx:{cash:+10,conf:+6},
+       result:"Legally hairy, emotionally brilliant. Your most fanatical customers become your most fanatical investors. The forums switch from 'where is my car' to 'where do I buy more'."},
+      {label:"Another personal loan against SpaceX stock", fx:{cash:+8,conf:+3}, set:["allin"],
+       result:"You are now leveraged against two companies that have never turned a profit, secured by each other. Your accountant develops a facial tic."}
+     ]},
+    {id:"doe", year:"JUN 2009", title:"The Government Option",
+     text:"The Department of Energy offers $465M at near-zero interest under a program written to retool Detroit. Strings attached: milestones, audits, and a political target painted on your back the size of a Model S. Solyndra has taken similar money. You have a feeling about how that's going to age.",
+     voice:"Your CFO: \"It's the cheapest capital we will ever be offered in our lives. Take it before someone in Washington changes their mind.\"",
+     choices:[
+      {label:"Take all $465M — fund the Model S properly", fx:{cash:+20,prod:+10,conf:+4}, set:["doe"],
+       result:"The Model S program goes from 'aspiration' to 'funded program with milestones'. Fox News learns your name. A fair trade.",
+       hist:"Real: Tesla took $465M in 2009 under the ATVM program."},
+      {label:"Take half — keep the leash short", fx:{cash:+10,prod:+5,conf:+2}, set:["doe"],
+       result:"Half the money, all of the politics. Washington doesn't do partial credit."},
+      {label:"Refuse. Government money is government control", fx:{cash:-12,prod:-8,conf:+4}, set:["no_doe"],
+       result:"The libertarian wing of your fanbase erupts in applause that pays for nothing. Model S development slides six months right."}
+     ]},
+    {id:"nummi", year:"APR 2010", title:"A Cathedral, Slightly Used",
+     text:"Fremont. Five and a half million square feet of factory — the old GM-Toyota NUMMI plant, built for half a million cars a year. It cost a billion dollars; Toyota will let it go for $42M and they'll invest $50M in Tesla on top, because Akio Toyoda likes your Roadster and dislikes empty factories. Your entire company has built ~1,000 cars. Ever.",
+     voice:"Franz von Holzhausen, design chief, on the catwalk above the silent assembly hall: \"It echoes. Imagine when it doesn't.\"",
+     choices:[
+      {label:"Buy the cathedral. Demand will fill it — or we'll die trying", fx:{cash:+4,prod:+20,conf:+10}, set:["fremont"],
+       result:"A world-class plant for four cents on the dollar, with Toyota's blessing as a bonus. You now own more factory than ambition — temporarily.",
+       hist:"Real: the Fremont deal closed in 2010 and still builds Teslas today."},
+      {label:"Too much, too soon — contract manufacturing keeps us asset-light", fx:{cash:+5,prod:-8,conf:-4}, set:["contract_mfg"],
+       result:"The consultants love it. You'll discover what 'asset-light' means when your product is someone else's side project."},
+      {label:"Buy a modest plant sized to honest demand forecasts", fx:{prod:+8}, set:["small_plant"],
+       result:"Prudent. Adult. And when lightning strikes demand later, you'll be expanding a small building instead of filling a big one."}
+     ]},
+    {id:"ipo", year:"JUN 2010", title:"Ring the Bell",
+     text:"No American car company has gone public since Ford in 1956 — and Ford was profitable. You are not. The S-1 filing will expose every terrifying number to every short seller on Earth, forever. In exchange: ~$226M and a currency called TSLA.",
+     alt:[{if:"daimler", text:"No American car company has gone public since Ford in 1956. Your bankers' best slide is the one with the three-pointed star on it — Daimler's stake lets them pitch you as 'validated by the inventors of the automobile'. The roadshow demand is real. So is the scrutiny that follows."}],
+     choices:[
+      {label:"Go public now, at the bottom of the worst market in decades", fx:{cash:+18,conf:+12}, set:["public"],
+       fxIf:[{if:"daimler", fx:{conf:+4}, note:"Daimler's stake anchors the book — institutions that ignore startups follow Stuttgart's money."}],
+       result:"TSLA opens at $17 and closes up 41%. You now have a war-chest currency and a permanent, well-funded enemy: everyone short the stock.",
+       hist:"Real: Tesla IPO'd June 29, 2010 — the first US automaker IPO since Ford."},
+      {label:"Stay private — quarterly earnings are a metronome for cowards", fx:{cash:+6,conf:-3}, set:["private"],
+       result:"You raise less from VCs at a worse price, but nobody gets to mark your homework four times a year. You'll find out what that flexibility costs — and what it's worth — in 2013."},
+      {label:"Wait a year for prettier numbers", fx:{cash:-6}, set:["public"],
+       result:"The numbers improve slower than the cash burns. You IPO anyway in 2011, into a worse window, having paid a year of runway for vanity."}
+     ]},
+    {id:"models", year:"2011", title:"The Whole Company on One Car",
+     text:"Roadster production ends this year. After it: nothing, unless the Model S ships. It must be designed, engineered, certified and MANUFACTURED — the part every startup dies on — by you. Engineering wants 2013 'to do it right'. Finance notes, dryly, that there is no 2013 without revenue in 2012.",
+     alt:[{if:"contract_mfg", text:"Roadster production ends this year. The Model S must ship through your contract manufacturer — whose A-team is currently assigned to a minivan refresh for their biggest client. Your launch date is, in a real sense, their decision. Engineering wants 2013. Your partner's slot availability says maybe."}],
+     voice:"Peter Rawlinson, chief engineer: \"The architecture is right. The timeline is religion. Pick which one we die for.\"",
+     choices:[
+      {label:"Hard date: June 2012. Move your desk to the factory floor", fx:{cash:-5,prod:+15,conf:+10},
+       fxIf:[{if:"fremont", fx:{prod:+5}, note:"Owning Fremont pays off — when a line jams, you reroute it that afternoon, not after a partner committee meets."},
+             {if:"contract_mfg", fx:{prod:-8}, note:"Your hard date meets your partner's change-order process. June becomes 'June, plus escalation fees'."}],
+       result:"Brutal months. Engineers sleep under desks; so do you. But a deadline with a CEO attached to it behaves differently than a deadline in an email.",
+       hist:"Real: first Model S deliveries — June 22, 2012."},
+      {label:"Slip to 2013 — a bad first impression is forever", fx:{cash:-12,prod:+5,conf:-8},
+       result:"The car gets better. The company gets poorer. Reservation-holders get Audis."},
+      {label:"Ship 2012 as a stripped 'Signature-only' trickle, ramp later", fx:{cash:+3,prod:+6,conf:-2},
+       result:"Technically on time. Reviewers note the $90k car has cup holders 'coming via software update', a sentence you'll spend a year living down."}
+     ]},
+    {id:"partner_hell", year:"2012", title:"Partner Purgatory", cond:"contract_mfg",
+     text:"Your contract manufacturer just sent this quarter's quality report: paint defects up, panel gaps 'within contractual tolerance' — a phrase your designers read aloud in disbelief. Their plant manager takes four days to return calls. You don't own the line, the workers, or the urgency.",
+     choices:[
+      {label:"Buy your way out: terminate, eat the penalty, buy Fremont late and at full price", fx:{cash:-15,prod:+12,conf:+5}, set:["fremont"],
+       result:"It costs triple what the plant cost in 2010. Tuition for the most important lesson in this industry: the factory IS the product."},
+      {label:"Embed 40 Tesla engineers inside their plant, permanently", fx:{cash:-6,prod:+8},
+       result:"An occupation dressed as collaboration. Quality improves; the relationship doesn't. Every improvement now requires diplomacy."},
+      {label:"Accept it — ship now, fix quality in service", fx:{cash:+3,prod:+3,conf:-10},
+       result:"The early-build cars become known on forums as 'Friday cars', except every day is Friday."}
+     ]},
+    {id:"chargers", year:"SEP 2012", title:"The Moat Nobody Asked For",
+     text:"Range anxiety is the dragon guarding the EV market, and every survey says so. Your proposal: build a proprietary fast-charging network spanning the continent — hundreds of millions you barely have — and give the electricity away free, forever. The board points out that no carmaker has ever built its own fuel network. You point out that's exactly why.",
+     choices:[
+      {label:"Build it. Free, forever, exclusive to Tesla", fx:{cash:-12,conf:+18}, set:["superchargers"],
+       fxIf:[{if:"gutted", fx:{cash:-4}, note:"The 2008 amputation cut the infrastructure team; you rebuild it now at 2012 salaries."}],
+       result:"Six stations open in California to polite media confusion. Within two years, 'free coast-to-coast travel' is your most devastating sales argument and a moat rivals will spend a decade failing to copy.",
+       hist:"Real: Superchargers launched Sept 2012; rivals took ~10 years to respond with comparable networks."},
+      {label:"Open standard, shared cost — invite the whole industry in", fx:{cash:-4,conf:+5},
+       result:"Statesmanlike. The industry attends two summits, forms a working group, and builds almost nothing. Committees don't feel range anxiety."},
+      {label:"Not our job — we make cars, utilities make electrons", fx:{conf:-10}, set:["no_chargers"],
+       result:"Every Model S review ends the same paragraph: magnificent car, theoretical road trips."}
+     ]},
+    {id:"nyt", year:"FEB 2013", title:"The Reporter and the Flatbed",
+     text:"A New York Times reporter took a Model S on a cold-weather road trip and produced the single worst image in your company's history: your car, dead, on a flatbed. The review is devastating and, according to the vehicle's own logs sitting on your screen right now, partly fiction — he drove past chargers, circled a parking lot, set the cabin to tropical.",
+     alt:[{if:"no_chargers", text:"A New York Times reporter tried the cold-weather road trip your sparse charging map barely supports, and got the inevitable photo: your car, dead, on a flatbed. The logs show he made mistakes. The map shows you made a bigger one. Punching back means inviting everyone to look at that map."}],
+     voice:"Your comms chief, again: \"We can win this argument and still lose the photo.\"",
+     choices:[
+      {label:"Publish the logs. Call it what the data says it is", fx:{conf:+8},
+       fxIf:[{if:"superchargers", fx:{conf:+5}, note:"Your trump card: the Supercharger map. 'He drove past free chargers to write this' is unanswerable."},
+             {if:"no_chargers", fx:{conf:-6}, note:"The counterattack invites a question you can't win: past WHAT chargers, exactly?"}],
+       result:"The data war goes viral. Journalists learn, permanently, that a Tesla remembers everything. Your fans mint the episode into legend; the press corps files it under grudges.",
+       hist:"Real: Musk published the logs in Feb 2013; the NYT public editor conceded the reporter took 'casual and imprecise notes'."},
+      {label:"Surgical rebuttal: facts, no adjectives, no war", fx:{conf:+3},
+       result:"Correct, dignified, forgotten by Thursday. The flatbed photo is forever."},
+      {label:"Say nothing. Send him a winter-range software update and a handwritten note", fx:{conf:-4},
+       result:"Grace is invisible at internet speed. The review becomes received wisdom: EVs strand you in the cold."}
+     ]},
+    {id:"neardeath", year:"MAR 2013", title:"The Quiet Emergency",
+     text:"Nobody outside this room knows: Model S reservations aren't converting to orders. The cash model says you have weeks, not quarters. Larry Page will take your call — Google would buy Tesla and fund the mission, with you in charge, for a while, probably. Or there's the insane option: turn all 5,000 employees into a sales force for one month and tell no one why.",
+     alt:[{if:"private", text:"Nobody outside this room knows: reservations aren't converting, and as a private company you can't tap public markets quickly — your VCs want a down-round and a pound of flesh. Larry Page will take your call. Or there's the insane option: turn every employee into a closer for one month, and let conviction do what your cap table can't."}],
+     voice:"Your deputy: \"If we tell people to deliver cars before quarter-end, they'll ask why. What do we say?\" — \"Tell them the truth has a delivery date.\"",
+     choices:[
+      {label:"All hands close orders. Google stays a parachute, unopened", fx:{cash:+15,conf:+10}, set:["q1_miracle"],
+       fxIf:[{if:"public", fx:{conf:+8}, note:"The payoff of being public: Q1 profitability detonates the short thesis and the stock quadruples in months."},
+             {if:"superchargers", fx:{cash:+4}, note:"Closers' secret weapon: 'free fuel for life' converts fence-sitters at the kitchen table."}],
+       result:"Q1 2013: Tesla's first profitable quarter in ten years of existence. The Google file goes into a drawer that you will never open again and never quite throw away.",
+       hist:"Real: all of this happened — the Google talks were confirmed by Ashlee Vance's 2015 biography."},
+      {label:"Take Google's hand. The mission matters more than the masthead", fx:{cash:+22,prod:+5,conf:-15}, set:["sold_google"],
+       result:"Tesla becomes Google's moonshot with wheels. Deep pockets, gentle decline of urgency. Twenty years from now, business schools will debate this case study, and you'll read every paper."},
+      {label:"Emergency capital at distress pricing", fx:{cash:+10,conf:-8},
+       result:"Dilution at the bottom — the most expensive money in finance. But the lights stay on, and the story stays yours."}
+     ]},
+    {id:"payback", year:"MAY 2013", title:"Pay Caesar Early", cond:"doe",
+     text:"The stock surge means you can raise a billion dollars with a phone call. Your CFO proposes something with zero financial logic and infinite narrative logic: repay the government's $465M nine years early, with interest, this month. Solyndra just collapsed. Every EV subsidy story needs a counterexample, and you could become it.",
+     choices:[
+      {label:"Repay every cent, this week, loudly", fx:{cash:-8,conf:+15}, set:["paid_doe"],
+       result:"'Tesla repays taxpayers early — with interest' kills the Solyndra comparison in one news cycle. Senators who mocked you now cite you. Cheapest reputation purchase in automotive history.",
+       hist:"Real: Tesla repaid the DOE in full in May 2013, first US automaker ever to do so."},
+      {label:"Keep the near-free money — sentiment is not a balance-sheet item", fx:{cash:+5,conf:-5},
+       result:"Financially impeccable. 'Subsidy-dependent' stays stapled to your brand through three election cycles."},
+      {label:"Repay half as a gesture", fx:{cash:-3,conf:+4},
+       result:"Headlines don't do fractions. 'Tesla partially repays loan' trends nowhere."}
+     ]},
+    {id:"swap", year:"JUN 2013", title:"The Battery Swap Show", cond:"!doe",
+     text:"Having refused government loans, you need government-grade optics another way — California's ZEV credit rules pay handsomely for 'fast refueling' capability. Your engineers can demo a 90-second automated battery swap on stage. Whether anyone will ever USE it is a separate question you are choosing not to ask out loud.",
+     choices:[
+      {label:"Stage the swap event — claim the credits", fx:{cash:+10,conf:+3},
+       result:"The demo dazzles, the credits flow, and exactly one swap station ever operates, in a parking lot in Harris Ranch, mostly unvisited. Regulatory theater with excellent production values.",
+       hist:"Real: the June 2013 swap demo happened; the lone station quietly closed within a few years."},
+      {label:"Skip the theater — put the engineers on Supercharger V2", fx:{cash:-3,conf:+6},
+       result:"Less cynical, less lucrative. The charging network gets meaningfully faster a year early."},
+      {label:"Sell ZEV credits aggressively to compliance-starved rivals instead", fx:{cash:+12,conf:-3},
+       result:"Detroit literally pays you for existing. It becomes a nine-figure quiet habit that bears will cite forever as 'the only reason Tesla survives'."}
+     ]},
+    {id:"fires", year:"NOV 2013", title:"Three Fires",
+     text:"Three Model S battery fires in six weeks — road debris, all of them, no injuries. Statistically, gasoline cars burn five times as often. Narratively, 'ELECTRIC CAR BURNS' is a headline and 'gasoline car burns' is a Tuesday. The stock is down 20%, NHTSA is opening a file, and your phone shows 47 missed calls.",
+     choices:[
+      {label:"Armor every car: titanium underbody shield, retroactive, free — and call it an upgrade, not a recall", fx:{cash:-6,conf:+12},
+       fxIf:[{if:"q1_miracle", fx:{conf:+4}, note:"A profitable company over-delivering on safety reads as strength. A desperate one doing it reads as panic. You're the former now."}],
+       result:"Over-engineering as message: the fires stop, NHTSA closes the file, and the safety narrative inverts. The Model S ends up with the best crash scores ever recorded.",
+       hist:"Real: Tesla added titanium shields in 2014; NHTSA closed the investigation."},
+      {label:"Fight with statistics — we are RIGHT", fx:{conf:-6},
+       result:"You are right. Every subsequent fire is still a national headline, and your math is still paragraph nine."},
+      {label:"Silent fix: raise highway ride height via overnight software update", fx:{cash:-2,conf:+2},
+       result:"Elegant, instant, and slightly furtive. The OTA update impresses engineers and unsettles columnists: 'he changed every car on the road while owners slept'."}
+     ]},
+    {id:"legacy", year:"DEC 2013", title:"The Next Decade, Chosen Tonight",
+     text:"Five years ago you had three weeks of payroll. Tonight the board wants your endgame. The room is quiet. Whatever you announce, the company will spend ten years becoming.",
+     alt:[{if:"sold_google", text:"Five years ago you had three weeks of payroll. Tonight, in a Google conference room with excellent snacks, the planning committee wants Tesla-division's five-year roadmap. Whatever you propose will be weighed against the self-driving unit's budget and someone's smart-glasses project."}],
+     choices:[
+      {label:"Announce the impossible: a $35k car for millions, fed by the biggest battery factory on Earth", fx:{cash:-8,prod:+15,conf:+15},
+       fxIf:[{if:"fremont", fx:{prod:+6}, note:"The cathedral fills: Fremont's absurd unused capacity is suddenly the plan, not the embarrassment."},
+             {if:"small_plant", fx:{prod:-6, cash:-4}, note:"Your prudent little plant is now the bottleneck. The mass-market plan starts with a land search."},
+             {if:"daimler", fx:{conf:+3}, note:"Daimler's engineers vouch for your manufacturing roadmap in Frankfurt's skeptical salons."}],
+       result:"The Gigafactory rendering alone moves the stock. Wall Street finally files you correctly: not a car company — a bet on whether the future arrives on schedule.",
+       hist:"Real: Gigafactory announced Feb 2014; Model 3 unveiled 2016; the rest is the industry you live in."},
+      {label:"Stay luxury. Porsche margins, Apple mystique, no factory roulette", fx:{cash:+10,conf:-5},
+       result:"Profitable, elegant, finite. You've built the world's best niche automaker, and the mass-market EV revolution gets outsourced to whoever wants it more."},
+      {label:"Become the Intel of EVs: license powertrains to every legacy badge", fx:{cash:+12,prod:-5,conf:-3},
+       result:"The royalties are lovely until gas hits $2.10 and your licensees shelve every EV program simultaneously. You've made the future optional for exactly the companies that wanted it optional."}
+     ]}
+   ]
+  }
+ }
+};
+</script>
+<script>
+DATA.tesla.eras.b = {
+   name:"Scaling Era", years:"2016–2021", start:{cash:45, prod:35, conf:55}, stock0:45,
+   intro:"It's 2016. The Model 3 just collected 400,000 deposits in weeks. Now you have to actually build it — and survive 'production hell', the SEC, and a pandemic.",
+   scenarios:[
+    {year:"2016", title:"400,000 Deposits", text:"Demand for the Model 3 is overwhelming. The plan said 2017 for early production. Do you pull the schedule forward and aim for volume manufacturing years ahead of any sane timeline?",
+     choices:[
+      {label:"Accelerate everything — 500k cars/year by 2018", fx:{cash:-10,prod:+12,conf:+10}, result:"Suppliers think you're insane. Some quote you accordingly. But the machine starts moving at startup speed.", hist:"Real: Musk pulled the 500k target forward two years to 2018."},
+      {label:"Hold the original cautious ramp", fx:{cash:+5,prod:+3,conf:-8}, result:"Deposit holders drift away to other EVs now reaching market. The moment cools."},
+      {label:"Raise prices to throttle demand", fx:{cash:+8,conf:-10}, result:"Margins improve; the 'affordable Tesla for everyone' promise quietly dies."}
+     ]},
+    {year:"2016", title:"The SolarCity Question", text:"SolarCity — run by your cousins, chaired by you — is nearly insolvent. A $2.6B all-stock acquisition would create an integrated clean-energy company. Critics call it a bailout of your own family's firm.",
+     choices:[
+      {label:"Acquire it — the master plan needs solar", fx:{cash:-12,prod:-5,conf:-8}, result:"Shareholders approve it, lawsuits follow, and the solar business distracts from Model 3 at the worst time.", hist:"Real: the 2016 deal triggered years of litigation; Musk eventually won in court."},
+      {label:"Let it fail — Tesla can't afford passengers", fx:{conf:+5}, result:"Painful family dinners, but Tesla stays focused. A solar partnership comes later on better terms."},
+      {label:"Acquire only the Solar Roof technology and key engineers", fx:{cash:-5,conf:+3}, result:"You get the interesting tech without the debt-laden installer business."}
+     ]},
+    {year:"2017", title:"The Alien Dreadnought", text:"Your plan: hyper-automate Model 3 assembly beyond anything in auto history — robots even for final assembly, where humans have always ruled.",
+     choices:[
+      {label:"Full automation — the machine that builds the machine", fx:{cash:-12,prod:-10}, result:"The robots fumble what human hands do trivially. Lines jam. You will later admit: 'Excessive automation was a mistake. Humans are underrated.'", hist:"Real: Musk tweeted exactly that in April 2018 after the automation push backfired."},
+      {label:"Conventional line with selective automation", fx:{cash:-5,prod:+10}, result:"Boring, proven, effective. Toyota engineers nod approvingly."},
+      {label:"Automate body shop only; humans do final assembly", fx:{cash:-8,prod:+5}, result:"A sensible hybrid. The ramp is slow but never fully stalls."}
+     ]},
+    {year:"2018", title:"Production Hell", text:"Model 3 output is a fraction of target. You're burning ~$100M a week. Wall Street says bankruptcy within months. Your team is shattered.",
+     choices:[
+      {label:"Build a third assembly line in a tent and sleep at the factory", fx:{cash:-8,prod:+18,conf:+8}, result:"GA4 — a production line under a giant tent — works. 5,000 cars/week is hit in the last week of June 2018.", hist:"Real: the tent line was mocked, then it delivered the target."},
+      {label:"Raise capital and slow the ramp to sane speed", fx:{cash:+10,prod:+3,conf:-10}, result:"Survival secured, momentum lost. Shorts feast on every delayed quarter."},
+      {label:"Outsource overflow assembly to a contract manufacturer", fx:{cash:-5,prod:+6,conf:-5}, result:"Quality variance between plants becomes a persistent headache."}
+     ]},
+    {year:"2018", title:"'Funding Secured'", text:"Exhausted, besieged by shorts, you're tempted to tweet that you're taking Tesla private at $420/share, funding secured. The Saudis did express interest...",
+     choices:[
+      {label:"Send the tweet", fx:{cash:-8,conf:-18}, result:"Chaos. SEC fraud charges, a $40M settlement, you lose the chairman role for 3 years, and a 'Twitter sitter' reviews your market-moving tweets.", hist:"Real: the Aug 7, 2018 tweet cost Musk and Tesla $20M each in SEC fines."},
+      {label:"Don't tweet. Call the board about going private properly", fx:{conf:+5}, result:"The process quietly dies — public markets are actually serving you fine. Crisis avoided."},
+      {label:"Tweet something vague about 'exploring options'", fx:{conf:-6}, result:"Still reckless, less actionable. The SEC sends a warning letter instead of a lawsuit."}
+     ]},
+    {year:"2019", title:"Shanghai Speed", text:"China offers something unprecedented: a wholly-owned foreign car factory, no joint venture required, with cheap land and loans. But it means betting your growth on Beijing's goodwill.",
+     choices:[
+      {label:"Build Giga Shanghai at maximum speed", fx:{cash:-8,prod:+20,conf:+10}, result:"Permits to production in under a year — the fastest auto plant ever built. China becomes your second engine.", hist:"Real: Giga Shanghai broke ground Jan 2019 and delivered cars by Dec 2019."},
+      {label:"Decline — too much geopolitical risk", fx:{prod:-5,conf:-5}, result:"Prudent, maybe. But Chinese EV makers fill the space at terrifying speed and you fight them with imports and tariffs."},
+      {label:"Insist on a 50/50 joint venture for political cover", fx:{cash:-4,prod:+8}, result:"Slower, with shared IP — the very model you'd been offered the chance to skip."}
+     ]},
+    {year:"2019", title:"Cybertruck Reveal", text:"Pickup trucks are America's most profitable segment. Design has two candidates: a conventional handsome truck, or a stainless-steel low-poly wedge that looks like a rendering error.",
+     choices:[
+      {label:"The wedge. Smash a steel ball into its 'unbreakable' window on stage", fx:{conf:+10}, result:"The window cracks. The clip goes viral forever. So does the truck — 250k reservations in a week. There's no such thing as bad publicity.", hist:"Real: the Nov 2019 reveal flopped on stage and won anyway."},
+      {label:"Conventional truck aimed at F-150 owners", fx:{prod:+5,conf:-3}, result:"It benchmarks well and is forgotten by Monday. Cyber-nothing."},
+      {label:"Delay trucks; focus on the Model Y crossover", fx:{cash:+5,prod:+5}, result:"The Y will quietly become the world's best-selling car. Less fun, more money."}
+     ]},
+    {year:"2020", title:"Pandemic Defiance", text:"COVID lockdowns close Fremont. You call the orders 'fascist' and threaten to reopen in defiance of county health rules, daring authorities to arrest you.",
+     choices:[
+      {label:"Reopen in defiance", fx:{cash:+5,prod:+10,conf:-8}, result:"Production resumes, no one is arrested, and the episode permanently politicizes the brand.", hist:"Real: Tesla reopened Fremont May 2020 against county orders; charges never came."},
+      {label:"Comply and negotiate a safe-reopening plan", fx:{cash:-5,prod:+3,conf:+5}, result:"Two extra weeks of downtime in exchange for goodwill you'll want later."},
+      {label:"Comply, but announce HQ and future factories will leave California", fx:{prod:+5}, result:"Texas wins Giga Austin. California keeps Fremont and a grudge."}
+     ]},
+    {year:"2020", title:"S&P 500 and a Mountain of Cash", text:"Five straight profitable quarters. TSLA joins the S&P 500 and the stock is up ~700% on the year. You can sell stock at absurd prices. How much do you raise?",
+     choices:[
+      {label:"Raise $12B+ across multiple offerings — fortress balance sheet", fx:{cash:+25,prod:+5,conf:+5}, result:"You sell shares at prices skeptics call insane. The war chest funds two new Gigafactories without debt.", hist:"Real: Tesla raised ~$12B in 2020 and ended the year with $19B cash."},
+      {label:"Raise nothing — dilution is theft", fx:{conf:+3}, result:"Purist, and a missed once-in-a-decade window."},
+      {label:"Raise $5B and put some treasury cash in Bitcoin", fx:{cash:+12,conf:-3}, result:"The $1.5B Bitcoin buy makes headlines and adds earnings volatility forever after.", hist:"Real: Tesla bought $1.5B of Bitcoin in early 2021."}
+     ]},
+    {year:"2021", title:"Full Self-Driving Pricing", text:"FSD is a $10k software option that isn't fully self-driving. Engineers want caution; finance notes it's nearly pure margin; regulators are circling.",
+     choices:[
+      {label:"Sell it hard — beta to customers, price rising over time", fx:{cash:+12,conf:-8}, result:"Revenue is fantastic. So is the regulatory and legal exposure every time a beta driver does something stupid.", hist:"Real: FSD beta expanded through 2021 amid NHTSA scrutiny."},
+      {label:"Rebrand honestly as 'advanced driver assistance'", fx:{cash:+4,conf:+6}, result:"Less sizzle, fewer lawsuits. Trust compounds quietly."},
+      {label:"Subscription only — $199/month, cancel anytime", fx:{cash:+8,conf:+3}, result:"Lower sticker shock, recurring revenue, easier consciences."}
+     ]},
+    {year:"2021", title:"The Chip Famine", text:"The global semiconductor shortage is shutting down auto plants worldwide. Legacy automakers are cancelling orders and waiting it out.",
+     choices:[
+      {label:"Rewrite your firmware to use whatever chips ARE available", fx:{cash:-4,prod:+15,conf:+8}, result:"Your software team substitutes alternative chips in 19 weeks. Tesla grows 87% in a year when rivals shrink.", hist:"Real: Tesla's 2021 firmware rewrites let it sidestep the worst of the shortage."},
+      {label:"Pay scalper prices on the spot market", fx:{cash:-12,prod:+8}, result:"Expensive but effective. Margins take the hit."},
+      {label:"Idle plants like everyone else", fx:{cash:+3,prod:-12,conf:-8}, result:"You behave like a legacy automaker and get legacy-automaker results."}
+     ]},
+    {year:"2021", title:"Trillion-Dollar Question", text:"Tesla passes $1T in value — worth more than the next nine automakers combined. Final call: what do you tell the world the next decade is about?",
+     choices:[
+      {label:"Robots, AI and energy — Tesla is not a car company", fx:{prod:+5,conf:+12}, result:"Optimus, Dojo, Megapack. The valuation only makes sense if you're right. You're betting the company that you are.", hist:"Real: Tesla unveiled the Optimus robot concept in 2021 and leaned hard into AI."},
+      {label:"Affordable cars for the next billion drivers", fx:{cash:-5,prod:+12,conf:+5}, result:"The $25k car becomes the obsession. Volume is the mission; the mission is volume."},
+      {label:"Consolidate — quality, service and reliability first", fx:{cash:+8,prod:+5}, result:"Panel gaps close, service improves, the install base stops grumbling. Unsexy excellence."}
+     ]}
+   ]
+};
+</script>
+<script>
+DATA.mercedes = {
+ name:"Mercedes-Benz (Daimler)", short:"Mercedes", logo:"◈", theme:"theme-mercedes", ipo:40,
+ pitch:"The 130-year-old inventor of the automobile. Immense profits and prestige — and a fleet of disruptors aiming at you.",
+ kpis:[
+  {key:"margin", label:"EBIT Margin", desc:"Profitability. Stuttgart expects ~10%. Hit zero and you're out."},
+  {key:"brand", label:"Prestige", desc:"'The Best or Nothing.' Lose it and you're just an expensive Volkswagen."},
+  {key:"future", label:"Future Readiness", desc:"EV, software and tech competitiveness vs Tesla and China."}
+ ],
+ eras:{
+  a:{
+   name:"Recovery & Expansion Era", years:"2010–2015", start:{margin:40, brand:55, future:30}, stock0:35,
+   intro:"It's 2010. Daimler has just survived the financial crisis and the costly Chrysler divorce. BMW has overtaken you in luxury sales. China is exploding. Win back the crown — profitably.",
+   scenarios:[
+    {year:"2010", title:"The Tesla Stake", text:"Last year Daimler bought ~10% of a tiny Californian EV startup called Tesla for $50M. Engineers say their battery tech is crude. Finance says the stake is illiquid. What's your posture?",
+     choices:[
+      {label:"Hold the stake and deepen the partnership — learn everything", fx:{future:+15}, result:"Tesla powertrains go into the electric Smart and B-Class. Your engineers get a front-row seat to the future.", hist:"Real: Daimler held until 2014, selling for a $780M profit — and arguably sold the seat to the future along with it."},
+      {label:"Sell now — book the profit, focus on real cars", fx:{margin:+8,future:-10}, result:"A tidy gain that will look catastrophically small in hindsight. That stake would be worth tens of billions."},
+      {label:"Double down — try to buy 25% of Tesla", fx:{margin:-8,future:+20}, result:"Musk resists control but takes the money. You now own a quarter of what becomes the most valuable automaker on Earth."}
+     ]},
+    {year:"2010", title:"Alliance with Renault-Nissan", text:"Carlos Ghosn proposes a cross-shareholding alliance: shared small-car platforms, engines, and a small-van JV. Purists at AMG are horrified by Renault engines in anything wearing the star.",
+     choices:[
+      {label:"Sign it — scale economics matter", fx:{margin:+10,brand:-5,future:+5}, result:"Citan vans and shared engines save billions. Enthusiasts grumble about the Renault diesel in the A-Class. Accountants do not.", hist:"Real: the Daimler/Renault-Nissan alliance was signed April 2010."},
+      {label:"Decline — Mercedes shares nothing", fx:{margin:-8,brand:+5}, result:"Purity preserved at a price: your small cars stay uncompetitive on cost."},
+      {label:"Partner only on vans and commercial vehicles", fx:{margin:+4,future:+2}, result:"A cautious half-alliance. Half the savings, none of the controversy."}
+     ]},
+    {year:"2011", title:"China: How Fast?", text:"China is becoming the world's biggest luxury car market. Audi got there first and owns the official-car image. Your dealer network is fragmented between two feuding sales channels.",
+     choices:[
+      {label:"Fix the channel mess, build local production, go all-in", fx:{margin:+12,brand:+8,future:+5}, result:"Merging the sales organizations and localizing the E-Class long-wheelbase pays off massively. China becomes your biggest market.", hist:"Real: Daimler unified its China sales JV in 2012 and rode the boom."},
+      {label:"Grow carefully — protect 'Made in Germany' exclusivity", fx:{margin:-5,brand:+5,future:-5}, result:"The brand stays pristine and sub-scale. BMW and Audi lap you twice."},
+      {label:"Chase volume with aggressive discounting", fx:{margin:+5,brand:-12}, result:"Sales spike; residual values and prestige sink. A discounted star is just a badge."}
+     ]},
+    {year:"2012", title:"Hunting Younger Buyers", text:"Your average buyer is pushing 60. The plan: a front-wheel-drive compact family — new A-Class, and a $30k 'CLA' four-door coupe for America. Critics say cheap Mercedes = brand suicide.",
+     choices:[
+      {label:"Launch the CLA offensive with a Super Bowl ad", fx:{margin:+8,brand:-3,future:+8}, result:"The CLA brings in buyers 10+ years younger, most new to the brand. Some purists sniff; the order books don't.", hist:"Real: the 2013 CLA became Mercedes' youth gateway and a US hit."},
+      {label:"Stay premium-only — no car under $40k", fx:{brand:+8,future:-8}, result:"Exclusive and aging. Every year your buyer demographics look more like a retirement community."},
+      {label:"Launch a separate sub-brand for compacts", fx:{margin:-8,brand:+3,future:+3}, result:"Building a new brand costs billions — ask Toyota how long Lexus took."}
+     ]},
+    {year:"2012", title:"The F1 Bet", text:"Your Formula 1 team is mid-grid and expensive. The board wants out. But new hybrid V6 engine rules arrive in 2014 — and your engine team thinks they can dominate them. Also available: a fast young driver named Lewis Hamilton.",
+     choices:[
+      {label:"Commit fully — sign Hamilton, fund the hybrid program", fx:{margin:-6,brand:+18,future:+8}, result:"From 2014 Mercedes wins eight straight constructors' titles. The best marketing money you ever spent.", hist:"Real: Hamilton signed in Sept 2012; the hybrid era domination followed."},
+      {label:"Quit F1, redirect funds to product", fx:{margin:+6,brand:-10}, result:"Rational on a spreadsheet. The brand loses its loudest global stage just as it turns silver-and-turquoise."},
+      {label:"Stay in as engine supplier only", fx:{margin:+2,brand:+2,future:+3}, result:"Customer teams win races with your engines. The trophies say their names, not yours."}
+     ]},
+    {year:"2013", title:"S-Class: Flagship or Tech Ship?", text:"The new W222 S-Class is ready. Engineering wants to load it with semi-autonomous driving tech years before rivals. Finance warns of cost and warranty risk on your most profitable car.",
+     choices:[
+      {label:"Ship it loaded — the S-Class defines the future, always has", fx:{margin:+5,brand:+12,future:+10}, result:"Distronic steering assist makes the S-Class the closest thing to autonomy on sale. 'The best car in the world' headlines return.", hist:"Real: the 2013 W222 pioneered steering assist and stop-and-go pilot."},
+      {label:"Keep it conservative and bulletproof", fx:{margin:+8,brand:+3,future:-8}, result:"Profitable and safe — while Tesla's Autopilot steals the innovation narrative two years later."},
+      {label:"Save the tech for a halo EV instead", fx:{future:+5}, result:"Interesting, but the EV isn't ready and the tech sits on a shelf."}
+     ]},
+    {year:"2013", title:"Diesel: Double Down?", text:"Diesel is Europe's answer to CO2 targets and 70% of your sales mix. Billions are queued for next-gen diesel engines. A small internal memo notes real-world NOx emissions are... complicated industry-wide.",
+     choices:[
+      {label:"Invest in diesel, but fund full SCR/AdBlue cleanup hardware on every car", fx:{margin:-6,brand:+5,future:+5}, result:"Expensive honesty. When the industry's diesel reckoning arrives, your exposure is far smaller than rivals'."},
+      {label:"Invest in diesel at lowest compliant cost", fx:{margin:+8,brand:-5,future:-5}, result:"Margins shine now. Years later, 'compliant' turns out to be a word regulators interpret differently — recalls and fines follow.", hist:"Real: Daimler later paid ~$2.2B in US diesel settlements (2020)."},
+      {label:"Begin pivoting R&D from diesel to hybrids/EVs now", fx:{margin:-8,future:+15}, result:"Painful and early — two years before Dieselgate makes it look prophetic."}
+     ]},
+    {year:"2014", title:"Selling the Future?", text:"The Tesla stake and the EV partnership are up for review. Tesla's stock has gone vertical. Banks say: sell, book ~$780M profit, de-risk.",
+     choices:[
+      {label:"Sell the entire stake", fx:{margin:+10,future:-12}, result:"A record quarter. Also the moment Daimler chose quarterly earnings over a seat at the future. The stake would later be worth ~$50B+.", hist:"Real: Daimler sold its Tesla stake in October 2014."},
+      {label:"Sell half, keep half and the partnership", fx:{margin:+5,future:-3}, result:"Hedged. The remaining stake quietly compounds; the partnership still fades."},
+      {label:"Keep it all and expand EV co-development", fx:{margin:-5,future:+12}, result:"The CFO sulks for a quarter. Your engineers keep learning from the fastest-moving EV team on Earth."}
+     ]},
+    {year:"2014", title:"Trucks, Buses, Vans, Cars", text:"Daimler is a conglomerate: the world's biggest truck maker plus luxury cars under one roof. Activists argue splitting would unlock billions in value. The unions hate it.",
+     choices:[
+      {label:"Keep it together — scale and stability", fx:{margin:+3,future:-3}, result:"Stability wins. The conglomerate discount persists, and trucks and cars keep competing for capital.", hist:"Real: Daimler kept the structure until spinning off Daimler Truck in 2021."},
+      {label:"Begin preparing a truck spin-off", fx:{margin:+8,brand:+3,future:+5}, result:"Years early. Both companies get focus and their own currencies. The unions extract job guarantees as the toll."},
+      {label:"Sell the trucks to a rival outright", fx:{margin:+10,brand:-5}, result:"A windfall, and the end of a 120-year industrial legacy. Stuttgart never quite forgives you."}
+     ]},
+    {year:"2015", title:"Apple and Google Want In", text:"Tech giants want CarPlay/Android Auto deep in your dashboards — and rumors say Apple is building a car. Your software chief wants to build a proprietary OS instead.",
+     choices:[
+      {label:"Integrate their apps, but build your own OS for the core (MBUX)", fx:{margin:-5,brand:+8,future:+12}, result:"'Hey Mercedes' arrives in 2018 and is genuinely good. You keep the customer relationship — and the data.", hist:"Real: MBUX launched 2018 and was a class leader."},
+      {label:"Hand the dashboard to Apple/Google entirely", fx:{margin:+5,brand:-3,future:-8}, result:"Customers love it. You've just become hardware supplier to someone else's ecosystem."},
+      {label:"Block them — closed proprietary system only", fx:{brand:-8,future:-5}, result:"Buyers with iPhones (all of them) rage at your infotainment. Reviewers torch it."}
+     ]},
+    {year:"2015", title:"Number One Again", text:"You're on the verge of overtaking BMW and Audi to become the world's best-selling luxury brand. One last push could seal it — but how?",
+     choices:[
+      {label:"Win on product: SUV blitz (GLC, GLE, GLS) and design", fx:{margin:+10,brand:+10}, result:"The SUV wave plus Sensual Purity design retakes the crown cleanly in 2016. Record profits follow.", hist:"Real: Mercedes became the #1 premium brand in 2016, ahead of schedule."},
+      {label:"Win on price: incentives and fleet deals", fx:{margin:-8,brand:-10}, result:"You hit the number and hollow out the brand. Pyrrhic in chrome."},
+      {label:"Ignore the race — chase margin, not volume", fx:{margin:+8,future:+3}, result:"Healthy, but BMW keeps the bragging rights and uses them in every ad."}
+     ]},
+    {year:"2015", title:"The Disruption Memo", text:"Final call of the era. Your strategy team's memo: 'Tesla, Uber, Google and China will redefine this industry within 10 years.' The board asks what Daimler's answer is.",
+     choices:[
+      {label:"Announce CASE: Connected, Autonomous, Shared, Electric — with real money", fx:{margin:-8,brand:+5,future:+18}, result:"A €10B electrification plan and the EQ brand are born. You're early by legacy standards — which still means late by Tesla's.", hist:"Real: Daimler announced CASE and the EQ brand in 2016."},
+      {label:"Disruption is overhyped — perfect the combustion core", fx:{margin:+10,future:-15}, result:"Three excellent years. Then the 2020s arrive with regulations, Teslas, and Chinese EVs, and you're starting from zero."},
+      {label:"Buy your way in — acquire mobility startups aggressively", fx:{margin:-10,future:+8}, result:"Car2go, mytaxi, Chauffeur Privé... a portfolio of cash-burning apps that teach expensive lessons.", hist:"Real: Daimler built then merged its mobility apps with BMW's in 2019; most were later sold or shut."}
+     ]}
+   ]
+  }
+ }
+};
+</script>
+<script>
+DATA.mercedes.eras.b = {
+   name:"Transformation Era", years:"2016–2021", start:{margin:48, brand:55, future:28}, deep:true, stock0:60,
+   intro:"Stuttgart, 2016. You run the most profitable luxury car company on Earth, you've just retaken the global #1 crown — and you can feel the ground moving. VW's diesel fraud has set the industry's house on fire. A company you once owned 10% of is now worth half of Daimler and climbing. In Shenzhen, firms you've never heard of are hiring battery chemists by the thousand. Gottlieb Daimler's motto is carved over your door: 'Das Beste oder nichts.' The next six years decide whether that's a promise or an epitaph.",
+   scenarios:[
+    {id:"diesel", year:"2016", title:"The Fire Next Door",
+     text:"Volkswagen has confessed to industrial-scale emissions fraud and the regulators' floodlights are sweeping the whole industry. Your engineers, in a meeting that legal insisted go unminuted, explain that Mercedes diesels use 'thermal windows' — emissions controls that relax in cold weather. Defensible engineering, they say. The KBA and the US DOJ may use a different dictionary.",
+     voice:"Your general counsel: \"Every document we write from today will someday be read aloud in a courtroom. Including this advice.\"",
+     choices:[
+      {label:"Get ahead of it: voluntary recall of 3 million diesels, full regulator cooperation", fx:{margin:-10,brand:+10,future:+4}, set:["clean"],
+       result:"€220M of voluntary humility. The headlines say 'Mercedes fixes diesels'; VW's say 'raids, arrests, $30B'. You will still pay settlements — but as a cooperator, not a defendant in handcuffs.",
+       hist:"Real: Daimler announced a 3M-vehicle voluntary diesel service action in 2017."},
+      {label:"Defend the engineering — our windows are legal and our lawyers are excellent", fx:{margin:+5,brand:-10}, set:["fought"],
+       result:"The engineers feel defended. The prosecutors feel motivated."},
+      {label:"Settle everything quietly, admit nothing, say less", fx:{margin:-8,brand:-3}, set:["settled"],
+       result:"Expensive silence. The checks clear, the questions linger, and 'what did Stuttgart know' becomes a hardy perennial of German journalism."}
+     ]},
+    {id:"raid", year:"MAY 2017", title:"Eleven Search Warrants", cond:"fought",
+     text:"05:58. Two hundred and thirty prosecutors and police officers walk into eleven Daimler sites simultaneously, including the floor below your office. They have a list of servers. Your defiant legal strategy just collided with the German criminal code, live, on the morning news.",
+     voice:"Your comms chief, by phone, before sunrise: \"The cameras were outside the gates before the police. Someone invited them.\"",
+     choices:[
+      {label:"Reverse course: cooperate fully, starting this morning", fx:{margin:-8,brand:+5}, set:["clean"],
+       result:"Late conversion costs more than early honesty would have — but it stops the bleeding. The eventual US settlement lands at ~$2.2B; the criminal exposure narrows to individuals.",
+       hist:"Real: prosecutors raided 11 Daimler sites in May 2017; the US settlement came in 2020."},
+      {label:"Hold the line — lawyer up harder", fx:{margin:-5,brand:-12},
+       result:"Three more years of raids, document fights and perp-walk photography. You win some motions. The brand loses every front page."},
+      {label:"Sacrifice the diesel program: early retirement for its leadership, restructure loudly", fx:{margin:-6,brand:-2,future:+5},
+       result:"Heads roll with full pensions. Prosecutors take the offering but keep digging — and your best powertrain engineers update their CVs, having watched how Stuttgart treats its own."}
+     ]},
+    {id:"eq", year:"SEP 2016", title:"Paris, or the Art of Announcing the Future",
+     text:"The Paris Motor Show. In your hall: a covered concept car and a decision. Unveil 'EQ' — a whole electric sub-brand, €10B of committed investment — or keep the cover on until you have a product that won't be benchmarked against a Model S and lose. Across the river, metaphorically, Tesla has 400,000 deposits for a car it hasn't built. They announced first and built later. It appears to be working.",
+     voice:"Head of development: \"The EQC is a converted GLC, and every journalist will know it. The honest unveiling is the platform AFTER it — in 2021.\"",
+     choices:[
+      {label:"Unveil EQ with the full €10B commitment — the supertanker turns today", fx:{margin:-8,brand:+5,future:+14}, set:["eq"],
+       result:"'Mercedes declares electric war' leads the trade press. The commitment is real, public, and irreversible — which was the point. Now you have to ship.",
+       hist:"Real: the EQ brand and Generation EQ concept debuted at Paris 2016."},
+      {label:"Wait for a product worthy of the star — announce nothing you can't win with", fx:{margin:+5,future:-10}, set:["no_eq"],
+       result:"Discipline, of a kind. But in the narrative economy, silence is a position too: every quarter without an EV plan reads as 'Mercedes has no answer'. Your own dealers start asking."},
+      {label:"Skip the sub-brand — electrify the core: an electric C-Class is worth ten concepts", fx:{margin:-4,brand:+3,future:+10}, set:["integrated"],
+       result:"Quietly heretical and possibly right — you've bet that 'Mercedes' is the brand, not 'EQ'. Years later, the industry will come around to exactly this view.",
+       hist:"Real: Mercedes eventually retired standalone EQ styling and folded EVs back into the core lineup."}
+     ]},
+    {id:"eqc_flop", year:"2019", title:"The Verdict on the EQC", cond:"eq",
+     text:"Your first EQ product is out, and the reviews have a theme: a fine Mercedes, a mediocre EV. Less range than a Model 3 that costs less, a converted combustion platform, and US sales so slow you're weighing whether to import it at all. The €10B promise of Paris now has a face, and it's polite disappointment.",
+     voice:"A dealer principal from Munich, at the annual conference, into a live microphone: \"My customers ask me why the future drives shorter than the past.\"",
+     choices:[
+      {label:"Own it publicly: 'transition product' — and pull the dedicated EV platform forward a full year", fx:{margin:-8,future:+12},
+       result:"Candor buys patience. The EVA platform program (EQS and siblings) absorbs every resource you can strip from elsewhere. The org learns the difference between announcing the future and engineering it."},
+      {label:"Defend it: discounts, marketing blitz, fleet deals", fx:{margin:-6,brand:-6},
+       result:"You move metal at the cost of meaning. A discounted 'future of Mercedes' teaches the market the future is negotiable."},
+      {label:"Restrict it to Europe, call it a 'focused rollout', bury the US plan", fx:{margin:+3,brand:-3},
+       result:"Tactically tidy. But American tech media writes the 'Mercedes retreats from EVs' story anyway, and Tesla's keynote slides quote it gleefully.",
+       hist:"Real: the EQC's US launch was postponed and ultimately cancelled."}
+     ]},
+    {id:"empty_stand", year:"2019", title:"The Empty Space on the Stand", cond:"no_eq",
+     text:"Frankfurt Motor Show. Audi has the e-tron, Porsche has the Taycan, even Volkswagen has an ID-something. Mercedes has a hybrid S-Class and a concept under silk. An analyst from Bernstein asks, in the open Q&A, with cameras running: 'Is Mercedes-Benz planning to participate in the electric century?' The room laughs. It is not a friendly laugh.",
+     choices:[
+      {label:"Answer with a date and a number: dedicated EV platform, 2021, and a board obligated to it", fx:{margin:-6,future:+12}, set:["eq"],
+       result:"Late, therefore expensive, therefore credible — markets know panic-spending when they see it and this isn't; it's a plan with a deadline. The laughter stops. The work begins."},
+      {label:"Deflect with strength: record margins fund whatever future we choose, whenever we choose it", fx:{margin:+5,future:-8},
+       result:"True, and fatal in the retelling. 'Whenever we choose' becomes the analyst note title. Your stock starts trading at a 'transition risk' discount that costs more than an EV program would."},
+      {label:"Buy your way in: acquire an EV startup with a working platform", fx:{margin:-12,future:+8},
+       result:"Due diligence on unicorns in 2019 is an extreme sport. You overpay, integration is a culture war, but you do get talent and a head start measured in real months."}
+     ]},
+    {id:"geely", year:"FEB 2018", title:"The Shareholder You Didn't Choose",
+     text:"Li Shufu — the founder of Geely, the man who bought Volvo when Detroit was laughing at China — has quietly assembled 9.69% of Daimler through derivatives structured precisely to avoid disclosure thresholds. Perfectly legal, completely deliberate, and discovered by you via a regulatory filing like everyone else. Your largest shareholder is now a Chinese competitor, and Berlin is calling.",
+     voice:"Your IR chief: \"He didn't sneak in to be ignored. The question is whether he's a wolf or a bridge.\"",
+     choices:[
+      {label:"Engage him as a partner: keep him close, find a deal both sides need", fx:{margin:+5,future:+8}, set:["geely_ally"],
+       result:"Months of careful dinners produce the answer: Smart — your beloved money-loser — reborn as a 50/50 EV brand, engineered in China, designed in Stuttgart. He gets prestige; you stop losing €500M a year on cute cars.",
+       hist:"Real: the Smart JV with Geely was agreed in 2019."},
+      {label:"Treat it as an incursion: rally Berlin, tighten governance, freeze him out", fx:{margin:-5,future:-5}, set:["geely_foe"],
+       result:"Politicians fret photogenically; lawyers confirm he bought legally; nothing changes except now your largest shareholder dines with your competitors and remembers."},
+      {label:"Go deeper: invite Geely into joint engine and EV development", fx:{margin:+3,brand:-6,future:+10}, set:["geely_deep"],
+       result:"The cost-sharing is real and so is the outrage — 'Daimler shares its crown jewels' writes Handelsblatt. Your CFO calls the outrage 'roughly €2B cheaper than the alternative'."}
+     ]},
+    {id:"helm", year:"MAY 2019", title:"The Keys to the Kingdom",
+     text:"Dieter Zetsche hands over after thirteen years, to a standing ovation and two unspoken profit warnings. You now run Daimler. The inheritance: record revenue, falling profit, 300,000 employees, a cost base built for a world that's ending, and a transformation bill nobody has honestly added up. Your first all-hands is Thursday. What's the message?",
+     voice:"Your CFO, first one-on-one: \"I'll give you the real number: we spend €1.4B more per year than the company we need to be. Every month you wait costs €120M and gets harder to fix.\"",
+     choices:[
+      {label:"The hard truth: €1.4B cost cut, ~10,000 jobs, every euro saved goes to electric and software", fx:{margin:+10,brand:-3,future:+8}, set:["lean"],
+       result:"The works council calls it brutal; you call it arithmetic; both are right. Shrinking the old to fund the new is the whole job now — you've just said it out loud first.",
+       hist:"Real: Källenius announced exactly this in November 2019."},
+      {label:"Continuity and calm: no shocks, protect employment, trust the cycle", fx:{margin:-12,brand:+3,future:-5},
+       result:"Thursday's applause is warm. February's profit warning is not. The supervisory board's patience, you learn, is denominated in quarters."},
+      {label:"Grow through it: an offensive in every segment, volume heals all wounds", fx:{margin:-8,brand:-6,future:-3},
+       result:"Pushing volume with a bloated cost base into a softening market: you've chosen to sprint uphill carrying the piano. Margins and exclusivity erode together."}
+     ]},
+    {id:"covid", year:"MAR 2020", title:"The World Stops",
+     text:"Pandemic. Every plant from Sindelfingen to Tuscaloosa is dark, showrooms are locked, and the CFO's liquidity chart has developed a cliff. Rivals are lining up for state aid. Your treasury team can secure a €12B credit line by Friday — if you decide today.",
+     alt:[{if:"lean", text:"Pandemic. Every plant is dark — but your November cost surgery means the patient entered this crisis lean, with months more liquidity than rivals. Painful decisions, it turns out, compound like interest. The €12B credit line is still on offer. The question is what you do with strength while competitors negotiate for survival."}],
+     choices:[
+      {label:"Take the credit line as insurance, draw nothing, cut deeper while the world's distracted", fx:{margin:+8,brand:+3,future:+3},
+       fxIf:[{if:"lean", fx:{margin:+5}, note:"The 2019 restructuring pays out: you exit the crisis with margins rivals assume are typos."},
+             {if:"geely_ally", fx:{future:+3}, note:"Your China relationships keep parts and sales flowing while rivals' channels seize."}],
+       result:"You never fully draw the line. Luxury demand comes roaring back — wealthy customers, it emerges, spent lockdown shopping. The crisis you prepared for becomes the springboard you didn't expect.",
+       hist:"Real: Daimler secured a €12B facility in April 2020; the recovery outran every forecast."},
+      {label:"Take state support — protect every job, share the burden with Berlin", fx:{margin:-5,brand:-5},
+       result:"Safe and sticky: aid arrives with opinions attached about dividends, executive pay, and plant closures. Untangling Berlin from your boardroom takes years."},
+      {label:"Use the fog of crisis: close the plants that could never be closed in peacetime", fx:{margin:+6,brand:-6,future:+5},
+       result:"Never waste a catastrophe. The restructuring of a decade happens in six months, and the bitterness will last exactly as long as the savings."}
+     ]},
+    {id:"capital", year:"OCT 2020", title:"Economics of Desire",
+     text:"Strategy day. Three complete plans on the table for the post-COVID decade. One: retreat upmarket — S-Class, Maybach, AMG, G-Class — fewer cars, indecent margins. Two: defend every segment, including the compacts you fought to win. Three: torch the combustion budget entirely and go all-in electric. You get one.",
+     voice:"Your strategy chief: \"The A-Class buyer gives us 4% margin and brand dilution. The G-Wagen buyer gives us 25% and a waiting list. This is not a hard chart to read.\"",
+     choices:[
+      {label:"Luxury-first. 'We will build fewer cars and mean more'", fx:{margin:+12,brand:+10,future:-3}, set:["luxury"],
+       result:"Average selling price becomes the KPI that matters. The entry segments you spent a decade conquering are quietly ceded — mostly, you note, to the Chinese brands that were always going to take them.",
+       hist:"Real: Källenius's strategy pivoted Mercedes decisively upmarket from 2020."},
+      {label:"Defend the full range — retreat is a habit you don't want to teach the company", fx:{margin:-5,brand:-3},
+       result:"You hold ground that costs more to hold each year, with margins that barely cover the capital. Honorable, expensive, and quietly unwound by your successor."},
+      {label:"All-in electric: end combustion R&D now, bet the house", fx:{margin:-8,future:+15}, set:["evfirst"],
+       result:"Further than the board wanted and the market rewards conviction with a re-rating. The bet's settlement date, however, is chosen by customers, not by you."}
+     ]},
+    {id:"software", year:"JUN 2020", title:"The Brain of the Car",
+     text:"Every future Mercedes is a computer wearing a body. VW has hurled ten thousand people at in-house software and produced, so far, delayed launches and a CEO casualty. Google offers a turnkey brain — beautiful, instant, and theirs. Your own MB.OS plan needs 3,000 engineers, four years, and several miracles. NVIDIA's Jensen Huang, meanwhile, will sell compute to anyone with taste.",
+     voice:"Your CTO: \"Whoever owns the operating system owns the customer. Whoever owns the customer owns the margin. After that it's just sheet metal.\"",
+     choices:[
+      {label:"Build MB.OS in-house; partner with NVIDIA for the silicon and autonomy stack", fx:{margin:-8,brand:+3,future:+14}, set:["mbos"],
+       result:"Slow, costly, sovereign. Hiring 3,000 software engineers into Swabia requires salary bands that scandalize HR — but the brain of the car stays in Stuttgart.",
+       hist:"Real: the Mercedes–NVIDIA partnership was announced June 2020; MB.OS targeted mid-decade."},
+      {label:"Take Google's stack — ship world-class software next year, not in four", fx:{margin:+5,future:+4}, set:["google_os"],
+       result:"Reviewers love it immediately. Somewhere in Mountain View, a product manager you will never meet now decides what a Mercedes feels like to use."},
+      {label:"Software minimalism — we sell hand-stitched leather, not apps", fx:{margin:+5,future:-14},
+       result:"The most expensive sentence in the modern car industry, delivered with conviction. Resale values will eventually deliver the rebuttal."}
+     ]},
+    {id:"data_call", year:"2021", title:"Mountain View Calls", cond:"google_os",
+     text:"The Google partnership has gone smoothly, which should have been the warning. The renewal terms arrive: deeper data sharing — driving patterns, location history, in-car purchases — in exchange for better terms. Your data officer points out you no longer fully know what your own cars tell California about your customers. Several of those customers are German privacy regulators' favorite constituents.",
+     choices:[
+      {label:"Refuse the data terms — start building an exit ramp to in-house software now", fx:{margin:-6,future:+8}, set:["mbos"],
+       result:"The divorce will take five years and cost billions — beginning it now, on your terms, is the cheapest it will ever be. Stuttgart's engineers receive the news like a liberation."},
+      {label:"Sign. The product is winning; philosophy is a luxury", fx:{margin:+6,brand:-6},
+       result:"The cars get smarter, the dependency gets deeper, and a Der Spiegel cover — 'DAS GOOGLE-AUTO' — hangs framed in Mountain View as a joke you're not in on."},
+      {label:"Negotiate a data trust: customer data held by a neutral German entity", fx:{margin:-3,brand:+6},
+       result:"Genuinely novel governance that costs speed and wins trust. Other automakers quietly copy the structure within two years."}
+     ]},
+    {id:"eqs", year:"APR 2021", title:"The Flagship Question",
+     text:"The EQS is ready: 770km of range, a drag coefficient of 0.20 — the slipperiest production car ever made — and a 56-inch Hyperscreen. It is also, your designers concede behind closed doors, a jellybean. Aerodynamics ate the stately three-box silhouette that has said 'S-Class' for fifty years. Engineering is proud. Design is split. The customer clinics in China are... polite.",
+     alt:[{if:"luxury", text:"The EQS is ready, and it has a strategy problem dressed as a design problem: your whole pivot says 'presence, prestige, desire' — and the most aerodynamic production car ever made looks like a beautifully engineered bar of soap. The clinics in China, where your luxury strategy lives or dies, keep using the word 'taxi'. Engineering is proud. The strategy deck is nervous."}],
+     choices:[
+      {label:"Ship the aero pod — let physics be the new prestige", fx:{margin:+3,brand:-5,future:+10},
+       fxIf:[{if:"eq", fx:{future:+3}, note:"The EQ groundwork means the EQS lands as a chapter, not a stunt — dealers know how to sell it."}],
+       result:"A technical triumph with a sales-floor problem: S-Class buyers want to be seen arriving, not measured in wind tunnels. The reviews say 'remarkable'; the order bank says 'hmm'.",
+       hist:"Real: the 2021 EQS was technically lauded and commercially underwhelming; Mercedes later steered EV design back toward classic proportions."},
+      {label:"Delay two years — rebody it with S-Class presence", fx:{margin:-6,brand:+6,future:+2},
+       result:"The car that finally ships is unmistakably a Mercedes, and unmistakably late: Lucid and Tesla split the 'first luxury EV flagship' headlines you paid a decade for."},
+      {label:"Ship it AND keep the combustion S-Class as the true flagship, indefinitely", fx:{margin:+8,brand:+3},
+       result:"Every customer covered, every message muddled. 'The future of Mercedes, sold alongside the present of Mercedes, at a discount to it' is a sentence your marketing team learns to say quickly."}
+     ]},
+    {id:"split", year:"FEB 2021", title:"Cutting the Giant in Two",
+     text:"The project codename is 'Focus': spin off Daimler Truck — the largest truck maker on Earth, your industrial backbone since 1896 — into an independent company, and rename what remains 'Mercedes-Benz Group'. The bankers' math says two focused companies outvalue one conglomerate by billions. The historians' math says you're signing away half the company's soul. Both maths are correct.",
+     choices:[
+      {label:"Execute the split — pure-play luxury, pure-play trucks", fx:{margin:+10,brand:+6,future:+6}, set:["spun"],
+       result:"December 2021: Daimler Truck rings its own bell, both stocks re-rate, and 'Daimler AG' — the name itself — passes into history under your signature. Focus, it turns out, was worth more than heritage.",
+       hist:"Real: Daimler Truck listed in Dec 2021; Daimler AG became Mercedes-Benz Group."},
+      {label:"Keep the conglomerate — scale is armor in the storms ahead", fx:{margin:-3,future:-5},
+       result:"The discount persists, the activists return every spring like swallows, and trucks and limousines keep arm-wrestling for the same capital."},
+      {label:"Split everything: trucks, vans, AND financial services", fx:{margin:+5,brand:+2},
+       result:"Maximum focus, maximum surgery. Losing captive financing — the quiet machine behind every lease deal — turns out to be the organ you miss."}
+     ]},
+    {id:"chips", year:"2021", title:"Triage by Semiconductor",
+     text:"The chip shortage has reduced your production planning to battlefield medicine: you will receive chips for roughly 70% of planned volume, and you choose who lives. One spreadsheet column shows margin per chip: a G-Class consumes the same scarce silicon as an A-Class and returns six times the profit. The works council has seen the same spreadsheet and drawn the opposite conclusion.",
+     choices:[
+      {label:"Feed the top: S-Class, Maybach, AMG, G — maximum profit per chip", fx:{margin:+15,brand:+4},
+       fxIf:[{if:"luxury", fx:{margin:+5}, note:"The luxury pivot means this isn't improvisation — it's your strategy under test conditions, passing."}],
+       result:"Record profits on shrunken volume — scarcity, it turns out, is a luxury strategy that enforces itself. A heretical thought takes root on the board: what if we just... kept volumes low?",
+       hist:"Real: Mercedes prioritized high-margin models through the shortage and posted record 2021 results."},
+      {label:"Share the pain evenly across every model line", fx:{margin:-6},
+       result:"Fair to every factory, optimal for none. The all-segments compromise produces all-segment waiting lists and the year's most forgettable financials."},
+      {label:"Prioritize EVs — protect CO2 compliance and the transformation story", fx:{margin:-3,future:+8},
+       fxIf:[{if:"evfirst", fx:{future:+4}, note:"All-in means all-in: the EV-first allocation proves the pledge was load-bearing, and the org notices."}],
+       result:"You buy regulatory peace and EV momentum with the fattest margins in the company. The CFO signs it off the way one signs off a dental procedure."}
+     ]},
+    {id:"abudhabi", year:"DEC 2021", title:"Five Laps in Abu Dhabi",
+     text:"The F1 season finale. Lewis Hamilton is cruising to a record eighth title in your silver car when a late safety car is handled — by the race director, improvising — in a way that hands Max Verstappen the championship on the final lap. Hundreds of millions are watching. Your team principal is screaming on the radio. You have a protest window measured in hours, and a brand position measured in decades.",
+     voice:"Toto Wolff, by phone, voice flat: \"We were robbed in front of the whole world. Tell me whether we fight in a courtroom or win on the track.\"",
+     choices:[
+      {label:"Protest, appeal, escalate — the star defends its own", fx:{brand:-6,margin:-2},
+       result:"Weeks of paddock lawyering turn a sporting injustice into a corporate grievance. You're probably right; being right in a courtroom about a car race is worth surprisingly little at this altitude of brand."},
+      {label:"Withdraw the appeal with one cold sentence, and let the silence indict them", fx:{brand:+8},
+       result:"'We walked away because the sport needed us to be bigger than its mistake.' Hamilton's dignified fury and your restraint read as class at planetary scale. The FIA quietly restructures race control anyway — your point, made for free.",
+       hist:"Real: Mercedes withdrew its appeal; the FIA replaced the race director within months."},
+      {label:"Channel it commercially: 'still the team to beat' — re-sign Hamilton, announce the W13 early", fx:{brand:+3,margin:+2},
+       result:"Brisk, professional, slightly bloodless. The sporting wound closes; the marketing makes sure a scar stays visible, on purpose."}
+     ]},
+    {id:"pledge", year:"JUL 2021", title:"The Promise",
+     text:"Strategy update day, and the world wants a date. Regulators, investors, activists — all demanding to know when Mercedes goes all-electric. Your draft says 2030. Legal wants the phrase 'where market conditions allow' inserted after it. Four words that change a promise into a posture — or, depending on the decade you get, into wisdom.",
+     alt:[{if:"evfirst", text:"Strategy update day. Having already torched the combustion R&D budget, the pledge writes itself — the only question is whether you say the unconditional version out loud and make it contractual with the future. Legal still wants their four magic words: 'where market conditions allow'. Your conviction wants them deleted."}],
+     choices:[
+      {label:"'Electric-only by 2030 — where market conditions allow'", fx:{brand:+4,future:+10},
+       fxIf:[{if:"mbos", fx:{future:+4}, note:"With MB.OS in-house, the pledge is a system, not a slogan: car, brain and battery on one roadmap."}],
+       result:"Ambition with an exit row. The caveat will do heavy lifting in difficult years — but the capital reallocation it unlocks today is real and enormous.",
+       hist:"Real: Mercedes made exactly this pledge, caveat included, in July 2021."},
+      {label:"No date. Technology-neutral, customer-led, slogan-free", fx:{margin:+5,future:-8},
+       result:"Intellectually defensible, strategically lonely. Rivals' dates — even ones they'll miss — anchor every comparison chart, and you're the blank cell."},
+      {label:"2030, hard stop, no caveats — burn the boats", fx:{margin:-5,brand:+3,future:+10},
+       result:"Total conviction, zero flexibility. If EV adoption wobbles, this sentence will attend every earnings call you ever host, sitting in the front row."}
+     ]},
+    {id:"decade", year:"DEC 2021", title:"What the Star Means Now",
+     text:"Year's end. The company is renamed, refocused, and — by the numbers — triumphant: record margins, a luxury strategy validated by accident and design alike. Yet you know the truth under the numbers: software is still years behind Palo Alto, the Chinese brands are no longer coming — they've arrived, and the next decade will be harder than the last. The board asks for your defining bet, the one that outlives your contract.",
+     choices:[
+      {label:"Desirability above volume — become the world's most valuable luxury brand, full stop", fx:{margin:+10,brand:+12},
+       fxIf:[{if:"spun", fx:{margin:+3}, note:"Pure-play focus makes the luxury thesis legible to markets: no trucks, no noise, one story."},
+             {if:"luxury", fx:{brand:+4}, note:"Two years of consistent upmarket signals mean the world already believes you — the bet compounds."}],
+       result:"Fewer, better, more expensive, forever. You're managing decline in units and growth in everything that actually matters — a trick only the greatest luxury houses ever pull off.",
+       hist:"Real: this remains Mercedes-Benz's stated strategy."},
+      {label:"Out-Tesla Tesla: software, autonomy, direct sales — a tech company with a heritage problem", fx:{margin:-8,future:+14},
+       fxIf:[{if:"mbos", fx:{future:+5}, note:"MB.OS gives the tech bet a spine — you're scaling something that exists, not promising something that doesn't."},
+             {if:"google_os", fx:{future:-5}, note:"Hard to out-Tesla anyone when your operating system answers to Mountain View."}],
+       result:"A decade-long sprint against companies born without legacy costs, dealer networks, or works councils. Expensive, uncertain — and possibly the only version of the future where Mercedes still sets the pace rather than the price."},
+      {label:"The bridge strategy: deep alliance with China for the EV era — speed over pride", fx:{margin:+5,brand:-8,future:+8},
+       fxIf:[{if:"geely_ally", fx:{future:+5,margin:+3}, note:"The Li Shufu relationship you built in 2018 becomes the trust this alliance is assembled from. The wolf was a bridge."},
+             {if:"geely_foe", fx:{future:-4}, note:"The partner you froze out in 2018 takes your call, eventually, on terms that remember everything."}],
+       result:"Cost and speed via partnership, prestige spent as the currency. A debate begins that will outlast you: who, in the end, needed whom more?"}
+     ]}
+   ]
+};
+</script>
+<script>
+const EVENTS = {
+ tesla:[
+  {title:"Short Seller Report", text:"A famous fund publishes 'Tesla: The Anatomy of a Zero'. CNBC books the author for a victory lap before anything has actually happened.", fx:{conf:-5}, up:"Your fans buy the dip and mint memes. The report ages like milk, but today it stings."},
+  {title:"Oil Price Collapse", text:"Crude drops below $45. Suddenly every op-ed asks whether anyone needs electric cars when gasoline is nearly free.", fx:{conf:-4}, up:"Your buyers, it turns out, weren't doing it for the gas money."},
+  {title:"A Celebrity Delivery", text:"An A-list actor posts an unboxing of his new Tesla to ten million followers, unprompted and unpaid.", fx:{conf:+6}, up:"Marketing budget: still zero. Reach: still absurd."},
+  {title:"Key Engineer Poached", text:"Apple's secretive car project just hired one of your best battery architects, with a comp package you can't discuss without laughing or crying.", fx:{prod:-4}, up:"The org reroutes around the gap within a quarter. The mission, weirdly, out-recruits the money."},
+  {title:"Supplier Bankruptcy", text:"A single-source supplier of a small, irreplaceable part has gone insolvent overnight.", fx:{cash:-4,prod:-4}, up:"Your engineers redesign the part in-house in six weeks — and never single-source it again."},
+  {title:"Regulatory Tailwind", text:"New emissions rules tighten. Rivals must now buy the compliance credits only you have in surplus.", fx:{cash:+6}, up:"Money for nothing. Detroit grumbles, pays, and lobbies."}
+ ],
+ mercedes:[
+  {title:"Union Ultimatum", text:"IG Metall calls a warning strike over the transformation roadmap. Sindelfingen's gates are lined with banners and television vans.", fx:{margin:-4}, up:"A weekend of negotiation buys peace, priced in guarantees."},
+  {title:"China Sneezes", text:"A regulatory shift in Beijing chills luxury purchases for a quarter. Your largest market suddenly reads tea leaves instead of brochures.", fx:{margin:-5}, up:"The quarter is saved, barely, by the S-Class waiting list."},
+  {title:"Design Award Sweep", text:"Your design language wins everything in sight; the press calls the new lineup 'the most desirable cars on sale'.", fx:{brand:+6}, up:"Desire, it turns out, photographs better than specifications."},
+  {title:"Recall Scare", text:"A potential brake-component fault triggers a precautionary recall across two model lines.", fx:{margin:-4,brand:-3}, up:"Handled fast and honestly; the story dies in a week."},
+  {title:"Tech Talent Coup", text:"A renowned chip architect chooses Stuttgart over Silicon Valley, citing 'the chance to put real software in a real icon'.", fx:{future:+6}, up:"One hire moves the roadmap by a quarter and recruiting by a year."},
+  {title:"Euro Surges", text:"Currency swings shave hundreds of millions off repatriated profits this quarter.", fx:{margin:-4}, up:"The hedging desk earns its bonuses; most of the damage is absorbed."}
+ ]
+};
+const TICKER = {
+ tesla:["GM kills the EV1 — again, in spirit","Analyst: 'niche product for wealthy environmentalists'","Gas prices fluctuate; op-eds follow","Nikola Tesla still uncredited, still dead","Detroit exec: 'we could do this anytime we want'","Battery costs fall 8% — nobody notices","Short interest hits record — again","Reddit forum argues about panel gaps for 400 comments"],
+ mercedes:["BMW launches rival model, claims 'driving pleasure'","Audi gains share among software engineers","Chinese EV startup #47 raises $2B","Brussels drafts stricter CO2 targets","Tesla market cap passes another legacy automaker","Geneva Motor Show attendance declines again","Consultants forecast 'peak car' — for the ninth year","Porsche margins remain annoyingly excellent"]
+};
+const ACH = [
+ {id:"iron",   ic:"🛡️", nm:"Iron Hands",      ds:"Finish with every KPI at 70+."},
+ {id:"brink",  ic:"🎲", nm:"The Brink",        ds:"Survive after any KPI fell to 10 or below."},
+ {id:"hist",   ic:"📜", nm:"The Historian",    ds:"Match real history in 75%+ of decisions."},
+ {id:"mav",    ic:"🃏", nm:"The Maverick",     ds:"Defy real history in 70%+ of decisions — and survive."},
+ {id:"moon",   ic:"🚀", nm:"Moonshot",         ds:"Grow the stock to 4× its starting price."},
+ {id:"board",  ic:"🤝", nm:"Untouchable",      ds:"Finish with board patience above 80."},
+ {id:"google", ic:"🔍", nm:"The Other Timeline", ds:"Sell Tesla to Google. See what happens."},
+ {id:"soul",   ic:"🏳️", nm:"Winter of 2009",  ds:"Sell Tesla in the darkest hour."},
+ {id:"legend", ic:"🏆", nm:"Legendary",        ds:"Earn the Legendary CEO ending."}
+];
+</script>
+<script>
+const app = document.getElementById('app');
+let S = null;
+let soundOn = true;
+
+/* ---------- audio ---------- */
+let AC = null;
+function beep(freq, dur, type, vol){
+  if(!soundOn) return;
+  try{
+    AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    const o = AC.createOscillator(), g = AC.createGain();
+    o.type = type||'sine'; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol||.06, AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(.0001, AC.currentTime+(dur||.12));
+    o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime+(dur||.12));
+  }catch(e){}
+}
+const sfx = {
+  click(){ beep(520,.07,'triangle'); },
+  good(){ beep(523,.1,'sine'); setTimeout(()=>beep(784,.14,'sine'),90); },
+  bad(){ beep(196,.2,'sawtooth',.05); },
+  news(){ beep(880,.08,'square',.04); setTimeout(()=>beep(880,.08,'square',.04),140); },
+  win(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,.22,'sine'),i*140)); },
+  lose(){ [392,330,262,196].forEach((f,i)=>setTimeout(()=>beep(f,.25,'sawtooth',.05),i*170)); }
+};
+function toggleSound(){
+  soundOn = !soundOn;
+  document.getElementById('mute').textContent = soundOn ? '🔊 sound' : '🔇 muted';
+  if(soundOn) sfx.click();
+}
+
+/* ---------- persistence ---------- */
+const SAVE_KEY = 'drive_v3_save';
+function loadSave(){ try{ return JSON.parse(localStorage.getItem(SAVE_KEY))||{ach:{},runs:0,best:0}; }catch(e){ return {ach:{},runs:0,best:0}; } }
+function commitSave(sv){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(sv)); }catch(e){} }
+
+/* ---------- helpers ---------- */
+function clamp(v){ return Math.max(0, Math.min(100, v)); }
+function evalCond(cond){
+  if(!cond) return true;
+  return cond.split('&&').every(t=>{ t=t.trim(); return t[0]==='!' ? !S.flags[t.slice(1)] : !!S.flags[t]; });
+}
+function money(v){ return '$'+(v>=100?Math.round(v):v.toFixed(2)); }
+
+/* ---------- screens ---------- */
+function titleScreen(){
+  S = null;
+  document.body.className = '';
+  const sv = loadSave();
+  const earned = Object.keys(sv.ach).length;
+  app.innerHTML = `
+  <div class="screen center" style="margin-top:48px">
+    <div class="fade-seq">
+      <div class="kicker">A STRATEGY SAGA IN TWO EMPIRES</div>
+      <h1 class="display" style="font-size:3rem;margin-top:10px">D R I V E</h1>
+      <p class="dim" style="max-width:520px;margin:14px auto 0">You will be offered the corner office at two of the most consequential car companies on Earth. Real history. Real stakes. Your past follows you — every decision echoes forward, the market keeps score in real time, and the board is always watching.</p>
+      <div style="margin-top:18px">
+        <span class="pill">🦋 Butterfly-effect campaigns</span><span class="pill">📈 Live stock market</span><span class="pill">🏛️ Board patience</span><span class="pill">🏆 ${earned}/${ACH.length} achievements</span>
+      </div>
+      <div style="max-width:440px;margin:22px auto 0">
+        <button class="btn primary" onclick="sfx.click();offerScreen()"><span class="t" style="text-align:center">📨 &nbsp;Open your job offers</span></button>
+        ${earned?`<button class="btn ghost" onclick="sfx.click();trophyScreen()">🏆 Trophy room</button>`:''}
+      </div>
+      ${sv.runs?`<p class="dim" style="margin-top:16px;font-size:.8rem">Careers played: ${sv.runs} · Best legacy score: ${sv.best}</p>`:''}
+    </div>
+  </div>`;
+}
+
+function trophyScreen(){
+  const sv = loadSave();
+  app.innerHTML = `<div class="screen">
+    <div class="kicker">TROPHY ROOM</div>
+    <h1>Achievements</h1>
+    <div class="card">
+      ${ACH.map(a=>`<div class="ach ${sv.ach[a.id]?'':'locked'}"><div class="ic">${a.ic}</div><div><div class="nm">${a.nm}</div><div class="ds">${sv.ach[a.id]?a.ds:'???'}</div></div></div>`).join('')}
+    </div>
+    <button class="btn ghost" onclick="sfx.click();titleScreen()">← Back</button>
+  </div>`;
+}
+
+function offerScreen(){
+  document.body.className = '';
+  app.innerHTML = `<div class="screen">
+    <div class="kicker">TWO ENVELOPES, ONE DESK</div>
+    <h1>The Offers</h1>` +
+    ['tesla','mercedes'].map(k=>{
+      const c = DATA[k];
+      return `<div class="card glow" onmouseenter="document.body.className='${c.theme}'">
+        <h2>${c.logo} ${c.name}</h2>
+        <p class="dim">${c.pitch}</p>
+        <p style="margin-top:10px;font-size:.85rem"><span class="dim">Your KPIs as CEO:</span><br>${c.kpis.map(x=>`<b>${x.label}</b> — ${x.desc}`).join('<br>')}</p>
+        <button class="btn" onclick="sfx.click();eraScreen('${k}')"><span class="t">Accept the ${c.short} offer →</span></button>
+      </div>`;
+    }).join('') + `</div>`;
+}
+
+function eraScreen(co){
+  const c = DATA[co];
+  document.body.className = c.theme;
+  app.innerHTML = `<div class="screen">
+    <div class="kicker">${c.logo} ${c.name.toUpperCase()}</div>
+    <h1>Choose Your Era</h1>` +
+    Object.entries(c.eras).map(([ek,e])=>`
+      <div class="card">
+        <h2>${e.name} <span class="dim" style="font-weight:400;font-size:1rem">· ${e.years}</span></h2>
+        ${e.deep?'<span class="pill" style="color:var(--gold);border-color:#5c4a1a">🦋 Butterfly-effect campaign — hidden scenarios, echoing consequences</span>':'<span class="pill">Classic campaign</span>'}
+        <p class="dim" style="margin-top:10px">${e.intro}</p>
+        <button class="btn" onclick="sfx.click();startGame('${co}','${ek}')"><span class="t">Take the helm in ${e.years.slice(0,4)} →</span></button>
+      </div>`).join('') +
+    `<button class="btn ghost" onclick="sfx.click();offerScreen()">← Back to offers</button></div>`;
+}
+
+function startGame(co, ek){
+  const e = DATA[co].eras[ek];
+  S = { co, ek, idx:0, played:0, kpi:{...e.start}, flags:{}, log:[], lastFx:null,
+        stock:e.stock0, stockHist:[e.stock0], board:65, brink:false, histMatch:0, histTotal:0,
+        usedEvents:[], lastWasEvent:false };
+  renderScenario();
+}
+
+/* ---------- HUD ---------- */
+function spark(){
+  const h = S.stockHist;
+  if(h.length<2) return '<svg viewBox="0 0 100 34" preserveAspectRatio="none"><line x1="0" y1="17" x2="100" y2="17" stroke="var(--line)" stroke-width="1"/></svg>';
+  const mn = Math.min(...h), mx = Math.max(...h), rng = (mx-mn)||1;
+  const pts = h.map((v,i)=>`${(i/(h.length-1)*100).toFixed(1)},${(30-(v-mn)/rng*26+2).toFixed(1)}`).join(' ');
+  const up = h[h.length-1] >= h[0];
+  return `<svg viewBox="0 0 100 34" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="${up?'var(--good)':'var(--bad)'}" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>`;
+}
+function hud(c){
+  const last = S.stockHist.length>1 ? S.stockHist[S.stockHist.length-2] : S.stock;
+  const chg = ((S.stock-last)/last*100);
+  const bcol = S.board>=60?'var(--good)':S.board>=30?'var(--warn)':'var(--bad)';
+  return `<div class="hud">` + c.kpis.map(k=>{
+    const v = S.kpi[k.key];
+    const col = v>=60?'var(--good)':v>=30?'var(--warn)':'var(--bad)';
+    const d = S.lastFx ? S.lastFx[k.key]||0 : 0;
+    const ds = d ? `<span class="delta ${d>0?'good':'bad'}">${d>0?'+':''}${d}</span>` : '';
+    return `<div class="kpi ${d<0?'hit':''}"><div class="name">${k.label}</div><div class="val">${v}${ds}</div>
+      <div class="bar"><i style="width:${v}%;background:${col}"></i></div></div>`;
+  }).join('') +
+  `<div class="stockbox"><div class="name" style="font-size:.7rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px">${S.co==='tesla'?'TSLA':'DAI'} · Stock</div>
+    <div class="val" style="font-size:1.35rem;font-weight:750;margin:3px 0">${money(S.stock)} <span class="delta ${chg>=0?'good':'bad'}">${chg>=0?'▲':'▼'}${Math.abs(chg).toFixed(1)}%</span></div>
+    ${spark()}</div></div>
+  <div class="boardrow"><span>🏛️ Board patience</span><div class="bar"><i style="width:${S.board}%;background:${bcol}"></i></div><span>${S.board}</span></div>`;
+}
+function tickerBar(){
+  const pool = TICKER[S.co];
+  const picks = [];
+  for(let i=0;i<4;i++) picks.push(pool[(S.played*3+i*2)%pool.length]);
+  picks.push(`${S.co==='tesla'?'TSLA':'DAI'} ${money(S.stock)}`);
+  return `<div class="ticker"><div class="inner">${picks.map(p=>`<b>›</b>${p}`).join('')}</div></div>`;
+}
+
+/* ---------- flow ---------- */
+function currentScenario(){
+  const e = DATA[S.co].eras[S.ek];
+  while(S.idx < e.scenarios.length && !evalCond(e.scenarios[S.idx].cond)) S.idx++;
+  return S.idx < e.scenarios.length ? e.scenarios[S.idx] : null;
+}
+function remaining(e){
+  let n=0; for(let i=S.idx;i<e.scenarios.length;i++) if(evalCond(e.scenarios[i].cond)) n++;
+  return n;
+}
+
+function maybeEvent(){
+  // ~30% chance, never twice in a row, max 3 per run, not on first/last round
+  const e = DATA[S.co].eras[S.ek];
+  if(S.lastWasEvent || S.usedEvents.length>=3 || S.played===0 || remaining(e)<=1) return false;
+  if(Math.random() > .3) return false;
+  const pool = EVENTS[S.co].filter((ev,i)=>!S.usedEvents.includes(i));
+  if(!pool.length) return false;
+  const ev = pool[Math.floor(Math.random()*pool.length)];
+  S.usedEvents.push(EVENTS[S.co].indexOf(ev));
+  S.lastWasEvent = true;
+  for(const k in ev.fx) S.kpi[k] = clamp(S.kpi[k]+ev.fx[k]);
+  S.lastFx = ev.fx;
+  updateStock(ev.fx);
+  sfx.news();
+  const c = DATA[S.co];
+  const dead = c.kpis.find(k=>S.kpi[k.key]<=0);
+  app.innerHTML = `<div class="screen">
+    ${hud(c)}
+    <div class="news">
+      <div class="tag">⚡ BREAKING</div>
+      <h2 style="margin-top:6px">${ev.title}</h2>
+      <p class="dim">${ev.text}</p>
+      <div class="outcome" style="border-color:var(--warn)">${ev.up}</div>
+      ${dead
+        ? `<button class="btn" onclick="endScreen('kpi','${dead.key}')"><span class="t bad">Face the board…</span></button>`
+        : `<button class="btn" onclick="sfx.click();renderScenario(true)"><span class="t">Back to the desk →</span></button>`}
+    </div></div>`;
+  window.scrollTo(0,0);
+  return true;
+}
+
+function renderScenario(skipEvent){
+  const c = DATA[S.co], e = c.eras[S.ek];
+  if(!skipEvent && maybeEvent()) return;
+  S.lastWasEvent = false;
+  const sc = currentScenario();
+  if(!sc){ endScreen('end'); return; }
+  let text = sc.text;
+  if(sc.alt) for(const a of sc.alt) if(evalCond(a.if)){ text = a.text; break; }
+  const total = S.played + remaining(e);
+  app.innerHTML = `<div class="screen">
+    <div><span class="pill">${c.logo} <b>${c.short}</b></span><span class="pill">${e.name}</span><span class="pill">Decision <b>${S.played+1}</b> of ~${total}</span></div>
+    ${hud(c)}
+    ${tickerBar()}
+    <div class="card glow">
+      <div class="year">${sc.year}</div>
+      <h2>${sc.title}</h2>
+      <p class="scen-text">${text}</p>
+      ${sc.voice?`<div class="voice">${sc.voice}</div>`:''}
+      ${sc.choices.filter(ch=>evalCond(ch.cond)).map(ch=>`<button class="btn" onclick="choose(${sc.choices.indexOf(ch)})"><span class="t">${ch.label}</span></button>`).join('')}
+    </div></div>`;
+  S.lastFx = null;
+  window.scrollTo(0,0);
+}
+
+function updateStock(fx){
+  const sum = Object.values(fx).reduce((a,b)=>a+b,0);
+  let pct = sum/55 + (Math.random()-.5)*.06;
+  pct = Math.max(-.30, Math.min(.40, pct));
+  S.stock = Math.max(.5, S.stock*(1+pct));
+  S.stockHist.push(S.stock);
+}
+
+function choose(i){
+  const c = DATA[S.co], e = c.eras[S.ek], sc = e.scenarios[S.idx], ch = sc.choices[i];
+  const fx = {...ch.fx};
+  const notes = [];
+  if(ch.fxIf) for(const f of ch.fxIf) if(evalCond(f.if)){
+    for(const k in f.fx) fx[k] = (fx[k]||0) + f.fx[k];
+    notes.push(f.note);
+  }
+  for(const k in fx) S.kpi[k] = clamp((S.kpi[k]||0) + fx[k]);
+  if(ch.set) for(const fl of ch.set) S.flags[fl] = true;
+  const echoes = [];
+  if(ch.echo) for(const ec of ch.echo) if(evalCond(ec.if)) echoes.push(ec.text);
+  S.lastFx = fx;
+  S.played++;
+  S.log.push({title:sc.title, choice:ch.label, hist:!!ch.hist});
+  // meta systems
+  S.histTotal++; if(ch.hist) S.histMatch++;
+  updateStock(fx);
+  const sum = Object.values(fx).reduce((a,b)=>a+b,0);
+  S.board = clamp(S.board + (sum>=5?+4:sum>=0?+1:-5));
+  const minK = Math.min(...c.kpis.map(k=>S.kpi[k.key]));
+  if(minK < 25) S.board = clamp(S.board-4);
+  if(minK <= 10) S.brink = true;
+  (sum>=0?sfx.good:sfx.bad)();
+  const dead = c.kpis.find(k=>S.kpi[k.key]<=0);
+  const coup = S.board<=0;
+  app.innerHTML = `<div class="screen">
+    <div><span class="pill">${c.logo} <b>${c.short}</b></span><span class="pill">Decision <b>${S.played}</b></span></div>
+    ${hud(c)}
+    <div class="card">
+      <div class="year">${sc.year}</div>
+      <h2>${sc.title}</h2>
+      <p class="dim" style="margin-top:6px">You chose: <b style="color:var(--text)">${ch.label}</b></p>
+      <div class="outcome">${ch.result}</div>
+      ${notes.map(n=>`<div class="echo">⟲ ${n}</div>`).join('')}
+      ${echoes.map(n=>`<div class="echo">⟲ ${n}</div>`).join('')}
+      ${ch.hist?`<div class="hist">📜 ${ch.hist}</div>`:`<div class="hist">📜 History took a different road here. Yours might be better — the market will decide.</div>`}
+      ${dead ? `<button class="btn" onclick="endScreen('kpi','${dead.key}')"><span class="t bad">Face the board…</span></button>`
+       : coup ? `<button class="btn" onclick="endScreen('coup')"><span class="t bad">The board is calling an emergency session…</span></button>`
+       : `<button class="btn" onclick="sfx.click();S.idx++;renderScenario()"><span class="t">Continue →</span></button>`}
+    </div></div>`;
+  window.scrollTo(0,0);
+}
+
+/* ---------- endings ---------- */
+function endScreen(kind, deadKey){
+  const c = DATA[S.co], e = c.eras[S.ek];
+  const avg = Math.round(c.kpis.reduce((a,k)=>a+S.kpi[k.key],0)/c.kpis.length);
+  const stockX = S.stock/e.stock0;
+  const align = S.histTotal? Math.round(S.histMatch/S.histTotal*100) : 0;
+  const score = Math.round(avg*0.6 + Math.min(stockX*10,30) + S.board*0.1);
+  let title, msg, icon, win=false;
+  if (S.flags.sold_google){ icon='🔍'; title='ACQUIRED'; msg=`Tesla lives on as a Google division. The mission survived; the legend didn't. Business schools will debate this one forever — and so will you.`; }
+  else if (S.flags.sold_soul){ icon='🏳️'; title='ABSORBED'; msg=`You sold in the dark winter of 2009. The buyer shelved the EV program in 2011 when gas got cheap. Somewhere, an alternate timeline is having more fun.`; }
+  else if (kind==='kpi'){ const k=c.kpis.find(x=>x.key===deadKey); icon='🪦'; title='FIRED'; msg=`Your <b>${k.label}</b> collapsed to zero. ${S.co==='tesla'?'Tesla files for bankruptcy protection; the EV revolution is delayed a decade.':'An emergency CEO is parachuted in from BMW. The humiliation is total.'}`; }
+  else if (kind==='coup'){ icon='🗳️'; title='BOARD COUP'; msg=`No single catastrophe — just a board that stopped believing. The vote is unanimous, the press release warm, the knife invisible. Your KPIs were ${avg}; your support was zero.`; }
+  else if (avg>=75){ win=true; icon='🏆'; title='LEGENDARY CEO'; msg=`${S.co==='tesla'?"You didn't just save a company — you bent the entire industry toward electricity.":"You proved a century-old giant can dance. The three-pointed star has never shone brighter."}`; }
+  else if (avg>=55){ win=true; icon='⭐'; title='RESPECTED CEO'; msg=`A strong tenure with real wins and survivable scars. The board renews your contract; the biography sells modestly.`; }
+  else if (avg>=35){ win=true; icon='😬'; title='SURVIVOR'; msg=`You kept the lights on, barely. History will record you as a caretaker in revolutionary times.`; }
+  else { win=true; icon='📉'; title='QUIETLY REPLACED'; msg=`No single disaster, just steady decline. The press release says you're "pursuing new opportunities."`; }
+  (win&&avg>=55?sfx.win:sfx.lose)();
+  // achievements
+  const sv = loadSave();
+  const unlocked = [];
+  function grant(id){ if(!sv.ach[id]){ sv.ach[id]=true; unlocked.push(ACH.find(a=>a.id===id)); } }
+  if(win && c.kpis.every(k=>S.kpi[k.key]>=70)) grant('iron');
+  if(win && S.brink) grant('brink');
+  if(win && S.histTotal>=8 && align>=75) grant('hist');
+  if(win && S.histTotal>=8 && align<=30) grant('mav');
+  if(win && stockX>=4) grant('moon');
+  if(win && S.board>80) grant('board');
+  if(S.flags.sold_google) grant('google');
+  if(S.flags.sold_soul) grant('soul');
+  if(title==='LEGENDARY CEO') grant('legend');
+  sv.runs++; if(win && score>sv.best) sv.best=score;
+  commitSave(sv);
+  app.innerHTML = `<div class="screen">
+    <div class="center" style="margin-top:26px">
+      <div class="logo">${icon}</div>
+      <h1 class="big">${title}</h1>
+      <p class="dim">${c.name} · ${e.name} (${e.years})</p>
+    </div>
+    ${hud(c)}
+    <div class="card"><p>${msg}</p></div>
+    <div class="card">
+      <h2>Final Report</h2>
+      <div class="grid2" style="margin-top:10px">
+        <div class="stat"><div class="v">${money(S.stock)}</div><div class="l">Stock (${stockX>=1?'+':''}${Math.round((stockX-1)*100)}% from ${money(e.stock0)})</div></div>
+        <div class="stat"><div class="v">${score}</div><div class="l">Legacy score</div></div>
+        <div class="stat"><div class="v">${align}%</div><div class="l">Matched real history</div></div>
+        <div class="stat"><div class="v">${S.board}</div><div class="l">Board patience at exit</div></div>
+      </div>
+    </div>
+    ${unlocked.length?`<div class="card glow"><h2>🏆 Unlocked</h2>${unlocked.map(a=>`<div class="ach"><div class="ic">${a.ic}</div><div><div class="nm">${a.nm}</div><div class="ds">${a.ds}</div></div></div>`).join('')}</div>`:''}
+    <div class="card">
+      <h2>Your Tenure</h2>
+      ${S.log.map((l,i)=>`<p style="margin-top:8px;font-size:.88rem"><span class="dim">${i+1}. ${l.title}:</span> ${l.choice} ${l.hist?'<span class="dim" style="font-size:.75rem">· as history had it</span>':'<span class="goldc" style="font-size:.75rem">· your road</span>'}</p>`).join('')}
+      ${e.deep?`<p class="dim" style="margin-top:14px;font-size:.8rem">Path markers: ${Object.keys(S.flags).length?Object.keys(S.flags).join(' · '):'none'} — replay differently to unlock hidden scenarios.</p>`:''}
+    </div>
+    <div class="grid2">
+      <button class="btn" onclick="sfx.click();startGame(S.co,S.ek)"><span class="t" style="text-align:center">↻ Run it back</span></button>
+      <button class="btn" onclick="sfx.click();titleScreen()"><span class="t" style="text-align:center">🏁 Title screen</span></button>
+    </div>
+  </div>`;
+  window.scrollTo(0,0);
+}
+
+titleScreen();
+</script>
+</body>
+</html>
