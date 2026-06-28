@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Future Eras — Test Harness</title>
+<style>
+  :root{
+    --bg:#0b0e13; --panel:#141925; --panel2:#1b2231; --line:#2a3447;
+    --ink:#e8edf6; --dim:#8a98b0; --gold:#e9c46a; --ice:#7fd3ff;
+    --good:#4ade80; --bad:#f87171; --accent:#6ea8fe;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#16202f,var(--bg));
+    color:var(--ink);font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    line-height:1.55;min-height:100vh}
+  .wrap{max-width:860px;margin:0 auto;padding:28px 20px 80px}
+  .tag{font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--dim)}
+  h1{font-size:1.5rem;margin:.2rem 0 .1rem;font-weight:800;letter-spacing:-.01em}
+  .sub{color:var(--dim);font-size:.92rem;margin-bottom:22px}
+  .banner{background:linear-gradient(180deg,#fff2,transparent);border:1px solid var(--line);
+    border-radius:14px;padding:16px 18px;margin-bottom:22px;font-size:.86rem;color:var(--dim)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+  .co{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;
+    cursor:pointer;transition:.15s;text-align:left}
+  .co:hover{border-color:var(--accent);transform:translateY(-2px);background:var(--panel2)}
+  .co .logo{font-size:1.6rem}
+  .co .nm{font-weight:700;margin-top:6px}
+  .co .tk{font-size:.72rem;color:var(--dim);letter-spacing:1px}
+  .co .era{font-size:.78rem;color:var(--ice);margin-top:8px}
+
+  /* KPI HUD */
+  .hud{position:sticky;top:0;z-index:5;background:rgba(11,14,19,.92);backdrop-filter:blur(8px);
+    border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:18px}
+  .hud-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .hud-co{font-weight:700}
+  .hud-co small{color:var(--dim);font-weight:500}
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .kpi .lab{font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);
+    display:flex;justify-content:space-between}
+  .kpi .lab b{color:var(--ink)}
+  .bar{height:8px;background:#0c1118;border-radius:6px;margin-top:5px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:6px;transition:width .5s ease}
+  .delta{font-size:.7rem;margin-left:6px}
+  .meter{margin-top:10px;font-size:.74rem;color:var(--dim);display:flex;justify-content:space-between}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 22px 8px}
+  .yr{font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+  .ti{font-size:1.25rem;font-weight:800;margin:4px 0 12px;letter-spacing:-.01em}
+  .tx{font-size:.98rem;margin-bottom:14px}
+  .voice{border-left:3px solid var(--accent);padding:8px 14px;margin:0 0 16px;color:var(--ice);
+    font-style:italic;font-size:.9rem;background:#6ea8fe14;border-radius:0 8px 8px 0}
+  .choices{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+  .choice{text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:12px;
+    padding:13px 15px;color:var(--ink);cursor:pointer;font-size:.92rem;transition:.13s}
+  .choice:hover{border-color:var(--accent);background:#22304a}
+  .res{background:#0c1118;border:1px solid var(--line);border-radius:12px;padding:15px 16px;margin:6px 0 14px}
+  .res .effs{font-size:.8rem;color:var(--dim);margin-bottom:8px}
+  .res .effs span{margin-right:12px}
+  .res .note{font-size:.84rem;color:var(--ice);margin-top:8px}
+  .res .hist{font-size:.86rem;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);color:var(--gold)}
+  .res .road{font-size:.86rem;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);color:var(--dim)}
+  .btn{background:var(--gold);color:#1a1a1a;border:none;border-radius:10px;padding:11px 20px;
+    font-weight:700;cursor:pointer;font-size:.92rem}
+  .btn:hover{filter:brightness(1.07)}
+  .btn.ghost{background:transparent;color:var(--dim);border:1px solid var(--line)}
+  .pos{color:var(--good)} .neg{color:var(--bad)}
+  .end{text-align:center;padding:30px 18px}
+  .end .icon{font-size:3rem}
+  .end h2{font-size:1.6rem;margin:.3rem 0}
+  .end .verdict{color:var(--dim);max-width:560px;margin:8px auto 18px}
+  .badge{display:inline-block;background:var(--panel2);border:1px solid var(--line);border-radius:999px;
+    padding:6px 14px;font-size:.8rem;margin:4px}
+  .log{text-align:left;max-width:600px;margin:22px auto 0}
+  .log p{font-size:.86rem;margin:7px 0;color:var(--dim)}
+  .log b{color:var(--ink)}
+  .foot{margin-top:26px;text-align:center}
+  a.lnk{color:var(--accent);cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<!-- Stub company DATA must be defined BEFORE future-eras.js loads -->
+<script>
+"use strict";
+var DATA = (window.DATA = {});
+/* Minimal company stubs. KPI labels map to the 3 engine keys in order:
+   [0]=cashflow  [1]=marketshare  [2]=stockprice  (relabeled per company for flavor) */
+const STUBS = {
+  tesla:{logo:"⚡",name:"Tesla",ticker:"TSLA",k:["Cashflow","Market Share","Stock Price"],
+    fired:"The board finally does the unthinkable and removes you. Tesla without its founder becomes just another car company.",
+    legend:"You didn't just keep Tesla alive — you decided what the next century of mobility would be."},
+  toyota:{logo:"⛩",name:"Toyota",ticker:"TM",k:["Brand Trust","Production Resilience","Future Readiness"],
+    fired:"The world's largest automaker stumbles, and a humbled board accepts an outside rescue. The 'Kodak of cars' jibe comes true.",
+    legend:"You proved patience was a strategy. Every hedge, vindicated — the dinosaur outlived them all."},
+  byd:{logo:"🔋",name:"BYD",ticker:"BYD",k:["Capital","Vertical Integration","Global Standing"],
+    fired:"Overreach abroad and hostility everywhere collapse the empire inward. Beijing installs new leadership overnight.",
+    legend:"You built the industrial backbone of the electric age — the company that powers the planet's transition."},
+  vw:{logo:"🚙",name:"Volkswagen",ticker:"VOW3",k:["Global Scale","Trust & Compliance","Labor Peace"],
+    fired:"A cratering China and an immovable works council force a humiliating, state-backed rescue.",
+    legend:"You broke the unbreakable and rebuilt the people's car — Wolfsburg dances again."},
+  bmw:{logo:"◎",name:"BMW",ticker:"BMW",k:["EBIT Margin","Driving Pleasure","Tech Openness"],
+    fired:"Margins collapse and the roundel becomes, at last, an expensive Volkswagen.",
+    legend:"You proved the joy of driving could survive the age of the robot — and charged a premium for it."},
+  mercedes:{logo:"◈",name:"Mercedes-Benz",ticker:"MBG",k:["Cashflow","Market Share","Stock Price"],
+    fired:"The luxury bet strands you above a market that moved on; an emergency CEO arrives from a rival.",
+    legend:"You made the three-pointed star mean more than ever — the automotive Hermès."},
+  gm:{logo:"🔧",name:"General Motors",ticker:"GM",k:["Solvency","Washington & Labor","Future Readiness"],
+    fired:"For the second time in a generation, GM goes to the brink — and this time Washington doesn't catch it.",
+    legend:"The company that died once proved it had learned how never to die again."},
+  ford:{logo:"🔵",name:"Ford",ticker:"F",k:["Liquidity","Truck & Pro Engine","EV & Software"],
+    fired:"The blue oval is pawned a second time, and this time there is no buying it back.",
+    legend:"The oval flew through every storm, never pawned again — the indispensable American workhorse."},
+  stellantis:{logo:"🔩",name:"Stellantis",ticker:"STLA",k:["Margin Discipline","Brand & Dealer Trust","Industrial Scale"],
+    fired:"The fourteen-brand tightrope snaps; lenders take the keys and the empire is sold for parts.",
+    legend:"You turned scale into the industry's best products — the merger nobody believed in, vindicated."},
+  honda:{logo:"🛵",name:"Honda",ticker:"HMC",k:["Capital Discipline","Engineering Standing","Global Trust"],
+    fired:"The proud independent finally bends the knee — absorbed, its engineering soul dissolved into a larger whole.",
+    legend:"Soichiro's creed survived the age of software and scale: build it right, and need no one."},
+  tata:{logo:"🐘",name:"Tata Motors",ticker:"TTM",k:["Balance Sheet","Domestic Credibility","Global Competitiveness"],
+    fired:"The bridge loan comes due with no refinancing in sight; Bombay House goes quiet for a week.",
+    legend:"You forged India's first true global automotive champion — the name endures, vindicated."},
+  mahindra:{logo:"🐂",name:"Mahindra",ticker:"M&M",k:["Capital Discipline","SUV Credibility","Global & EV Readiness"],
+    fired:"Ambition outruns the balance sheet one final time; the tractor business stops forgiving.",
+    legend:"The tractor that dreamed of everything built India's rugged-mobility and farm-tech champion."}
+};
+for(const co in STUBS){
+  const s = STUBS[co];
+  DATA[co] = {
+    short:s.name, name:s.name, logo:s.logo, ticker:s.ticker,
+    bankruptcy:s.fired, legendary:s.legend,
+    kpis:[
+      {key:"cashflow",   label:s.k[0]},
+      {key:"marketshare",label:s.k[1]},
+      {key:"stockprice", label:s.k[2]}
+    ],
+    eras:{}
+  };
+}
+</script>
+
+<!-- The real file under test. autoAttach:true means it injects DATA.<co>.eras.future on load. -->
+<script src="future-eras.js"></script>
+
+<!-- Lightweight engine: just enough to play & score a single future era. -->
+<script>
+"use strict";
+const app = document.getElementById("app");
+let S = null;
+
+const COL = ["#6ea8fe","#e9c46a","#7fd3ff"]; // bar colors per KPI
+const clamp = v => Math.max(0, Math.min(100, v));
+
+function titleScreen(){
+  S = null;
+  const loaded = (typeof window.FutureEras !== "undefined");
+  const cos = Object.keys(DATA).filter(co => DATA[co].eras && DATA[co].eras.future);
+  app.innerHTML = `
+    <div class="tag">Standalone test harness · core game untouched</div>
+    <h1>Future Eras — 2026 → 2040</h1>
+    <div class="sub">Pick a company and play its speculative future era. ${cos.length} of 12 future eras loaded.</div>
+    <div class="banner">
+      <b>This is a test sandbox.</b> It stubs the 12 companies and runs a lightweight engine that loads the real
+      <code>future-eras.js</code>. Scoring mirrors the core game: each KPI hitting <b>0</b> ends your run; otherwise
+      the average is your verdict. One choice per card is the <span style="color:var(--gold)">consensus</span> path —
+      follow it often to score as <b>The Historian</b>, defy it and survive to score as <b>The Maverick</b>.
+      ${loaded?"":"<br><br><b style='color:var(--bad)'>⚠ future-eras.js did not load.</b> Open this file from the same folder as future-eras.js."}
+    </div>
+    <div class="grid">
+      ${cos.map(co=>{
+        const e = DATA[co].eras.future;
+        return `<button class="co" onclick="startFuture('${co}')">
+          <div class="logo">${DATA[co].logo}</div>
+          <div class="nm">${DATA[co].name}</div>
+          <div class="tk">${DATA[co].ticker} · ${e.scenarios.length} decisions</div>
+          <div class="era">${e.name} →</div>
+        </button>`;
+      }).join("")}
+    </div>`;
+}
+
+function startFuture(co){
+  const e = DATA[co].eras.future;
+  S = { co, idx:0, kpi:{...e.start}, flags:{}, log:[], histMatch:0, histTotal:0, lastFx:null };
+  introScreen();
+}
+
+function introScreen(){
+  const c = DATA[S.co], e = c.eras.future;
+  app.innerHTML = `
+    <div class="tag">${c.logo} ${c.name.toUpperCase()} · ${e.years}</div>
+    <h1>${e.name}</h1>
+    <div class="card">
+      <div class="tx" style="font-size:1rem">${e.intro}</div>
+      <div style="margin:8px 0 16px">
+        <button class="btn" onclick="renderScenario()">Take the helm →</button>
+        <button class="btn ghost" onclick="titleScreen()">← Back</button>
+      </div>
+    </div>`;
+}
+
+function nextIndex(){
+  const e = DATA[S.co].eras.future;
+  let i = S.idx;
+  while(i < e.scenarios.length){
+    const sc = e.scenarios[i];
+    if(sc.cond && !S.flags[sc.cond]){ i++; continue; }   // skip gated scenarios
+    return i;
+  }
+  return -1;
+}
+
+function hud(){
+  const c = DATA[S.co];
+  const align = S.histTotal ? Math.round(S.histMatch/S.histTotal*100) : 0;
+  const bars = c.kpis.map((k,n)=>{
+    const v = Math.round(S.kpi[k.key]);
+    const d = S.lastFx ? (S.lastFx[k.key]||0) : 0;
+    const dtxt = d ? `<span class="delta ${d>0?'pos':'neg'}">${d>0?'+':''}${d}</span>` : "";
+    const col = v<=20 ? "var(--bad)" : COL[n];
+    return `<div class="kpi">
+      <div class="lab"><span>${k.label}</span><span><b>${v}</b>${dtxt}</span></div>
+      <div class="bar"><i style="width:${v}%;background:${col}"></i></div>
+    </div>`;
+  }).join("");
+  return `<div class="hud">
+    <div class="hud-top"><div class="hud-co">${c.logo} ${c.name} <small>· ${c.ticker}</small></div>
+      <div style="font-size:.74rem;color:var(--dim)">Decision ${S.histTotal+1}</div></div>
+    <div class="kpis">${bars}</div>
+    <div class="meter"><span>Consensus alignment</span><span>${align}% ${align>=75?'· Historian path':(S.histTotal&&align<=30?'· Maverick path':'')}</span></div>
+  </div>`;
+}
+
+function renderScenario(){
+  const i = nextIndex();
+  if(i < 0){ return ending(); }
+  S.idx = i;
+  const e = DATA[S.co].eras.future, sc = e.scenarios[i];
+  let text = sc.text;
+  if(sc.alt){ for(const a of sc.alt){ if(S.flags[a.if]){ text = a.text; break; } } }
+  app.innerHTML = hud() + `
+    <div class="card">
+      <div class="yr">${sc.year}</div>
+      <div class="ti">${sc.title}</div>
+      <div class="tx">${text}</div>
+      ${sc.voice?`<div class="voice">${sc.voice}</div>`:""}
+      <div class="choices">
+        ${sc.choices.map((ch,n)=>`<button class="choice" onclick="choose(${n})">${ch.label}</button>`).join("")}
+      </div>
+    </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function choose(n){
+  const e = DATA[S.co].eras.future, sc = e.scenarios[S.idx], ch = sc.choices[n];
+  const fx = {...(ch.fx||{})};
+  let noteHtml = "";
+  // conditional bonus effects
+  if(ch.fxIf){ for(const cif of ch.fxIf){ if(S.flags[cif.if]){
+    for(const k in cif.fx){ fx[k]=(fx[k]||0)+cif.fx[k]; }
+    if(cif.note) noteHtml += `<div class="note">↳ ${cif.note}</div>`;
+  }}}
+  // apply
+  for(const k in fx){ S.kpi[k] = clamp((S.kpi[k]||0) + fx[k]); }
+  S.lastFx = fx;
+  if(ch.set){ ch.set.forEach(f=>S.flags[f]=true); }
+  S.histTotal++; if(ch.hist) S.histMatch++;
+  S.log.push({title:sc.title, choice:ch.label, hist:!!ch.hist});
+
+  const effs = DATA[S.co].kpis.map(k=>{
+    const d = fx[k.key]; if(!d) return "";
+    return `<span class="${d>0?'pos':'neg'}">${k.label} ${d>0?'+':''}${d}</span>`;
+  }).join("");
+
+  // KPI death check
+  let dead = null;
+  for(const k of DATA[S.co].kpis){ if(S.kpi[k.key] <= 0){ dead = k; break; } }
+
+  app.innerHTML = hud() + `
+    <div class="card">
+      <div class="yr">${sc.year}</div>
+      <div class="ti">${sc.title}</div>
+      <div class="res">
+        <div class="effs">${effs||"<span class='dim'>No stat change.</span>"}</div>
+        <div>${ch.result}</div>
+        ${noteHtml}
+        ${ch.hist
+          ? `<div class="hist">📊 ${ch.hist}</div>`
+          : `<div class="road">🧭 You went off the consensus here. No analyst predicted this — the market will judge it later.</div>`}
+      </div>
+      ${dead
+        ? `<button class="btn" onclick="ending()">See how it ended →</button>`
+        : `<button class="btn" onclick="advance()">Continue →</button>`}
+    </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function advance(){ S.idx++; renderScenario(); }
+
+function ending(){
+  const c = DATA[S.co];
+  const vals = c.kpis.map(k=>S.kpi[k.key]);
+  const avg = Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+  const align = S.histTotal ? Math.round(S.histMatch/S.histTotal*100) : 0;
+  const deadK = c.kpis.find(k=>S.kpi[k.key] <= 0);
+
+  let icon,title,verdict;
+  if(deadK){ icon="🪦"; title="REMOVED FROM THE HELM";
+    verdict=`Your <b>${deadK.label}</b> collapsed to zero. ${c.bankruptcy}`; }
+  else if(avg>=75){ icon="🏆"; title="LEGENDARY CEO"; verdict=c.legendary; }
+  else if(avg>=58){ icon="🎖"; title="A STRONG TENURE";
+    verdict="You navigated the future shocks and left the company stronger than you found it. Not flawless — but a record any board would re-sign."; }
+  else if(avg>=42){ icon="⚖"; title="A MIXED LEGACY";
+    verdict="You survived to 2040, but the bruises show. History will argue about whether you were bold enough, or too bold."; }
+  else{ icon="📉"; title="A TROUBLED RUN";
+    verdict="You held on, barely. The company endures, diminished — a cautionary chapter rather than a triumph."; }
+
+  const badges = [];
+  if(!deadK && S.histTotal>=5 && align>=75) badges.push("📜 The Historian — you trusted the consensus");
+  if(!deadK && S.histTotal>=5 && align<=30) badges.push("🃏 The Maverick — you defied the consensus and survived");
+  if(avg>=75) badges.push("⭐ Top-quartile finish");
+
+  const kpiLine = c.kpis.map((k,n)=>`<span class="badge">${k.label}: ${Math.round(S.kpi[k.key])}</span>`).join("");
+
+  app.innerHTML = `
+    <div class="end">
+      <div class="icon">${icon}</div>
+      <h2>${title}</h2>
+      <div class="tag">${c.logo} ${c.name} · ${c.eras.future.name} · 2026–2040</div>
+      <div class="verdict">${verdict}</div>
+      <div>${kpiLine}</div>
+      <div style="margin-top:10px">${badges.map(b=>`<span class="badge">${b}</span>`).join("")}</div>
+      <div style="margin-top:8px;color:var(--dim);font-size:.84rem">Consensus alignment: ${align}% &nbsp;·&nbsp; Final average: ${avg}</div>
+      <div class="log">
+        <div class="tag" style="margin-bottom:6px">Your decisions</div>
+        ${S.log.map((l,i)=>`<p><b>${i+1}. ${l.title}:</b> ${l.choice} <span style="color:${l.hist?'var(--gold)':'var(--ice)'}">· ${l.hist?'consensus':'your road'}</span></p>`).join("")}
+      </div>
+      <div class="foot">
+        <button class="btn" onclick="startFuture('${S.co}')">↻ Replay ${c.name}</button>
+        <button class="btn ghost" onclick="titleScreen()">← Choose another company</button>
+      </div>
+    </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+titleScreen();
+</script>
+</body>
+</html>

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be an Automotive CEO — v6 (Oracle · Future · Consequences)</title>
+<style>
+  :root{
+    --bg:#0b0e13; --panel:#141925; --panel2:#1b2231; --line:#2a3447;
+    --ink:#e8edf6; --dim:#8a98b0; --gold:#e9c46a; --ice:#7fd3ff;
+    --good:#4ade80; --warn:#fbbf24; --bad:#f87171; --accent:#6ea8fe; --violet:#b08cff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 700px at 50% -10%,#16202f,var(--bg));
+    color:var(--ink);font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    line-height:1.55;min-height:100vh}
+  .wrap{max-width:880px;margin:0 auto;padding:28px 20px 90px}
+  .tag{font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--dim)}
+  h1{font-size:1.55rem;margin:.2rem 0 .1rem;font-weight:800;letter-spacing:-.01em}
+  .sub{color:var(--dim);font-size:.92rem;margin-bottom:22px}
+  .banner{background:linear-gradient(180deg,#ffffff14,transparent);border:1px solid var(--line);
+    border-radius:14px;padding:15px 18px;margin-bottom:22px;font-size:.85rem;color:var(--dim)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+  .co{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;
+    cursor:pointer;transition:.15s;text-align:left}
+  .co:hover{border-color:var(--accent);transform:translateY(-2px);background:var(--panel2)}
+  .co .logo{font-size:1.7rem}
+  .co .nm{font-weight:700;margin-top:6px}
+  .co .tk{font-size:.72rem;color:var(--dim);letter-spacing:1px}
+  .co .pl{font-size:.78rem;color:var(--ice);margin-top:8px}
+
+  /* Oracle */
+  .oracle{background:radial-gradient(700px 320px at 50% 0%,#241a3a,transparent);
+    border:1px solid var(--line);border-radius:18px;padding:30px 22px;text-align:center;margin-bottom:18px}
+  .oracle .eye{font-size:2.4rem;filter:drop-shadow(0 0 16px var(--violet))}
+  .oracle h2{font-size:1.5rem;margin:.4rem 0 .2rem}
+  .oracle .says{color:var(--ice);font-style:italic;max-width:560px;margin:6px auto 20px;font-size:.96rem}
+  .doors{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:620px;margin:0 auto}
+  @media(max-width:560px){.doors{grid-template-columns:1fr}}
+  .door{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 18px;
+    cursor:pointer;transition:.15s;text-align:left}
+  .door:hover{transform:translateY(-3px)}
+  .door.hist:hover{border-color:var(--gold)}
+  .door.fut:hover{border-color:var(--violet)}
+  .door .dt{font-weight:800;font-size:1.05rem;margin-bottom:4px}
+  .door.hist .dt{color:var(--gold)} .door.fut .dt{color:var(--violet)}
+  .door .dd{font-size:.84rem;color:var(--dim)}
+
+  /* HUD — qualitative, no numbers during play */
+  .hud{position:sticky;top:0;z-index:5;background:rgba(11,14,19,.93);backdrop-filter:blur(8px);
+    border:1px solid var(--line);border-radius:14px;padding:13px 16px;margin-bottom:16px}
+  .hud-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+  .hud-co{font-weight:700} .hud-co small{color:var(--dim);font-weight:500}
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .kpi{display:flex;align-items:center;gap:8px;font-size:.82rem}
+  .kpi .dot{width:10px;height:10px;border-radius:50%;flex:none}
+  .kpi .lab{color:var(--dim);font-size:.7rem;text-transform:uppercase;letter-spacing:.4px}
+  .kpi .st{font-weight:700}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 22px 10px}
+  .yr{font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+  .ti{font-size:1.25rem;font-weight:800;margin:4px 0 12px;letter-spacing:-.01em}
+  .tx{font-size:.98rem;margin-bottom:14px}
+  .voice{border-left:3px solid var(--accent);padding:8px 14px;margin:0 0 16px;color:var(--ice);
+    font-style:italic;font-size:.9rem;background:#6ea8fe14;border-radius:0 8px 8px 0}
+  .choices{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+  .choice{text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:12px;
+    padding:13px 15px;color:var(--ink);cursor:pointer;font-size:.92rem;transition:.13s}
+  .choice:hover{border-color:var(--accent);background:#22304a}
+
+  .res{background:#0c1118;border:1px solid var(--line);border-radius:12px;padding:15px 16px;margin:6px 0 14px}
+  .react{margin:0 0 10px}
+  .react p{margin:3px 0;font-size:.86rem;color:var(--ink)}
+  .react .r-up::before{content:"▲ ";color:var(--good)}
+  .react .r-dn::before{content:"▼ ";color:var(--bad)}
+  .res .body{font-size:.94rem;margin-top:4px}
+  .cons{border-left:3px solid var(--violet);background:#b08cff14;border-radius:0 8px 8px 0;
+    padding:9px 13px;margin:12px 0 4px;font-size:.88rem;color:#d8c7ff}
+  .cons b{color:#fff}
+  .echo{border:1px dashed var(--violet);background:#b08cff0f;border-radius:12px;padding:12px 15px;
+    margin-bottom:14px;color:#d8c7ff;font-size:.9rem}
+  .echo .h{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--violet);margin-bottom:3px}
+
+  .btn{background:var(--gold);color:#1a1a1a;border:none;border-radius:10px;padding:11px 20px;
+    font-weight:700;cursor:pointer;font-size:.92rem}
+  .btn:hover{filter:brightness(1.07)}
+  .btn.v{background:var(--violet);color:#160d2b}
+  .btn.ghost{background:transparent;color:var(--dim);border:1px solid var(--line)}
+
+  /* history panel */
+  .eralist{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+  .erarow{display:flex;justify-content:space-between;background:var(--panel2);border:1px solid var(--line);
+    border-radius:10px;padding:11px 14px;font-size:.9rem}
+  .erarow .yy{color:var(--gold);font-size:.78rem;letter-spacing:1px}
+
+  /* end */
+  .end{text-align:center;padding:26px 18px}
+  .end .icon{font-size:3rem}
+  .end h2{font-size:1.6rem;margin:.3rem 0}
+  .end .verdict{color:var(--dim);max-width:580px;margin:8px auto 18px}
+  .badge{display:inline-block;background:var(--panel2);border:1px solid var(--line);border-radius:999px;
+    padding:6px 14px;font-size:.8rem;margin:4px}
+  .ledger{text-align:left;max-width:640px;margin:20px auto 0}
+  .ledger .lh{font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--violet);margin-bottom:6px}
+  .ledger .row{border-bottom:1px solid var(--line);padding:9px 0}
+  .ledger .row .t{font-size:.9rem}
+  .ledger .row .c{font-size:.82rem;color:var(--dim)}
+  .ledger .row .fx{font-size:.78rem;margin-top:3px}
+  .ledger .fx span{margin-right:10px}
+  .pos{color:var(--good)} .neg{color:var(--bad)} .neu{color:var(--dim)}
+  .foot{margin-top:26px;text-align:center}
+  .synergy{border:1px solid var(--ice);background:#7fd3ff14;border-radius:12px;padding:12px 15px;margin-bottom:14px;color:#cdeaff}
+  .synergy .h{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--ice);margin-bottom:3px}
+  .echo i{color:#e7dbff;font-style:italic}
+  .case{text-align:left;max-width:640px;margin:8px auto 0}
+  .case .sec{border-top:1px solid var(--line);padding:13px 0}
+  .case .sec:first-child{border-top:none}
+  .case .lbl{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--violet);margin-bottom:4px}
+  .case .val{font-size:1rem}
+  .stamp{font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--dim);
+    border:1px solid var(--line);border-radius:8px;display:inline-block;padding:6px 12px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<!-- 1) Stub company DATA + real historical era index (for the History door) -->
+<script>
+"use strict";
+var DATA = (window.DATA = {});
+const STUBS = {
+  tesla:{logo:"⚡",name:"Tesla",ticker:"TSLA",k:["Cashflow","Market Share","Stock Price"],pitch:"Innovation at any cost. Survives chaos; quality bends.",
+    fired:"The board does the unthinkable and removes you. Tesla without its founder becomes just another car company.",
+    legend:"You didn't just keep Tesla alive — you decided what the next century of mobility would be."},
+  toyota:{logo:"⛩",name:"Toyota",ticker:"TM",k:["Brand Trust","Production Resilience","Future Readiness"],pitch:"Patient, reliable, unkillable. Master every technology, rush none.",
+    fired:"The world's largest automaker stumbles; a humbled board accepts an outside rescue. The 'Kodak of cars' jibe comes true.",
+    legend:"You proved patience was a strategy. Every hedge, vindicated — the dinosaur outlived them all."},
+  byd:{logo:"🔋",name:"BYD",ticker:"BYD",k:["Capital","Vertical Integration","Global Standing"],pitch:"Make everything yourself. Win on price. Answer to Beijing.",
+    fired:"Overreach abroad and hostility everywhere collapse the empire inward. Beijing installs new leadership overnight.",
+    legend:"You built the industrial backbone of the electric age — the company that powers the planet's transition."},
+  vw:{logo:"🚙",name:"Volkswagen",ticker:"VOW3",k:["Global Scale","Trust & Compliance","Labor Peace"],pitch:"A 90-year cathedral. Too many workers, too many brands, one immovable union.",
+    fired:"A cratering China and an immovable works council force a humiliating, state-backed rescue.",
+    legend:"You broke the unbreakable and rebuilt the people's car — Wolfsburg dances again."},
+  bmw:{logo:"◎",name:"BMW",ticker:"BMW",k:["EBIT Margin","Driving Pleasure","Tech Openness"],pitch:"Premium, performance, low risk. The joy of driving is the product.",
+    fired:"Margins collapse and the roundel becomes, at last, an expensive Volkswagen.",
+    legend:"You proved the joy of driving could survive the age of the robot — and charged a premium for it."},
+  mercedes:{logo:"◈",name:"Mercedes-Benz",ticker:"MBG",k:["Cashflow","Market Share","Stock Price"],pitch:"Fewer cars, mean more. Rolls-Royce economics with a three-pointed star.",
+    fired:"The luxury bet strands you above a market that moved on; an emergency CEO arrives from a rival.",
+    legend:"You made the three-pointed star mean more than ever — the automotive Hermès."},
+  gm:{logo:"🔧",name:"General Motors",ticker:"GM",k:["Solvency","Washington & Labor","Future Readiness"],pitch:"Died once in 2009. Solvency is now a religion. Washington is the weather.",
+    fired:"For the second time in a generation, GM goes to the brink — and this time Washington doesn't catch it.",
+    legend:"The company that died once proved it had learned how never to die again."},
+  ford:{logo:"🔵",name:"Ford",ticker:"F",k:["Liquidity","Truck & Pro Engine","EV & Software"],pitch:"Trucks pay for everything. Pawned the oval once; never again.",
+    fired:"The blue oval is pawned a second time, and this time there is no buying it back.",
+    legend:"The oval flew through every storm, never pawned again — the indispensable American workhorse."},
+  stellantis:{logo:"🔩",name:"Stellantis",ticker:"STLA",k:["Margin Discipline","Brand & Dealer Trust","Industrial Scale"],pitch:"Fourteen brands, savage cost discipline. Scale is armor — and weight.",
+    fired:"The fourteen-brand tightrope snaps; lenders take the keys and the empire is sold for parts.",
+    legend:"You turned scale into the industry's best products — the merger nobody believed in, vindicated."},
+  honda:{logo:"🛵",name:"Honda",ticker:"HMC",k:["Capital Discipline","Engineering Standing","Global Trust"],pitch:"Engineer's company. Build it right, never expedient, never need a bailout.",
+    fired:"The proud independent finally bends the knee — absorbed, its engineering soul dissolved into a larger whole.",
+    legend:"Soichiro's creed survived the age of software and scale: build it right, and need no one."},
+  tata:{logo:"🐘",name:"Tata Motors",ticker:"TTM",k:["Balance Sheet","Domestic Credibility","Global Competitiveness"],pitch:"India's champion. Twice bet the company and lived. Already been hacked.",
+    fired:"The bridge loan comes due with no refinancing in sight; Bombay House goes quiet for a week.",
+    legend:"You forged India's first true global automotive champion — the name endures, vindicated."},
+  mahindra:{logo:"🐂",name:"Mahindra",ticker:"M&M",k:["Capital Discipline","SUV Credibility","Global & EV Readiness"],pitch:"India's SUV king, the world's biggest tractor maker. The tractor funds the dreams.",
+    fired:"Ambition outruns the balance sheet one final time; the tractor business stops forgiving.",
+    legend:"The tractor that dreamed of everything built India's rugged-mobility and farm-tech champion."}
+};
+for(const co in STUBS){
+  const s = STUBS[co];
+  DATA[co] = { short:s.name, name:s.name, logo:s.logo, ticker:s.ticker, pitch:s.pitch,
+    bankruptcy:s.fired, legendary:s.legend,
+    kpis:[ {key:"cashflow",label:s.k[0]}, {key:"marketshare",label:s.k[1]}, {key:"stockprice",label:s.k[2]} ],
+    eras:{} };
+}
+/* Real historical era index — names/years from the full game. The History door
+   shows these; in the full game v6 it launches the classic campaign for each. */
+const HISTORY = {
+  tesla:[["Survival Era","2008–2013"],["The Reckoning","2013–2016"],["Scaling Era","2016–2021"],["Empire of Distraction","2021–2026"]],
+  toyota:[["The Reckoning","2009–2013"],["Hybrid Conviction, Hydrogen Bet","2014–2020"],["The EV Reckoning & the Succession","2021–2023"],["Scandal & the Empire's Scale","2023–2026"]],
+  byd:[["The Battery Maker's Gamble","1995–2008"],["Buffett's Bet & the Crash","2008–2014"],["Going All-In On Electric","2015–2022"],["World's Biggest EV Maker — & Its Backlash","2023–2026"]],
+  vw:[["Strategy 2018","2007–2015"],["Dieselgate & the Reckoning","2015–2018"],["The Diess EV Offensive & Its Limits","2018–2022"],["Blume, China & the Cost Crisis","2022–2026"]],
+  bmw:[["The Rover Gamble & Premium Comeback","1994–2001"],["Strategy Number ONE & the i Gamble","2006–2015"],["The Krüger Stall & the China Pivot","2015–2019"],["Tech Openness Vindicated, Then Tested","2019–2026"]],
+  mercedes:[["Recovery & Expansion","2010–2015"],["Disruption Gathers","2015–2019"],["The CASE Pivot","2019–2021"],["Fewer Cars, Mean More","2021–2026"]],
+  gm:[["The Reckoning","2005–2009"],["Government Motors","2009–2014"],["Barra's GM: Crisis & the Cut","2014–2019"],["Betting the Garage on the Future","2016–2024"]],
+  ford:[["Bet the Company","2006–2012"],["The Lost Decade of Slow Pivot","2014–2017"],["Fitness, Then Fight","2017–2020"],["Electric Reckoning","2020–2026"]],
+  stellantis:[["The Turnaround & the Bargain","2004–2009"],["Building Fiat Chrysler","2009–2014"],["Scale or Die: The Merger Crusade","2014–2019"],["Margins, Mutiny & a New CEO","2020–2026"]],
+  honda:[["The Engineer's Company","1948–1991"],["Profitable Outsider, Wounded Giant","1992–2009"],["Crisis After Crisis","2009–2021"],["The EV Reckoning","2021–2026"]],
+  tata:[["Make in India","1998–2008"],["The JLR Gamble & the Financial Crisis","2008–2013"],["Turnaround, Succession & Governance War","2013–2019"],["Electrification, Demerger & the Cyber Crisis","2019–2026"]],
+  mahindra:[["The SUV Specialist Is Born","1991–2010"],["Going Global, Going Electric","2010–2016"],["SUV Boom, Korean Bust, Pandemic Reckoning","2016–2021"],["Born Electric","2021–2026"]]
+};
+</script>
+
+<!-- 2) The file under test — provides DATA.<co>.eras.future via the FutureEras API -->
+<script src="future-eras.js"></script>
+
+<!-- 3) v6 engine: oracle fork, qualitative reactions, consequences mode -->
+<script>
+"use strict";
+const app = document.getElementById("app");
+let S = null;
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const clamp = v => Math.max(0, Math.min(100, v));
+const cap = s => s ? s.charAt(0).toUpperCase()+s.slice(1) : s;
+const shorten = (s,n=9) => { const w=s.replace(/[—–]/g," ").split(/\s+/); return w.slice(0,n).join(" ").replace(/[;,.]$/,"") + (w.length>n?"…":""); };
+
+/* ---- company-specific reaction voices (archetypal roles, never named real people) ---- */
+const GENERIC = {
+  cashflow:["The CFO","Your bankers","The finance desk"],
+  marketshare:["The market","Dealers","Customers"],
+  stockprice:["Wall Street","Analysts","Investors"]
+};
+const VOICES = {
+  tesla:{cashflow:["The CFO","Tesla's treasury team","the short-sellers"],marketshare:["The fan army on X","Tesla owners","the reservation queue"],stockprice:["Retail investors","the bulls on X","the analysts"]},
+  toyota:{cashflow:["The Toyota City finance office","keiretsu bankers"],marketshare:["Veteran line managers","global dealers","the kaizen floor"],stockprice:["Tokyo analysts","long-term shareholders"]},
+  byd:{cashflow:["The Shenzhen finance office","state-bank lenders"],marketshare:["The global dealer network","price-war rivals"],stockprice:["Hong Kong analysts","Beijing's planners"]},
+  vw:{cashflow:["Wolfsburg's controllers","the supervisory board"],marketshare:["The dealer council","Chinese buyers"],stockprice:["Frankfurt analysts","Lower Saxony's stakeholders"]},
+  bmw:{cashflow:["Munich's controllers","the Quandt family office"],marketshare:["The driving press","BMW loyalists","the Garching engineers"],stockprice:["Frankfurt analysts","premium investors"]},
+  mercedes:{cashflow:["Stuttgart's controllers","the supervisory board"],marketshare:["The Sindelfingen line","the marque's loyal clientele"],stockprice:["Frankfurt analysts","luxury-sector investors"]},
+  gm:{cashflow:["The Renaissance Center finance floor","the ratings agencies"],marketshare:["The dealer body","fleet buyers"],stockprice:["Detroit analysts","Washington watchers"]},
+  ford:{cashflow:["Dearborn's treasury","the Ford family"],marketshare:["F-Series loyalists","Ford Pro fleet clients"],stockprice:["Detroit analysts","the bond market"]},
+  stellantis:{cashflow:["The finance committee","lenders on two continents"],marketshare:["The dealer councils","the Jeep and Ram faithful"],stockprice:["Milan and Paris analysts","the merged shareholder base"]},
+  honda:{cashflow:["The Tokyo finance office","Honda's cautious board"],marketshare:["The global motorcycle dealers","the engine faithful"],stockprice:["Tokyo analysts","long-term holders"]},
+  tata:{cashflow:["Bombay House","the lenders"],marketshare:["The Indian dealer network","first-time buyers","JLR's clientele"],stockprice:["Mumbai analysts","Tata Sons"]},
+  mahindra:{cashflow:["The group's finance council","the tractor division's bankers"],marketshare:["Rural buyers","the SUV faithful","farm cooperatives"],stockprice:["Mumbai analysts","the Mahindra family"]}
+};
+
+/* ---- case-study verdict lines (greatest achievement / biggest mistake / the debate) ---- */
+const CASE = {
+  tesla:{win:{cashflow:"keeping Tesla solvent through shocks that bankrupted weaker visionaries",marketshare:"putting more electric cars on the road than anyone thought possible",stockprice:"keeping investors believing in a future no one else could see"},
+    loss:{cashflow:"letting the cash position get dangerously thin chasing the next moonshot",marketshare:"ceding the volume crown while distracted by robots and robotaxis",stockprice:"shredding investor confidence at the worst possible moment"},
+    debate:"whether Tesla was ever really a car company, or an AI company wearing one as a disguise"},
+  toyota:{win:{cashflow:"printing cash from the hybrids the world told you to abandon",marketshare:"building cars when every rival's lines went dark",stockprice:"finally answering the 'Kodak of cars' jibe with vindication"},
+    loss:{cashflow:"spending fortunes hedging bets that never paid off",marketshare:"letting production stumble at the worst moment",stockprice:"staying the dinosaur one fashion cycle too long"},
+    debate:"whether mastering every technology was wisdom, or the most expensive way ever devised to avoid choosing"},
+  byd:{win:{cashflow:"funding an empire while fighting a price war you started",marketshare:"out-building and out-pricing the entire planet",stockprice:"convincing a suspicious world a Chinese champion could be trusted"},
+    loss:{cashflow:"burning the balance sheet to win a war with no end",marketshare:"letting tariffs and suspicion wall you out of the West",stockprice:"becoming too aligned with Beijing for the world to trust"},
+    debate:"whether BYD was a company, or an arm of the state"},
+  vw:{win:{cashflow:"finally fixing a cost base everyone swore was untouchable",marketshare:"rebuilding the people's car for the electric age",stockprice:"making a 90-year cathedral legible to investors again"},
+    loss:{cashflow:"letting a German cost base bleed you white in a Chinese-priced world",marketshare:"losing China, and a third of your scale with it",stockprice:"running another software saga that cost billions and shipped little"},
+    debate:"whether the volume empire could ever have survived without breaking its own union"},
+  bmw:{win:{cashflow:"defending the industry's best margins through every shock",marketshare:"making the joy of driving a luxury people still paid for",stockprice:"proving technology openness was foresight, not fence-sitting"},
+    loss:{cashflow:"sacrificing the sacred margin band chasing the frontier",marketshare:"drifting toward an expensive computer with a roundel",stockprice:"hedging so long that every window for leadership quietly closed"},
+    debate:"whether 'the ultimate driving machine' was a timeless moat or a beautiful anachronism"},
+  mercedes:{win:{cashflow:"holding luxury margins while the volume players bled",marketshare:"making the three-pointed star mean more than ever",stockprice:"turning a 140-year-old marque into the automotive Hermès"},
+    loss:{cashflow:"stranding the company above a market that quietly moved on",marketshare:"walking back the luxury bet the moment it got hard",stockprice:"waiting too long on the software that defined the era"},
+    debate:"whether 'fewer cars, mean more' was visionary discipline or a slow, dignified retreat"},
+  gm:{win:{cashflow:"keeping the company that died once relentlessly solvent",marketshare:"defending the American heartland that pays the bills",stockprice:"making decades of autonomy spend finally pay off"},
+    loss:{cashflow:"steering the company back toward the brink it knew too well",marketshare:"clinging to markets you could no longer win",stockprice:"letting the driverless money pit define the story"},
+    debate:"whether GM ever truly escaped 2009, or just kept surviving"},
+  ford:{win:{cashflow:"never once pawning the blue oval a second time",marketshare:"making Ford Pro the most durable business in the industry",stockprice:"funding a software future without dropping the truck present"},
+    loss:{cashflow:"draining the liquidity that is the company's whole religion",marketshare:"alienating the F-Series faithful who keep you alive",stockprice:"letting the EV losses define the story too long"},
+    debate:"whether Ford was a truck company funding a science project, or a tech company hiding in trucks"},
+  stellantis:{win:{cashflow:"turning savage discipline into the industry's best margins",marketshare:"proving fourteen brands could be strength, not weight",stockprice:"vindicating the merger nobody believed in"},
+    loss:{cashflow:"letting discipline curdle into cuts that gutted the product",marketshare:"watching the dealers and the brands turn on you in public",stockprice:"proving scale was a way to be big, not good"},
+    debate:"whether bigger was ever actually better"},
+  honda:{win:{cashflow:"never once going to a government on your knees",marketshare:"proving an engineer's company could still win",stockprice:"reinventing on the strength of heritage no rival could buy"},
+    loss:{cashflow:"letting pride cost you the discipline that defined the company",marketshare:"staying small and proud one fight too long",stockprice:"surrendering leads Honda invented to braver, richer hands"},
+    debate:"whether independence was a principle worth keeping, or a luxury Honda could no longer afford"},
+  tata:{win:{cashflow:"surviving two bet-the-company gambles and a cyber-fire",marketshare:"owning the home market that everyone came hunting for",stockprice:"forging India's first true global automotive champion"},
+    loss:{cashflow:"stretching the balance sheet until the banks came calling",marketshare:"losing the home EV lead you yourself created",stockprice:"letting the crown jewel drift toward a stranded asset"},
+    debate:"whether the JLR gamble was vision, or luck that happened to pay off twice"},
+  mahindra:{win:{cashflow:"letting the tractor business fund every dream before its patience ran out",marketshare:"keeping the rugged SUV crown through the electric age",stockprice:"leading a farm-robot revolution the car giants ignored"},
+    loss:{cashflow:"letting ambition outrun the balance sheet one more time",marketshare:"diluting the rugged soul that made the brand",stockprice:"missing the agri-tech frontier you were born to lead"},
+    debate:"whether the tractor money funded vision, or just expensive distractions"}
+};
+
+/* ---- combination synergies: two earlier choices unlock a later payoff ---- */
+const COMBOS = {
+  tesla:[{id:"t_sovereign",needs:["t_derisked","t_chip_improv"],title:"The Untouchable Supply Chain",text:"Because you cut China dependency in 2028 AND improvised your own silicon in 2032, Tesla is the only automaker no embargo can reach.",fx:{cashflow:6,marketshare:5}}],
+  toyota:[{id:"y_unkillable",needs:["y_hybrid_surge","y_hydrogen"],title:"Every Fuel, Every Market",text:"The 2028 hybrid surge funded the 2030 hydrogen bet — together they make Toyota unkillable across every powertrain on Earth.",fx:{marketshare:5,stockprice:6}}],
+  byd:[{id:"by_endtoend",needs:["by_fullstack","by_chip_sovereign"],title:"Truly End-to-End",text:"In-house software (2027) plus sovereign chips (2032): BYD becomes the only fully end-to-end automaker alive, immune to any sanction.",fx:{marketshare:5,stockprice:6}}],
+  vw:[{id:"v_legible",needs:["v_outside_sw","v_split"],title:"Legible at Last",text:"Fixing the software (2027) and splitting EV from ICE (2030) finally make the empire readable — investors who'd given up come back.",fx:{cashflow:5,stockprice:6}}],
+  bmw:[{id:"m_vindicated",needs:["m_multipath","m_hydrogen"],title:"Openness Vindicated",text:"Powertrain openness (2028) into a full hydrogen line (2030): the hedge everyone mocked becomes a premium product nobody can match.",fx:{marketshare:6,stockprice:5}}],
+  mercedes:[{id:"d_owns_customer",needs:["d_mbos","d_lux_security"],title:"The Experience Is the Luxury",text:"Owning the OS (2027) plus concierge-grade security (2029) makes the digital experience itself the luxury — the customer is wholly yours.",fx:{marketshare:5,stockprice:6}}],
+  gm:[{id:"g_indispensable",needs:["g_onshore","g_natl_security"],title:"Washington's Partner",text:"Onshored batteries (2028) and the national-security role (2029) make GM the government's indispensable partner — the contracts follow.",fx:{cashflow:6,stockprice:5}}],
+  ford:[{id:"f_smart_king",needs:["f_skunkworks","f_hybrid_trucks"],title:"The Truck That Thinks",text:"The clean-sheet software (2027) running the hybrid F-Series (2030): the truck stays king AND finally thinks like a Tesla.",fx:{marketshare:6,stockprice:5}}],
+  stellantis:[{id:"s_strength",needs:["s_one_platform","s_pruned"],title:"Scale Becomes Strength",text:"One software platform (2027) across a pruned, focused brand set (2030): for once, scale is strength, not weight.",fx:{cashflow:6,stockprice:5}}],
+  honda:[{id:"h_vindicated",needs:["h_solo","h_hydrogen"],title:"The Stubbornness Pays",text:"Going it alone (2027) on the strength of the fuel-cell heritage (2030): independence vindicated by an engine nobody else kept ready.",fx:{cashflow:5,stockprice:6}}],
+  tata:[{id:"ta_trusted",needs:["ta_localize_cells","ta_security_lead"],title:"Self-Reliant and Trusted",text:"Localized batteries (2028) and security leadership (2029) make Tata the self-sufficient, trusted choice the West can actually buy.",fx:{marketshare:6,stockprice:5}}],
+  mahindra:[{id:"ma_grabbed",needs:["ma_dependable","ma_seize"],title:"The Generation You Grabbed",text:"Rugged dependability (2029) and seizing the chip famine (2032): while rivals stalled, Mahindra grabbed a whole generation of buyers.",fx:{marketshare:6,stockprice:5}}]
+};
+
+/* ---------- qualitative helpers ---------- */
+const STANDING = [
+  [72,"Commanding","var(--good)"],[58,"Healthy","var(--good)"],[44,"Holding","var(--warn)"],
+  [30,"Strained","var(--warn)"],[15,"Precarious","var(--bad)"],[0,"Critical","var(--bad)"]
+];
+function standing(v){ for(const [t,w,c] of STANDING){ if(v>=t) return [w,c]; } return ["Critical","var(--bad)"]; }
+
+function reactLine(key, d){
+  const a=Math.abs(d), up=d>0;
+  let bank;
+  if(a>=12) bank = up?["erupt in applause","are jubilant","cheer the move openly"]:["sound the alarm","are in open revolt","recoil in disbelief"];
+  else if(a>=7) bank = up?["applaud the move","warm to it quickly","approve loudly"]:["frown hard","grow visibly anxious","push back hard"];
+  else if(a>=3) bank = up?["nod approvingly","are quietly pleased"]:["look uneasy","hesitate","murmur doubts"];
+  else bank = up?["barely notice, mildly pleased"]:["are faintly unsettled"];
+  const voices = (VOICES[S.co] && VOICES[S.co][key]) || GENERIC[key];
+  return { cls: up?"r-up":"r-dn", text:`${pick(voices)} ${pick(bank)}.` };
+}
+function genReactions(fx){
+  const keys = Object.keys(fx).filter(k=>fx[k]);
+  keys.sort((x,y)=>Math.abs(fx[y])-Math.abs(fx[x]));
+  return keys.slice(0,3).map(k=>reactLine(k,fx[k]));
+}
+
+/* ============================ SCREENS ============================ */
+function titleScreen(){
+  S=null;
+  const loaded = (typeof window.FutureEras !== "undefined");
+  const cos = Object.keys(DATA);
+  app.innerHTML = `
+    <div class="tag">Be an Automotive Industry CEO · v6 prototype</div>
+    <h1>Choose your company</h1>
+    <div class="sub">Then the Oracle will offer you two paths: relive the history, or shape the future.</div>
+    <div class="banner">
+      <b>What's new in this build:</b> after you pick a company, an <span style="color:var(--violet)">Oracle</span> asks
+      whether you want the <b style="color:var(--gold)">History</b> (the real, authored campaigns) or the
+      <b style="color:var(--violet)">Future</b> (2027–2038). The Future path runs in <b>fog</b>: no stat numbers while
+      you play — only how the world <i>reacts</i> — and your decisions return as <b>consequences</b> years later. The
+      full ledger is revealed only at the end.
+      ${loaded?"":"<br><br><b style='color:var(--bad)'>⚠ future-eras.js did not load.</b> Open this file from the same folder as future-eras.js."}
+    </div>
+    <div class="grid">
+      ${cos.map(co=>`<button class="co" onclick="oracle('${co}')">
+        <div class="logo">${DATA[co].logo}</div>
+        <div class="nm">${DATA[co].name}</div>
+        <div class="tk">${DATA[co].ticker}</div>
+        <div class="pl">${DATA[co].pitch}</div>
+      </button>`).join("")}
+    </div>`;
+}
+
+function oracle(co){
+  const c = DATA[co];
+  const hasFuture = !!(c.eras && c.eras.future);
+  app.innerHTML = `
+    <div class="oracle">
+      <div class="eye">🔮</div>
+      <div class="tag">${c.logo} ${c.name} · the Oracle of ${c.ticker}</div>
+      <h2>Two paths lie before you</h2>
+      <div class="says">"I have seen where ${c.name} has been, and I can show you where it may go. The past is written and known. The future is fog. Which will you walk, Chief Executive?"</div>
+      <div class="doors">
+        <div class="door hist" onclick="historyPanel('${co}')">
+          <div class="dt">↩ The History</div>
+          <div class="dd">Relive ${c.name}'s real story — every crisis, acquisition, and reckoning the board actually faced. The outcomes are known; can you match them, or do better?</div>
+        </div>
+        <div class="door fut" onclick="${hasFuture?`startFuture('${co}')`:"alert('No future era loaded for this company.')"}">
+          <div class="dt">↪ The Future</div>
+          <div class="dd">2027–2038. Eight shocks no one has lived yet. You won't see the numbers — only how the world reacts, and the consequences that find you years later.</div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center"><button class="btn ghost" onclick="titleScreen()">← Choose a different company</button></div>`;
+}
+
+function historyPanel(co){
+  const c = DATA[co], eras = HISTORY[co]||[];
+  app.innerHTML = `
+    <div class="tag">${c.logo} ${c.name.toUpperCase()} · the classic campaign</div>
+    <h1>The History</h1>
+    <div class="sub">The authored, researched campaigns — the real decisions, with what actually happened revealed after each one.</div>
+    <div class="banner">In the full game (v6), selecting an era here launches the classic, transparent campaign — visible stats and a
+      <b>"Real:"</b> verdict after every choice. This prototype focuses on the new <span style="color:var(--violet)">Future</span> experience,
+      so the eras below are shown as the index they route to.</div>
+    <div class="eralist">
+      ${eras.map(([n,y])=>`<div class="erarow"><span>${n}</span><span class="yy">${y}</span></div>`).join("")}
+    </div>
+    <div class="foot">
+      <button class="btn v" onclick="startFuture('${co}')">↪ Actually — show me the Future instead</button>
+      <button class="btn ghost" onclick="oracle('${co}')">← Back to the Oracle</button>
+    </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ============================ FUTURE ENGINE (fog + consequences) ============================ */
+function startFuture(co){
+  const e = DATA[co].eras.future;
+  S = { co, idx:0, kpi:{...e.start}, start:{...e.start}, flags:{}, log:[], histMatch:0, histTotal:0,
+        pending:[], combosFired:{}, omenShown:false };
+  introScreen();
+}
+
+function introScreen(){
+  const c = DATA[S.co], e = c.eras.future;
+  app.innerHTML = `
+    <div class="tag">${c.logo} ${c.name} · ${e.years} · THE FUTURE</div>
+    <h1>${e.name}</h1>
+    <div class="card">
+      <div class="tx" style="font-size:1rem">${e.intro}</div>
+      <div class="cons">From here, you steer in <b>fog</b>. You will feel the world's reaction to each call, but not the numbers behind it — and some decisions will only reveal their meaning years later.</div>
+      <div style="margin:10px 0 16px">
+        <button class="btn v" onclick="renderScenario()">Take the helm →</button>
+        <button class="btn ghost" onclick="oracle('${S.co}')">← Back to the Oracle</button>
+      </div>
+    </div>`;
+}
+
+function hud(){
+  const c = DATA[S.co];
+  const cells = c.kpis.map(k=>{
+    const [w,col] = standing(S.kpi[k.key]);
+    return `<div class="kpi"><span class="dot" style="background:${col}"></span>
+      <span><span class="lab">${k.label}</span><br><span class="st" style="color:${col}">${w}</span></span></div>`;
+  }).join("");
+  return `<div class="hud">
+    <div class="hud-top"><div class="hud-co">${c.logo} ${c.name} <small>· steering in fog</small></div>
+      <div style="font-size:.74rem;color:var(--dim)">Year ${currentYear()} · decision ${S.histTotal+1} of 8</div></div>
+    <div class="kpis">${cells}</div>
+  </div>`;
+}
+function currentYear(){ const e=DATA[S.co].eras.future; const sc=e.scenarios[Math.min(S.idx,e.scenarios.length-1)]; return sc?sc.year:""; }
+
+function dueEchoes(){
+  const due = S.pending.filter(p=>p.due<=S.histTotal);
+  S.pending = S.pending.filter(p=>p.due>S.histTotal);
+  if(!due.length) return "";
+  return due.map(p=>`<div class="echo"><div class="h">🔮 The Oracle returns</div><i>"${p.text}"</i></div>`).join("");
+}
+function dueCombos(){
+  const list = COMBOS[S.co]||[]; let html="";
+  for(const cb of list){
+    if(S.combosFired[cb.id]) continue;
+    if(cb.needs.every(f=>S.flags[f])){
+      S.combosFired[cb.id]=true;
+      for(const k in cb.fx){ S.kpi[k]=clamp((S.kpi[k]||0)+cb.fx[k]); }
+      S.log.push({title:"⚡ "+cb.title, year:"SYNERGY", choice:cb.text, hist:false, fx:cb.fx});
+      html += `<div class="synergy"><div class="h">⚡ Synergy unlocked</div><b>${cb.title}.</b> ${cb.text}</div>`;
+    }
+  }
+  return html;
+}
+function omen(){
+  const e=DATA[S.co].eras.future, sc=e.scenarios[S.idx];
+  if(sc && sc.id==="b5_taiwan" && !S.omenShown){ S.omenShown=true;
+    return `<div class="echo"><div class="h">🔮 The Oracle</div><i>"Chief Executive — the world is about to test you as it never has. What you have already built will matter more than what you decide today."</i></div>`;
+  }
+  return "";
+}
+
+function renderScenario(){
+  const e = DATA[S.co].eras.future;
+  if(S.idx >= e.scenarios.length){ return ending(); }
+  const sc = e.scenarios[S.idx];
+  let text = sc.text;
+  if(sc.alt){ for(const a of sc.alt){ if(S.flags[a.if]){ text=a.text; break; } } }
+  app.innerHTML = hud() + omen() + dueCombos() + dueEchoes() + `
+    <div class="card">
+      <div class="yr">${sc.year} · ${e.name}</div>
+      <div class="ti">${sc.title}</div>
+      <div class="tx">${text}</div>
+      ${sc.voice?`<div class="voice">${sc.voice}</div>`:""}
+      <div class="choices">
+        ${sc.choices.map((ch,n)=>`<button class="choice" onclick="choose(${n})">${ch.label}</button>`).join("")}
+      </div>
+    </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function choose(n){
+  const e = DATA[S.co].eras.future, sc = e.scenarios[S.idx], ch = sc.choices[n];
+  const fx = {...(ch.fx||{})};
+  let consHtml = "";
+  // authored echoes firing NOW (payoff of an earlier flagged choice)
+  if(ch.fxIf){ for(const cif of ch.fxIf){ if(S.flags[cif.if]){
+    for(const k in cif.fx){ fx[k]=(fx[k]||0)+cif.fx[k]; }
+    if(cif.note) consHtml += `<div class="cons"><b>Consequence —</b> ${cif.note}</div>`;
+  }}}
+  // apply (hidden), set flags, score
+  for(const k in fx){ S.kpi[k]=clamp((S.kpi[k]||0)+fx[k]); }
+  if(ch.set){ ch.set.forEach(f=>S.flags[f]=true); }
+  S.histTotal++; if(ch.hist) S.histMatch++;
+  S.log.push({title:sc.title, year:sc.year, choice:ch.label, hist:!!ch.hist, fx});
+
+  // schedule a delayed reflective echo of this decision (2 beats later)
+  scheduleEcho(sc, fx);
+
+  const reacts = genReactions(fx);
+  const dead = DATA[S.co].kpis.find(k=>S.kpi[k.key] <= 0);
+
+  app.innerHTML = hud() + `
+    <div class="card">
+      <div class="yr">${sc.year} · ${sc.title}</div>
+      <div class="res">
+        <div class="react">${reacts.map(r=>`<p class="${r.cls}">${r.text}</p>`).join("")||"<p>The world barely stirs.</p>"}</div>
+        <div class="body">${ch.result}</div>
+        ${consHtml}
+      </div>
+      ${dead
+        ? `<button class="btn v" onclick="ending()">See how it ended →</button>`
+        : `<button class="btn v" onclick="advance()">Continue →</button>`}
+    </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function scheduleEcho(sc, fx){
+  const keys = Object.keys(fx); if(!keys.length) return;
+  const dom = keys.reduce((a,b)=>Math.abs(fx[b])>Math.abs(fx[a])?b:a);
+  if(!fx[dom]) return;
+  const good = fx[dom] > 0;
+  const lines = good
+    ? [`Five years on, the seed you planted in ${sc.year} bears fruit. The patient are rewarded.`,
+       `History is beginning to vindicate your ${sc.year} move, Chief Executive. The doubters have gone quiet.`,
+       `What you chose in ${sc.year} has taken root. You harvest it now.`]
+    : [`The ${sc.year} debt comes due, Chief Executive. The bill, deferred, has arrived. Nothing is forgotten.`,
+       `That ${sc.year} choice casts its shadow forward, as I warned it might.`,
+       `Whispers grow that the ${sc.year} move was the wrong one. They may be right.`];
+  S.pending.push({ due:S.histTotal+2, text:pick(lines) });
+}
+
+function advance(){ S.idx++; renderScenario(); }
+
+function ending(){
+  const c = DATA[S.co], e = c.eras.future, cs = CASE[S.co];
+  const delta = {}; c.kpis.forEach(k=>delta[k.key]=S.kpi[k.key]-S.start[k.key]);
+  const vals = c.kpis.map(k=>S.kpi[k.key]);
+  const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
+  const align = S.histTotal ? Math.round(S.histMatch/S.histTotal*100) : 0;
+  console.log("[analytics] avg", Math.round(avg), "consensus", align+"%");   // hidden from player
+  const deadK = c.kpis.find(k=>S.kpi[k.key] <= 0);
+
+  // best / worst KPI by change over the tenure
+  const order = [...c.kpis].sort((a,b)=>delta[b.key]-delta[a.key]);
+  const achievement = cs.win[order[0].key];
+  const mistake = cs.loss[order[order.length-1].key];
+
+  // most pivotal real decision (largest total swing), for the debate line
+  let pivotal=null, max=-1;
+  for(const l of S.log){ if(l.year==="SYNERGY") continue;
+    const m = c.kpis.reduce((s,k)=>s+Math.abs(l.fx[k.key]||0),0);
+    if(m>max){ max=m; pivotal=l; } }
+  const debate = cs.debate + (pivotal?` — and above all, your ${pivotal.year} decision to ${shorten(pivotal.choice)}`:"");
+
+  let icon, stamp, legacy;
+  if(deadK){ icon="🪦"; stamp="A Case Study in Failure"; legacy=`Your ${deadK.label} collapsed to nothing. ${c.bankruptcy}`; }
+  else if(avg>=74){ icon="🏆"; stamp="A Landmark Tenure"; legacy=c.legendary; }
+  else if(avg>=58){ icon="🎖"; stamp="A Successful Tenure"; legacy=`You left ${c.name} stronger than you found it — a record any board would re-sign.`; }
+  else if(avg>=42){ icon="⚖"; stamp="A Contested Tenure"; legacy=`You left ${c.name} standing, and changed. History will argue about whether you were bold enough, or too bold.`; }
+  else{ icon="📉"; stamp="A Troubled Tenure"; legacy=`You left ${c.name} diminished but alive — a cautionary chapter rather than a triumph.`; }
+
+  const approach = align>=75 ? "You governed by consensus, trusting the expected path almost every time."
+    : align<=30 ? "You governed as a contrarian — defying the expected path again and again, and, remarkably, surviving it."
+    : "You governed by instinct, mixing the expected move with the audacious one.";
+
+  const ledger = S.log.map(l=>{
+    const fxs = c.kpis.map(k=>{
+      const d=l.fx[k.key]; if(!d) return `<span class="neu">${k.label} —</span>`;
+      return `<span class="${d>0?'pos':'neg'}">${k.label} ${d>0?'+':''}${d}</span>`;
+    }).join("");
+    const tagc = l.year==="SYNERGY" ? "var(--ice)" : (l.hist?"var(--gold)":"var(--ice)");
+    const tagt = l.year==="SYNERGY" ? "synergy" : (l.hist?"consensus":"your road");
+    return `<div class="row"><div class="t"><b>${l.year} — ${l.title}</b> <span style="color:${tagc};font-size:.76rem">· ${tagt}</span></div>
+      <div class="c">${l.choice}</div><div class="fx">${fxs}</div></div>`;
+  }).join("");
+
+  app.innerHTML = `
+    <div class="end">
+      <div class="icon">${icon}</div>
+      <div class="stamp">Harvard Business School · Case Study</div>
+      <h2>${c.name}</h2>
+      <div class="tag">${c.logo} ${e.name} · 2027–2038 · ${stamp}</div>
+      <div class="case">
+        <div class="sec"><div class="lbl">Your greatest achievement</div><div class="val">${cap(achievement)}.</div></div>
+        <div class="sec"><div class="lbl">Your biggest mistake</div><div class="val">${cap(mistake)}.</div></div>
+        <div class="sec"><div class="lbl">Historians still debate</div><div class="val">${cap(debate)}.</div></div>
+        <div class="sec"><div class="lbl">Your style in the chair</div><div class="val">${approach}</div></div>
+        <div class="sec"><div class="lbl">Legacy</div><div class="val">${legacy}</div></div>
+      </div>
+      <div class="oracle" style="margin-top:20px;padding:20px 18px">
+        <div class="eye">🔮</div>
+        <div class="says">"History has reached its verdict, Chief Executive. I merely read it aloud."</div>
+      </div>
+      <div class="ledger">
+        <div class="lh">⏳ The fog lifts — every decision, and what it truly cost or won</div>
+        ${ledger}
+      </div>
+      <div class="foot">
+        <button class="btn v" onclick="startFuture('${S.co}')">↻ Replay the Future</button>
+        <button class="btn ghost" onclick="oracle('${S.co}')">← The Oracle</button>
+        <button class="btn ghost" onclick="titleScreen()">⌂ New company</button>
+      </div>
+    </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+titleScreen();
+</script>
+</body>
+</html>

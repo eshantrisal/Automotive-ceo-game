@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be an Automotive Industry CEO — The Archive (v8)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#0b1320; --ground:#0d1626; --panel:#131f33; --panel-2:#18263d;
+    --ink:#eaf1fb; --ink-2:#c5d2e6; --dim:#8597b2;
+    --line:rgba(234,241,251,.13); --line-2:rgba(234,241,251,.07);
+    --ox:#c0473a; --ox-2:#d4604f; --brass:#c8a85a;
+    --pos:#74b07c; --neg:#d4604f; --warn:#d9a441;
+    --disp:'Archivo', system-ui, sans-serif;
+    --body:'Inter', system-ui, sans-serif;
+    --serif:'Spectral', Georgia, serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:var(--body);color:var(--ink);min-height:100vh;overflow-x:hidden;
+    background:var(--ground);
+    background-image:
+      radial-gradient(820px 480px at 80% -12%, rgba(200,168,90,.07), transparent 60%),
+      radial-gradient(620px 420px at 6% 108%, rgba(192,71,58,.06), transparent 64%),
+      linear-gradient(180deg,#101c30 0%, var(--ground) 58%, #0a1322 100%);
+  }
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+    background-image:linear-gradient(rgba(234,241,251,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(234,241,251,.028) 1px,transparent 1px);
+    background-size:52px 52px;mask-image:linear-gradient(to bottom,black,transparent 78%)}
+  .wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:22px 22px 80px}
+  ::selection{background:rgba(200,168,90,.28)}
+
+  /* Masthead */
+  .masthead{display:flex;justify-content:space-between;align-items:center;gap:14px;
+    border-bottom:1px solid var(--line);padding-bottom:13px;margin-bottom:22px}
+  .mh-left{display:flex;align-items:center;gap:13px;min-width:0}
+  .emblem{width:30px;height:30px;border:1px solid var(--line);display:grid;place-items:center;flex:none;
+    font-family:var(--disp);font-weight:800;font-size:12px;letter-spacing:.02em;color:var(--brass);background:rgba(0,0,0,.2)}
+  .mh-org{font-family:var(--disp);font-weight:700;font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);line-height:1.2}
+  .mh-org small{display:block;font-weight:500;font-size:10px;letter-spacing:.16em;color:var(--dim);margin-top:3px}
+  .mh-right{font-family:var(--disp);font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ox-2);
+    border:1px solid rgba(192,71,58,.45);padding:5px 11px;white-space:nowrap;flex:none}
+
+  .kicker{font-family:var(--disp);font-weight:600;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass)}
+  .kicker.red{color:var(--ox-2)}
+  .lede{font-family:var(--serif);font-size:16px;line-height:1.6;color:var(--ink-2);max-width:64ch;margin-top:12px}
+  h1.disp{font-family:var(--disp);font-weight:800;font-size:clamp(1.7rem,4.4vw,2.5rem);line-height:1.04;letter-spacing:-.01em;margin:10px 0 4px;color:var(--ink)}
+
+  .screen{animation:rise .4s cubic-bezier(.2,.7,.3,1) both}
+  @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  /* Company dossier grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:14px;margin-top:24px}
+  .co{position:relative;text-align:left;background:var(--panel);border:1px solid var(--line);
+    padding:17px 17px 15px;cursor:pointer;transition:border-color .18s,transform .18s,background .18s;overflow:hidden}
+  .co::after{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:var(--brass);opacity:.0;transition:opacity .18s}
+  .co:hover{border-color:var(--brass);background:var(--panel-2);transform:translateY(-3px)}
+  .co:hover::after{opacity:1}
+  .co-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .mono{width:38px;height:38px;border:1px solid var(--line);display:grid;place-items:center;flex:none;
+    font-family:var(--disp);font-weight:800;font-size:14px;letter-spacing:.02em;color:var(--brass);background:rgba(0,0,0,.18)}
+  .co-tk{font-family:var(--disp);font-weight:600;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+    border:1px solid var(--line-2);padding:3px 7px}
+  .co-nm{font-family:var(--disp);font-weight:700;font-size:18px;letter-spacing:.005em;margin-top:14px;color:var(--ink)}
+  .co-pitch{font-size:12.5px;line-height:1.5;color:var(--dim);margin-top:7px}
+  .co-open{font-family:var(--disp);font-weight:600;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);
+    margin-top:13px;display:flex;align-items:center;gap:8px}
+  .co-open::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  /* Oracle / doors */
+  .doors{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+  @media(max-width:680px){.doors{grid-template-columns:1fr}}
+  .door{text-align:left;background:var(--panel);border:1px solid var(--line);padding:22px 20px;cursor:pointer;
+    transition:border-color .18s,transform .18s,background .18s;position:relative}
+  .door:hover{transform:translateY(-3px);background:var(--panel-2)}
+  .door.past:hover{border-color:var(--brass)}
+  .door.future:hover{border-color:var(--ox)}
+  .door .dt{font-family:var(--disp);font-weight:800;font-size:1.2rem;margin-bottom:8px;color:var(--ink)}
+  .door.past .dt{color:var(--brass)} .door.future .dt{color:var(--ox-2)}
+  .door .dd{font-family:var(--serif);font-size:14px;line-height:1.55;color:var(--ink-2)}
+  .door .disabled{color:var(--dim);font-style:italic;font-size:13px}
+
+  /* Era list */
+  .eras{display:grid;gap:12px;margin-top:22px}
+  .era{text-align:left;background:var(--panel);border:1px solid var(--line);padding:16px 18px;cursor:pointer;
+    display:grid;grid-template-columns:1fr auto;gap:6px 16px;align-items:baseline;transition:border-color .18s,background .18s,transform .18s}
+  .era:hover{border-color:var(--brass);background:var(--panel-2);transform:translateX(3px)}
+  .era .en{font-family:var(--disp);font-weight:700;font-size:17px;color:var(--ink)}
+  .era .ey{font-family:var(--disp);font-weight:600;font-size:12px;letter-spacing:.08em;color:var(--brass);font-variant-numeric:tabular-nums}
+  .era .eintro{grid-column:1/-1;font-family:var(--serif);font-size:13.5px;line-height:1.55;color:var(--dim);margin-top:2px}
+
+  /* Stat ledger */
+  .ledger{display:flex;border:1px solid var(--line);background:rgba(0,0,0,.16);margin-bottom:18px;flex-wrap:wrap}
+  .stat{flex:1;min-width:150px;padding:12px 15px;border-left:1px solid var(--line-2);position:relative}
+  .stat:first-child{border-left:none}
+  .stat .k{font-family:var(--disp);font-weight:600;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:21px;letter-spacing:.01em;font-variant-numeric:tabular-nums;color:var(--ink);line-height:1.15;margin-top:3px;transition:color .5s}
+  .stat .band{font-family:var(--body);font-weight:600;font-size:10px;letter-spacing:.05em;margin-left:7px}
+  .stat .track{height:4px;background:rgba(234,241,251,.1);margin-top:8px;overflow:hidden}
+  .stat .track i{display:block;height:100%;transition:width .6s cubic-bezier(.3,.7,.3,1)}
+  .floatd{position:absolute;font-family:var(--disp);font-weight:700;font-size:13px;font-variant-numeric:tabular-nums;
+    pointer-events:none;animation:rise2 1.25s ease-out forwards;z-index:30}
+  @keyframes rise2{0%{opacity:0;transform:translateY(5px)}18%{opacity:1}100%{opacity:0;transform:translateY(-26px)}}
+
+  /* Brief + choices */
+  .brief .year{font-family:var(--disp);font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);font-variant-numeric:tabular-nums}
+  .brief h2{font-family:var(--disp);font-weight:800;font-size:clamp(1.3rem,3.2vw,1.7rem);line-height:1.1;margin:8px 0 12px;color:var(--ink)}
+  .sit{font-family:var(--serif);font-size:16px;line-height:1.62;color:var(--ink-2);max-width:66ch}
+  .voice{font-family:var(--serif);font-style:italic;font-size:14.5px;line-height:1.55;color:var(--ink-2);
+    border-left:2px solid var(--brass);padding:5px 0 5px 15px;margin-top:16px;max-width:64ch}
+  .ask{font-family:var(--disp);font-weight:600;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);
+    margin:22px 0 12px;display:flex;align-items:center;gap:12px}
+  .ask::after{content:"";flex:1;height:1px;background:var(--line)}
+  .choices{display:flex;flex-direction:column;gap:10px}
+  .choice{display:grid;grid-template-columns:34px 1fr;align-items:center;gap:14px;width:100%;text-align:left;
+    background:var(--panel);border:1px solid var(--line);color:var(--ink);cursor:pointer;padding:14px 15px;
+    transition:border-color .16s,background .16s,transform .16s}
+  .choice:hover{border-color:var(--brass);background:var(--panel-2);transform:translateX(3px)}
+  .choice.sel{border-color:var(--ox);background:var(--panel-2);box-shadow:inset 3px 0 0 var(--ox)}
+  .choice:disabled{cursor:default}
+  .choice .mark{width:32px;height:32px;border:1px solid var(--line);display:grid;place-items:center;flex:none;
+    font-family:var(--disp);font-weight:700;font-size:14px;color:var(--brass)}
+  .choice.sel .mark{background:var(--ox);border-color:var(--ox);color:var(--ink)}
+  .clabel{font-family:var(--body);font-weight:500;font-size:14.5px;line-height:1.4}
+  .cdeltas{display:flex;flex-direction:column;gap:3px;align-items:flex-end}
+  .tag{font-family:var(--disp);font-weight:600;font-size:11px;letter-spacing:.02em;font-variant-numeric:tabular-nums;
+    display:inline-flex;gap:6px;align-items:baseline;white-space:nowrap}
+  .tag .tk{font-family:var(--body);font-weight:500;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+  .tag.up{color:var(--pos)} .tag.down{color:var(--neg)}
+
+  .commitbar{display:flex;align-items:center;gap:14px;margin-top:20px;flex-wrap:wrap}
+  .commit{font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink);background:var(--ox);border:none;padding:14px 26px;cursor:pointer;transition:.16s}
+  .commit:hover:not(:disabled){background:var(--ox-2)}
+  .commit:disabled{background:transparent;border:1px solid var(--line);color:var(--dim);cursor:not-allowed}
+  .note{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--dim)}
+
+  /* Result */
+  .result{margin-top:22px;border:1px solid var(--line);border-left:3px solid var(--brass);background:rgba(0,0,0,.18);padding:20px 22px}
+  .rtag{font-family:var(--disp);font-weight:600;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass)}
+  .react{margin:8px 0 4px}
+  .react p{font-size:13px;color:var(--ink-2);margin:3px 0}
+  .react .up::before{content:"▲ ";color:var(--pos)}
+  .react .dn::before{content:"▼ ";color:var(--neg)}
+  .verdict{font-family:var(--serif);font-size:15px;line-height:1.6;color:var(--ink-2);max-width:66ch;margin-top:8px}
+  .cons{font-family:var(--serif);font-size:14px;line-height:1.55;color:#e7d4a8;border-left:2px solid var(--brass);
+    background:rgba(200,168,90,.07);padding:9px 13px;margin-top:13px}
+  .hist{font-family:var(--serif);font-size:14px;line-height:1.6;color:var(--ink-2);max-width:66ch;margin-top:14px;
+    border:1px solid var(--line);background:rgba(0,0,0,.2);padding:14px 16px;display:none}
+  .hist.show{display:block}
+  .hist b{color:var(--ink);font-weight:600;font-family:var(--disp)}
+  .ractions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+
+  /* Buttons */
+  .btn{font-family:var(--disp);font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+    padding:11px 17px;border:1px solid var(--line);background:transparent;color:var(--ink-2);transition:.16s}
+  .btn:hover{border-color:var(--brass);color:var(--brass)}
+  .btn.solid{background:var(--ox);border-color:var(--ox);color:var(--ink)}
+  .btn.solid:hover{background:var(--ox-2);border-color:var(--ox-2);color:var(--ink)}
+  .btn.brass{background:var(--brass);border-color:var(--brass);color:#1a1408}
+  .btn.brass:hover{filter:brightness(1.08);color:#1a1408}
+  .foot{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+
+  /* Ticker */
+  .ticker{border:1px solid var(--line);border-top:none;background:rgba(0,0,0,.2);overflow:hidden;white-space:nowrap;margin-bottom:18px}
+  .ticker .inner{display:inline-block;padding:7px 0;font-family:var(--disp);font-weight:500;font-size:11px;letter-spacing:.04em;color:var(--dim);animation:tick 150s linear infinite;padding-left:100%}
+  .ticker:hover .inner{animation-play-state:paused}
+  @keyframes tick{to{transform:translateX(-100%)}}
+  .ticker b{color:var(--brass);margin:0 6px 0 22px;font-weight:700}
+
+  /* Annual report / ending */
+  .report{border:1px solid var(--line);background:rgba(0,0,0,.16);padding:26px 24px;margin-top:20px}
+  .report .stamp{font-family:var(--disp);font-weight:700;font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--dim);border:1px solid var(--line);display:inline-block;padding:6px 13px;margin-bottom:14px}
+  .report h2{font-family:var(--disp);font-weight:800;font-size:1.7rem;color:var(--ink);margin-bottom:4px}
+  .rsec{border-top:1px solid var(--line);padding:14px 0}
+  .rsec:first-of-type{border-top:none}
+  .rlbl{font-family:var(--disp);font-weight:600;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:5px}
+  .rval{font-family:var(--serif);font-size:15.5px;line-height:1.6;color:var(--ink-2)}
+  .finals{display:flex;gap:14px;flex-wrap:wrap;margin-top:4px}
+  .final{flex:1;min-width:120px;border:1px solid var(--line);padding:11px 13px;background:rgba(0,0,0,.18)}
+  .final .fk{font-family:var(--disp);font-weight:600;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+  .final .fv{font-family:var(--disp);font-weight:700;font-size:20px;font-variant-numeric:tabular-nums;margin-top:3px}
+  .delta{font-size:11px;font-weight:600;margin-left:5px}
+
+  /* Decision ledger */
+  .dledger{margin-top:8px}
+  .drow{border-bottom:1px solid var(--line);padding:10px 0}
+  .drow .dt2{font-family:var(--disp);font-weight:700;font-size:13.5px;color:var(--ink)}
+  .drow .dyr{color:var(--brass);font-weight:600;font-size:11px;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+  .drow .dch{font-family:var(--serif);font-size:13px;color:var(--ink-2);margin-top:2px}
+  .drow .dfx{font-size:11px;margin-top:3px;font-variant-numeric:tabular-nums}
+  .drow .dfx span{margin-right:12px}
+  .pos{color:var(--pos)} .neg{color:var(--neg)} .neu{color:var(--dim)}
+  .tagline{font-size:10px;font-family:var(--disp);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-left:8px}
+
+  .warnbox{font-family:var(--serif);font-size:14px;line-height:1.55;color:#f0cfc9;border-left:3px solid var(--ox);
+    background:rgba(192,71,58,.1);padding:11px 14px;margin-top:14px}
+  .goodbox{font-family:var(--serif);font-size:14px;line-height:1.55;color:#cfe6cf;border-left:3px solid var(--pos);
+    background:rgba(116,176,124,.09);padding:11px 14px;margin-top:13px}
+
+  /* Survival meter (Future mode) */
+  .surv{border:1px solid var(--line);border-bottom:none;background:rgba(0,0,0,.24);padding:14px 16px}
+  .surv-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;gap:10px}
+  .surv-l{font-family:var(--disp);font-weight:600;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+  .surv-pct{font-family:var(--disp);font-weight:800;font-size:19px;font-variant-numeric:tabular-nums}
+  .surv-bar{height:13px;background:#0a1018;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(234,241,251,.08)}
+  .surv-bar i{display:block;height:100%;transition:width .6s cubic-bezier(.3,.7,.3,1)}
+  .surv-sub{display:flex;justify-content:space-between;font-family:var(--disp);font-size:9px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--dim);margin-top:6px}
+  .surv + .ledger{border-top:1px solid var(--line)}
+
+  /* Oracle echo */
+  .echo{border:1px dashed var(--brass);background:rgba(200,168,90,.06);padding:13px 15px;margin-bottom:16px}
+  .echo .eh{font-family:var(--disp);font-weight:600;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--brass);margin-bottom:5px}
+  .echo i{font-family:var(--serif);font-style:italic;font-size:14.5px;line-height:1.55;color:var(--ink-2)}
+  @media(max-width:680px){
+    .stat{min-width:33%}
+    .choice{grid-template-columns:30px 1fr;gap:10px}
+    .cdeltas{grid-column:1/-1;flex-direction:row;flex-wrap:wrap;gap:4px 12px;padding-left:40px}
+    .era{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="wrap"><div id="app"></div></div>
+
+<!-- DATA LAYER -->
+<script>"use strict"; var DATA = {}, EVENTS = {}, TICKER = {};</script>
+<script src="data-fragments/tesla.js"></script>
+<script src="data-fragments/mercedes.js"></script>
+<script src="data-fragments/toyota.js"></script>
+<script src="data-fragments/byd.js"></script>
+<script src="data-fragments/vw.js"></script>
+<script src="data-fragments/bmw.js"></script>
+<script src="data-fragments/gm.js"></script>
+<script src="data-fragments/ford.js"></script>
+<script src="data-fragments/stellantis.js"></script>
+<script src="data-fragments/honda.js"></script>
+<script src="data-fragments/tata.js"></script>
+<script src="data-fragments/mahindra.js"></script>
+<!-- FUTURE LAYER (auto-attaches DATA.<co>.eras.future) -->
+<script src="future-eras.js"></script>
+
+<!-- ENGINE -->
+<script>
+"use strict";
+const app = document.getElementById('app');
+let S = null;
+
+/* ---- typographic identity (no emoji, per the archive brief) ---- */
+const MONO = { tesla:"TS", mercedes:"MB", toyota:"TY", byd:"BYD", vw:"VW", bmw:"BMW",
+  gm:"GM", ford:"F", stellantis:"ST", honda:"H", tata:"TA", mahindra:"MM" };
+const ORDER = ["tesla","mercedes","toyota","byd","vw","bmw","gm","ford","stellantis","honda","tata","mahindra"];
+/* future-era KPI relabels (keys are always cashflow/marketshare/stockprice in the future deck) */
+const FUTURE_LABELS = {
+  tesla:["Cashflow","Market Share","Stock Price"], toyota:["Brand Trust","Production Resilience","Future Readiness"],
+  byd:["Capital","Vertical Integration","Global Standing"], vw:["Global Scale","Trust & Compliance","Labor Peace"],
+  bmw:["EBIT Margin","Driving Pleasure","Tech Openness"], mercedes:["Cashflow","Market Share","Stock Price"],
+  gm:["Solvency","Washington & Labor","Future Readiness"], ford:["Liquidity","Truck & Pro Engine","EV & Software"],
+  stellantis:["Margin Discipline","Brand & Dealer Trust","Industrial Scale"], honda:["Capital Discipline","Engineering Standing","Global Trust"],
+  tata:["Balance Sheet","Domestic Credibility","Global Competitiveness"], mahindra:["Capital Discipline","SUV Credibility","Global & EV Readiness"]
+};
+const ORG = {
+  tesla:"Tesla, Inc. · Austin", mercedes:"Mercedes-Benz Group · Stuttgart", toyota:"Toyota Motor Corp. · Toyota City",
+  byd:"BYD Co. · Shenzhen", vw:"Volkswagen Group · Wolfsburg", bmw:"BMW Group · Munich", gm:"General Motors · Detroit",
+  ford:"Ford Motor Co. · Dearborn", stellantis:"Stellantis N.V. · Amsterdam", honda:"Honda Motor Co. · Tokyo",
+  tata:"Tata Motors · Mumbai", mahindra:"Mahindra & Mahindra · Mumbai"
+};
+
+/* ---- helpers ---- */
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const clamp = v => Math.max(0, Math.min(100, v));
+const cap = s => s ? s.charAt(0).toUpperCase()+s.slice(1) : s;
+const esc = s => String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const isFuture = ek => ek === "future";
+function evalCond(cond){
+  if(!cond) return true;
+  return cond.split('||').some(group =>
+    group.split('&&').every(t=>{ t=t.trim(); return t[0]==='!' ? !S.flags[t.slice(1)] : !!S.flags[t]; })
+  );
+}
+function kpiLabels(co, ek){
+  if(isFuture(ek) && FUTURE_LABELS[co]) return FUTURE_LABELS[co].slice(0,3);
+  return (DATA[co].kpis||[]).map(k=>k.label);
+}
+function kpiKeys(co, ek){
+  if(isFuture(ek)) return ["cashflow","marketshare","stockprice"];
+  return (DATA[co].kpis||[]).map(k=>k.key);
+}
+const BANDS = [[74,"Commanding",'var(--pos)'],[58,"Healthy",'var(--pos)'],[44,"Holding",'var(--warn)'],
+  [28,"Strained",'var(--warn)'],[12,"Precarious",'var(--neg)'],[0,"Critical",'var(--neg)']];
+function band(v){ for(const [t,w,c] of BANDS){ if(v>=t) return [w,c]; } return ["Critical",'var(--neg)']; }
+
+/* ---- survival mechanic (Future mode only) ---- */
+const START_SURVIVAL = 50;   // winning probability starts at 50%
+const EROSION        = 5;    // the relentless grind — every decision costs ground
+const RANK_POINTS    = [15, 6, -13]; // survival points for best / 2nd-best / worst-of-three
+const ALIGN_BONUS    = 4;    // a call that matched the analysts' consensus steadies the board
+const SURV_BANDS = [[70,"Holding",'var(--pos)'],[50,"Exposed",'var(--warn)'],[30,"Precarious",'var(--warn)'],
+  [15,"On the brink",'var(--neg)'],[0,"Final warning",'var(--neg)']];
+function survBand(v){ for(const [t,w,c] of SURV_BANDS){ if(v>=t) return [w,c]; } return ["Final warning",'var(--neg)']; }
+const netFx = fx => Object.values(fx||{}).reduce((a,b)=>a+b,0);
+// rank a chosen answer against its siblings by net effect: 0 = best, 1 = second, 2 = worst
+function rankOf(choices, idx){
+  const sums = choices.map((c,i)=>({i, s:netFx(c.fx)}));
+  const sorted = [...sums].sort((a,b)=>b.s-a.s);
+  return sorted.findIndex(x=>x.i===idx);
+}
+function survivalHud(){
+  const [w,col] = survBand(S.survival);
+  return `<div class="surv">
+    <div class="surv-top"><span class="surv-l">Survival Probability</span>
+      <span class="surv-pct" id="survPct" style="color:${col}">${Math.round(S.survival)}% · ${w}</span></div>
+    <div class="surv-bar"><i id="survBar" style="width:${clamp(S.survival)}%;background:${col}"></i></div>
+    <div class="surv-sub"><span>0% — the board removes you</span><span>two worst-of-three calls in a row — out</span></div>
+  </div>`;
+}
+function scheduleEcho(sc, fx){
+  const keys = Object.keys(fx).filter(k=>fx[k]); if(!keys.length) return;
+  const dom = keys.reduce((a,b)=>Math.abs(fx[b])>Math.abs(fx[a])?b:a);
+  const good = fx[dom] > 0;
+  const lines = good
+    ? [`Five years on, the seed you planted in ${sc.year} bears fruit. The patient are rewarded.`,
+       `History is beginning to vindicate your ${sc.year} move, Chief Executive. The doubters have gone quiet.`,
+       `What you chose in ${sc.year} has taken root. You harvest it now.`]
+    : [`The ${sc.year} debt comes due, Chief Executive. The bill, deferred, has arrived. Nothing is forgotten.`,
+       `That ${sc.year} choice casts its shadow forward, as I warned it might.`,
+       `Whispers grow that the ${sc.year} move was the wrong one. They may be right.`];
+  S.pending.push({ due:S.histTotal+2, text:pick(lines) });
+}
+function dueEchoes(){
+  if(!S.pending) return "";
+  const due = S.pending.filter(p=>p.due<=S.histTotal);
+  S.pending = S.pending.filter(p=>p.due>S.histTotal);
+  return due.map(p=>`<div class="echo"><div class="eh">◆ The Oracle returns</div><i>"${esc(p.text)}"</i></div>`).join("");
+}
+function omen(sc){
+  if(S.mode!=='future') return "";
+  if(sc.id==="b5_taiwan" && !S.omenShown){ S.omenShown=true;
+    return `<div class="echo"><div class="eh">◆ The Oracle</div><i>"Chief Executive — the world is about to test you as it never has. What you have already built will matter more than what you decide today."</i></div>`;
+  }
+  return "";
+}
+
+/* ============================ MASTHEAD ============================ */
+function masthead(org, stamp, stampRed){
+  return `<div class="masthead">
+    <div class="mh-left">
+      <div class="emblem">CEO</div>
+      <div class="mh-org">Be an Automotive Industry CEO<small>${esc(org)}</small></div>
+    </div>
+    <div class="mh-right" style="${stampRed?'':'color:var(--brass);border-color:rgba(200,168,90,.45)'}">${esc(stamp)}</div>
+  </div>`;
+}
+
+/* ============================ TITLE ============================ */
+function titleScreen(){
+  S = null;
+  const cos = ORDER.filter(c=>DATA[c]);
+  app.innerHTML = `<div class="screen">
+    ${masthead("The Executive Archive", "Confidential")}
+    <div class="kicker">The Archive · v8</div>
+    <h1 class="disp">You have been handed the keys.</h1>
+    <p class="lede">Twelve companies. Each comes with its archive — the real, irreversible decisions its leaders actually faced — and a door into the years still unwritten. Choose an institution. The board is already seated.</p>
+    <div class="grid">
+      ${cos.map(co=>{const c=DATA[co];return `<button class="co" onclick="oracle('${co}')">
+        <div class="co-top"><div class="mono">${MONO[co]||c.ticker||'·'}</div><div class="co-tk">${esc(c.ticker||'')}</div></div>
+        <div class="co-nm">${esc(c.short||c.name)}</div>
+        <div class="co-pitch">${esc((c.pitch||'').split('. ').slice(0,2).join('. '))}</div>
+        <div class="co-open">Open the file</div>
+      </button>`;}).join("")}
+    </div>
+  </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ============================ ORACLE (two doors) ============================ */
+function oracle(co){
+  const c = DATA[co];
+  const hasFuture = !!(c.eras && c.eras.future);
+  app.innerHTML = `<div class="screen">
+    ${masthead(ORG[co]||c.name, "Office of the Chief Executive")}
+    <div class="kicker">${esc(c.ticker||'')} · ${esc(c.name)}</div>
+    <h1 class="disp">Two records lie before you.</h1>
+    <p class="lede">The past is written and known — relive it, and try to match history or better it. The future is fog, and it does not forgive. Which will you read into the record, Chief Executive?</p>
+    <div class="doors">
+      <div class="door past" onclick="historyEras('${co}')">
+        <div class="dt">The History</div>
+        <div class="dd">${esc(c.short||c.name)}'s real campaigns — every crisis and reckoning the board actually faced, with what truly happened revealed after each decision.</div>
+      </div>
+      <div class="door future" ${hasFuture?`onclick="startRun('${co}','future')"`:''}>
+        <div class="dt">The Future</div>
+        <div class="dd">${hasFuture
+          ? "2027–2038. Eight synchronized shocks strike every automaker in the same years. The same world, answered from your chair."
+          : "<span class='disabled'>No future dossier is on file for this company yet.</span>"}</div>
+      </div>
+    </div>
+    <div class="foot"><button class="btn" onclick="titleScreen()">← Choose another company</button></div>
+  </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ============================ HISTORY ERA PICKER ============================ */
+function historyEras(co){
+  const c = DATA[co];
+  const eraKeys = Object.keys(c.eras||{}).filter(k=>k!=="future");
+  app.innerHTML = `<div class="screen">
+    ${masthead(ORG[co]||c.name, "The Archive")}
+    <div class="kicker">${esc(c.ticker||'')} · The History</div>
+    <h1 class="disp">${esc(c.short||c.name)} — the campaigns on file.</h1>
+    <p class="lede">Each era is a real chapter of this company's life. Select one to take the chair at its opening, with the stat ledger visible and the verdict of history revealed after every call.</p>
+    <div class="eras">
+      ${eraKeys.map(ek=>{const e=c.eras[ek];return `<button class="era" onclick="startRun('${co}','${ek}')">
+        <span class="en">${esc(e.name)}</span><span class="ey">${esc(e.years||'')}</span>
+        <span class="eintro">${esc((e.intro||'').slice(0,180))}${(e.intro||'').length>180?'…':''}</span>
+      </button>`;}).join("")}
+    </div>
+    <div class="foot"><button class="btn" onclick="oracle('${co}')">← Back to the records</button></div>
+  </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ============================ RUN ============================ */
+function startRun(co, ek){
+  const e = DATA[co].eras[ek];
+  if(!e){ alert("That era is not on file."); return; }
+  const keys = kpiKeys(co, ek);
+  const start = {}; keys.forEach(k=>start[k] = (e.start && e.start[k]!=null) ? e.start[k] : 50);
+  S = { co, ek, mode:isFuture(ek)?'future':'history', idx:0, stats:{...start}, start:{...start},
+        flags:{}, log:[], histTotal:0, histMatch:0, selected:null, committed:false,
+        over:false, overReason:null, deadKpi:null,
+        survival:START_SURVIVAL, worstStreak:0, pending:[], omenShown:false };
+  introScreen();
+}
+
+function introScreen(){
+  const c=DATA[S.co], e=c.eras[S.ek], fut=S.mode==='future';
+  app.innerHTML = `<div class="screen">
+    ${masthead(ORG[S.co]||c.name, fut?"The Future · 2027–2038":"The Archive", fut)}
+    <div class="kicker ${fut?'red':''}">${esc(c.ticker)} · ${esc(e.name)} · ${esc(e.years||'')}</div>
+    <h1 class="disp">${esc(e.name)}</h1>
+    <p class="lede">${esc(e.intro)}</p>
+    ${fut?`<div class="voice">"I have seen where ${esc(c.short||c.name)} may go, Chief Executive. Eight shocks are coming, and the world will not wait for you to be ready."</div>`:''}
+    <div class="foot">
+      <button class="btn ${fut?'solid':'brass'}" onclick="renderScenario()">Take the chair →</button>
+      <button class="btn" onclick="oracle('${S.co}')">← Back</button>
+    </div>
+  </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ---- find next playable scenario index (honours cond) ---- */
+function nextIndex(from){
+  const e = DATA[S.co].eras[S.ek];
+  let i = from;
+  while(i < e.scenarios.length){
+    const sc = e.scenarios[i];
+    if(!sc.cond || evalCond(sc.cond)) return i;
+    i++;
+  }
+  return i;
+}
+
+function ledgerHtml(){
+  const labels = kpiLabels(S.co, S.ek), keys = kpiKeys(S.co, S.ek);
+  return `<div class="ledger" id="ledger">${keys.map((k,i)=>{
+    const v = S.stats[k], [w,col]=band(v);
+    return `<div class="stat" data-k="${k}">
+      <div class="k">${esc(labels[i])}</div>
+      <div class="v" style="color:${col}">${Math.round(v)}<span class="band" style="color:${col}">${w}</span></div>
+      <div class="track"><i style="width:${clamp(v)}%;background:${col}"></i></div>
+    </div>`;
+  }).join("")}</div>`;
+}
+function tickerHtml(){
+  const t = TICKER[S.co];
+  if(!t || !t.length) return "";
+  return `<div class="ticker"><div class="inner">${t.map(x=>`<b>◆</b>${esc(x)}`).join("")}${t.map(x=>`<b>◆</b>${esc(x)}`).join("")}</div></div>`;
+}
+
+function renderScenario(){
+  const c = DATA[S.co], e = c.eras[S.ek], fut=S.mode==='future';
+  S.idx = nextIndex(S.idx);
+  if(S.idx >= e.scenarios.length){ return eraSummary(); }
+  const sc = e.scenarios[S.idx];
+  S.selected = null; S.committed = false;
+  let text = sc.text;
+  if(sc.alt){ for(const a of sc.alt){ if(evalCond(a.if)){ text = a.text; break; } } }
+  const total = e.scenarios.length;
+  app.innerHTML = `<div class="screen">
+    ${masthead(ORG[S.co]||c.name, fut?("Future File · "+esc(sc.year)):("Recorded · "+esc(sc.year)), fut)}
+    ${tickerHtml()}
+    ${fut?survivalHud():""}
+    ${ledgerHtml()}
+    ${fut?(dueEchoes()+omen(sc)):""}
+    <div class="brief">
+      <div class="year">${esc(sc.year)} · ${esc(e.name)} · Decision ${Math.min(S.histTotal+1,total)} of ${total}</div>
+      <h2>${esc(sc.title)}</h2>
+      <p class="sit">${esc(text)}</p>
+      ${sc.voice?`<div class="voice">${esc(sc.voice)}</div>`:''}
+      <div class="ask">Your decision${fut?` <span style="color:var(--dim);font-weight:500;letter-spacing:0;text-transform:none;font-family:var(--serif);font-style:italic">— you will not know which call was strongest until you commit</span>`:""}</div>
+      <div class="choices" id="choices">
+        ${sc.choices.map((ch,n)=>`<button class="choice" data-n="${n}" onclick="selectChoice(${n})">
+          <span class="mark">${String.fromCharCode(65+n)}</span>
+          <span class="clabel">${esc(ch.label)}</span>
+        </button>`).join("")}
+      </div>
+      <div class="commitbar">
+        <button class="commit" id="commit" disabled onclick="commit()">Enter Into Record</button>
+        <span class="note" id="note">This decision is final for the chapter.</span>
+      </div>
+      <div id="resultZone"></div>
+    </div>
+  </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function selectChoice(n){
+  if(S.committed) return;
+  S.selected = n;
+  document.querySelectorAll('.choice').forEach(b=>b.classList.toggle('sel', +b.dataset.n===n));
+  document.getElementById('commit').disabled = false;
+}
+
+/* ---- reaction voices ---- */
+function reactions(fx){
+  const labels = kpiLabels(S.co,S.ek), keys = kpiKeys(S.co,S.ek);
+  const ks = keys.filter(k=>fx[k]).sort((a,b)=>Math.abs(fx[b])-Math.abs(fx[a])).slice(0,3);
+  return ks.map(k=>{ const d=fx[k], a=Math.abs(d), up=d>0; const lab=labels[keys.indexOf(k)];
+    let v; if(a>=10) v=up?"surges":"buckles"; else if(a>=6) v=up?"strengthens":"slips hard"; else if(a>=3) v=up?"firms":"softens"; else v=up?"ticks up":"ticks down";
+    return {cls:up?'up':'dn', t:`${lab} ${v}. ${up?'+':'−'}${a}`};
+  });
+}
+
+function commit(){
+  if(S.selected==null || S.committed) return;
+  S.committed = true;
+  const c = DATA[S.co], e = c.eras[S.ek], sc = e.scenarios[S.idx], ch = sc.choices[S.selected];
+  const keys = kpiKeys(S.co,S.ek), labels = kpiLabels(S.co,S.ek);
+  const fut = S.mode==='future';
+
+  // rank the chosen answer among its siblings (by net base effect) — drives the survival meter
+  const rank = rankOf(sc.choices, S.selected);
+  const isWorst = rank===2;
+
+  // assemble effects (+ conditional fxIf)
+  let fx = {...(ch.fx||{})};
+  let consHtml = "";
+  if(ch.fxIf){ for(const cif of ch.fxIf){ if(evalCond(cif.if)){
+    for(const k in cif.fx){ fx[k]=(fx[k]||0)+cif.fx[k]; }
+    if(cif.note) consHtml += `<div class="cons"><b>Consequence —</b> ${esc(cif.note)}</div>`;
+  }}}
+  // apply to the KPI ledger
+  const before = {...S.stats};
+  for(const k in fx){ if(keys.includes(k)) S.stats[k] = clamp(S.stats[k] + fx[k]); }
+  if(ch.set) ch.set.forEach(f=>S.flags[f]=true);
+  S.histTotal++; if(ch.hist) S.histMatch++;
+  S.log.push({title:sc.title, year:sc.year, choice:ch.label, hist:!!ch.hist, fx:{...fx}});
+
+  // survival mechanic (Future only): rank points − relentless erosion + consensus bonus
+  let rankHtml = "", streakWarn = "";
+  if(fut){
+    const bonus = ch.hist ? ALIGN_BONUS : 0;
+    S.survival = clamp(S.survival + RANK_POINTS[rank] - EROSION + bonus);
+    if(isWorst) S.worstStreak++; else S.worstStreak = 0;
+    scheduleEcho(sc, fx);
+    rankHtml = rank===0
+      ? `<div class="goodbox"><b>The strongest call on the table.</b> Of the three options, this one scored highest — the board's confidence steadies.</div>`
+      : rank===1
+      ? `<div class="cons"><b>A defensible call</b> — but not the strongest option that was on the table.</div>`
+      : `<div class="warnbox"><b>The weakest option on the table.</b> The board winces.</div>`;
+  }
+
+  // animate KPI ledger
+  keys.forEach(k=>{
+    const cell = document.querySelector(`.stat[data-k="${k}"]`); if(!cell) return;
+    const d = S.stats[k]-before[k], [w,col]=band(S.stats[k]);
+    cell.querySelector('.v').innerHTML = `${Math.round(S.stats[k])}<span class="band" style="color:${col}">${w}</span>`;
+    cell.querySelector('.v').style.color = col;
+    cell.querySelector('.track i').style.width = clamp(S.stats[k])+'%';
+    cell.querySelector('.track i').style.background = col;
+    if(Math.abs(d)>=1) floatDelta(cell, d);
+  });
+  // animate survival meter
+  if(fut){
+    const [w,col]=survBand(S.survival), pct=document.getElementById('survPct'), bar=document.getElementById('survBar');
+    if(pct){ pct.textContent = Math.round(S.survival)+'% · '+w; pct.style.color=col; }
+    if(bar){ bar.style.width = clamp(S.survival)+'%'; bar.style.background=col; }
+  }
+
+  // loss conditions (priority: survival → KPI collapse → two-strikes)
+  const dead = keys.findIndex(k=>S.stats[k] <= 0);
+  if(fut && S.survival<=0){ S.over=true; S.overReason='survival'; }
+  else if(dead>=0){ S.over=true; S.overReason='kpi'; S.deadKpi=labels[dead]; }
+  else if(fut && S.worstStreak>=2){ S.over=true; S.overReason='streak'; }
+  else if(fut && isWorst){ streakWarn = `<div class="warnbox"><b>Another worst-of-three call and you are gone.</b> The board is watching your hands now.</div>`; }
+  const deathHtml = (S.over && S.overReason==='kpi') ? `<div class="warnbox">A pillar of the company — <b>${esc(S.deadKpi)}</b> — has collapsed to nothing. There is no recovering from it.</div>` : "";
+
+  // lock choices
+  document.querySelectorAll('.choice').forEach(b=>{ b.disabled=true; b.style.pointerEvents='none';
+    if(+b.dataset.n!==S.selected) b.style.opacity=.4; });
+  const cm=document.getElementById('commit'); cm.disabled=true; cm.textContent='Recorded';
+  document.getElementById('note').style.display='none';
+
+  const reveal = ch.hist ? ch.hist : "";
+  const revealLabel = fut ? "The analysts' consensus" : "What really happened";
+  const rs = reactions(fx);
+  document.getElementById('resultZone').innerHTML = `
+    <div class="result">
+      <div class="rtag">Recorded · ${esc(sc.year)}</div>
+      <div class="react">${rs.map(r=>`<p class="${r.cls}">${r.t}</p>`).join("")||"<p>The room barely stirs.</p>"}</div>
+      <p class="verdict">${esc(ch.result||"")}</p>
+      ${rankHtml}${consHtml}${streakWarn}${deathHtml}
+      ${reveal?`<div class="ractions"><button class="btn" onclick="document.getElementById('histbox').classList.toggle('show')">${revealLabel}</button></div>
+        <div class="hist" id="histbox">${esc(reveal).replace(/^Real:/,'<b>Real:</b>').replace(/^Consensus call:/,'<b>Consensus call:</b>')}</div>`:''}
+      ${S.over?`<div class="ractions"><button class="btn solid" onclick="gameOver()">Face the board →</button></div>`
+      :`<div class="ractions"><button class="btn ${fut?'solid':'brass'}" onclick="advance()">Continue →</button></div>`}
+    </div>`;
+  document.querySelector('.result').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function floatDelta(cell, d){
+  const f=document.createElement('div'); f.className='floatd';
+  f.style.color = d>0?'var(--pos)':'var(--neg)';
+  f.textContent = (d>0?'+':'−')+Math.abs(Math.round(d));
+  f.style.right='14px'; f.style.top='10px';
+  cell.appendChild(f); setTimeout(()=>f.remove(),1300);
+}
+
+function advance(){ S.idx++; renderScenario(); }
+
+/* ============================ ENDINGS ============================ */
+function finalsHtml(){
+  const keys=kpiKeys(S.co,S.ek), labels=kpiLabels(S.co,S.ek);
+  return `<div class="finals">${keys.map((k,i)=>{
+    const v=Math.round(S.stats[k]), d=Math.round(S.stats[k]-S.start[k]), [,col]=band(S.stats[k]);
+    return `<div class="final"><div class="fk">${esc(labels[i])}</div>
+      <div class="fv" style="color:${col}">${v}<span class="delta ${d>0?'pos':(d<0?'neg':'neu')}">${d>0?'+':''}${d}</span></div></div>`;
+  }).join("")}</div>`;
+}
+function dledgerHtml(){
+  const keys=kpiKeys(S.co,S.ek), labels=kpiLabels(S.co,S.ek);
+  return `<div class="dledger">${S.log.map(l=>{
+    const fxs = keys.map((k,i)=>{ const d=l.fx[k]; return d?`<span class="${d>0?'pos':'neg'}">${esc(labels[i])} ${d>0?'+':''}${d}</span>`:`<span class="neu">${esc(labels[i])} —</span>`; }).join("");
+    const tag = S.mode==='future' ? (l.hist?'<span class="tagline" style="color:var(--brass)">consensus</span>':'<span class="tagline" style="color:var(--ink-2)">your road</span>')
+                                  : (l.hist?'<span class="tagline" style="color:var(--brass)">matched history</span>':'<span class="tagline" style="color:var(--ink-2)">your road</span>');
+    return `<div class="drow"><div class="dt2"><span class="dyr">${esc(l.year)}</span> · ${esc(l.title)}${tag}</div>
+      <div class="dch">${esc(l.choice)}</div><div class="dfx">${fxs}</div></div>`;
+  }).join("")}</div>`;
+}
+
+function gameOver(){
+  const c=DATA[S.co], fut=S.mode==='future';
+  const why = {
+    survival:"Your survival odds hit zero. The board moved before the shareholders — or the union, or Beijing — could.",
+    streak:"Two worst-of-three calls in a row. The board lost its nerve, and then it lost you.",
+    kpi:`A pillar of the company — <b>${esc(S.deadKpi)}</b> — collapsed to nothing. There was no recovering from it.`
+  }[S.overReason] || "The board moved before the shareholders could. Your tenure is over.";
+  app.innerHTML = `<div class="screen">
+    ${masthead(ORG[S.co]||c.name, "Tenure Concluded", true)}
+    <div class="report">
+      <div class="stamp">Removed From the Helm</div>
+      <h2>${esc(c.name)}</h2>
+      <div class="kicker red">${esc(c.eras[S.ek].name)} · your tenure ended in ${esc(S.log.length?S.log[S.log.length-1].year:'—')}</div>
+      <div class="rsec"><div class="rlbl">How it ended</div><div class="rval">${why}<br><br>${esc(c.bankruptcy||"")}</div></div>
+      ${fut?`<div class="echo" style="margin:14px 0"><div class="eh">◆ The Oracle</div><i>"I warned you the future does not forgive, Chief Executive. Few who sit in that chair leave it standing."</i></div>`:''}
+      <div class="rsec"><div class="rlbl">The ledger you leave behind</div>${finalsHtml()}</div>
+      <div class="rsec"><div class="rlbl">Every decision on the record</div>${dledgerHtml()}</div>
+    </div>
+    <div class="foot">
+      <button class="btn solid" onclick="startRun('${S.co}','${S.ek}')">↻ Take the chair again</button>
+      <button class="btn" onclick="oracle('${S.co}')">← The records</button>
+      <button class="btn" onclick="titleScreen()">⌂ New company</button>
+    </div>
+  </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function eraSummary(){
+  const c=DATA[S.co], e=c.eras[S.ek], fut=S.mode==='future';
+  const keys=kpiKeys(S.co,S.ek);
+  const avg = keys.reduce((a,k)=>a+S.stats[k],0)/keys.length;
+  const low = Math.min(...keys.map(k=>S.stats[k]));
+  const consensus = S.histTotal ? Math.round(S.histMatch/S.histTotal*100) : 0;
+  const surv = Math.round(S.survival);
+  let stamp, legacy;
+  if(fut){
+    if(surv>=72){ stamp="A Landmark Tenure"; legacy=c.legendary||"You left the company stronger than any board dared hope."; }
+    else if(surv>=52){ stamp="A Successful Tenure"; legacy=`Against the odds, you left ${esc(c.short||c.name)} stronger than you found it — a record any board would re-sign.`; }
+    else if(surv>=32){ stamp="A Contested Tenure"; legacy=`You survived to 2038 by your fingertips. History will argue whether you were bold enough, or simply lucky.`; }
+    else{ stamp="A Bruised Survival"; legacy=`You reached the finish, barely, with the board's hand on your shoulder the whole way. The company endures, diminished but alive.`; }
+  } else {
+    if(avg>=70 && low>=45){ stamp="A Landmark Tenure"; legacy=c.legendary||"You left the company stronger than any board dared hope."; }
+    else if(avg>=55){ stamp="A Successful Tenure"; legacy=`Against real pressure, you left ${esc(c.short||c.name)} stronger than you found it — a record any board would re-sign.`; }
+    else if(avg>=40){ stamp="A Contested Tenure"; legacy=`You reached the end of the chapter intact. History will argue whether you were bold enough, or merely fortunate.`; }
+    else{ stamp="A Bruised Survival"; legacy=`You finished with the board's hand on your shoulder the whole way. The company endures, diminished but alive.`; }
+  }
+  const style = consensus>=70 ? (fut?"You governed by the analysts' consensus, trusting the base case almost every time."
+                                     :"You governed by the archive — choosing, again and again, what history actually did.")
+              : consensus<=30 ? (fut?"You governed as a contrarian, defying the consensus repeatedly — and, against the odds, survived it."
+                                     :"You governed as a revisionist, defying what history actually did again and again — and lived to tell it.")
+              : "You governed by instinct, mixing the expected move with the audacious one.";
+
+  app.innerHTML = `<div class="screen">
+    ${masthead(ORG[S.co]||c.name, fut?"Case Study · 2038":"Annual Report")}
+    <div class="report">
+      <div class="stamp">${fut?'Harvard Business School · Case Study':'The Tenure, Reviewed'}</div>
+      <h2>${esc(c.name)}</h2>
+      <div class="kicker">${esc(e.name)} · ${esc(e.years||'')} · ${stamp}${fut?' · survived at '+surv+'%':''}</div>
+      ${fut?`<div class="rsec"><div class="rlbl">Survival Probability at close</div><div class="rval"><b style="font-family:var(--disp);color:${survBand(S.survival)[1]}">${surv}%</b> — from a starting probability of ${START_SURVIVAL}%.</div></div>`:''}
+      <div class="rsec"><div class="rlbl">The ledger at close</div>${finalsHtml()}</div>
+      <div class="rsec"><div class="rlbl">Your style in the chair</div><div class="rval">${style} ${fut?'You sat with the analysts on':'You matched the historical record on'} ${consensus}% of your decisions.</div></div>
+      <div class="rsec"><div class="rlbl">Legacy</div><div class="rval">${esc(legacy)}</div></div>
+      ${fut?`<div class="echo" style="margin:16px 0"><div class="eh">◆ The Oracle</div><i>"You survived the fog, Chief Executive. Few do. History has reached its verdict; I merely read it aloud."</i></div>`:''}
+      <div class="rsec"><div class="rlbl">${fut?'The fog lifts — every decision on the record':'The record — every decision, and what it cost or won'}</div>${dledgerHtml()}</div>
+    </div>
+    <div class="foot">
+      <button class="btn ${fut?'solid':'brass'}" onclick="startRun('${S.co}','${S.ek}')">↻ Replay this chapter</button>
+      ${fut?`<button class="btn" onclick="historyEras('${S.co}')">Try the History →</button>`:`<button class="btn" onclick="oracle('${S.co}')">The Future →</button>`}
+      <button class="btn" onclick="titleScreen()">⌂ New company</button>
+    </div>
+  </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ---- boot ---- */
+(function(){
+  if(typeof DATA==="undefined" || !Object.keys(DATA).length){
+    app.innerHTML = `<div class="screen" style="padding-top:60px"><h1 class="disp">The archive could not be loaded.</h1>
+      <p class="lede">Open this file from the same folder as <b>future-eras.js</b> and the <b>data-fragments</b> directory.</p></div>`;
+    return;
+  }
+  titleScreen();
+})();
+</script>
+</body>
+</html>
