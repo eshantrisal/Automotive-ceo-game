@@ -129,7 +129,7 @@ DATA.byd = {
       {label:"Quietly trim targets without public acknowledgment", fx:{cash:-8,trust:-6},
        result:"A half-measure that satisfies no one — dealers still feel misled, and the press fills the silence with its own theories."}
      ]},
-    {id:"rebuild", year:"2012", title:"Rebuilding Trust: Dealer Network Reform", cond:"crash",
+    {id:"rebuild", year:"2012", title:"Rebuilding Trust: Dealer Network Reform", cond:"mea_culpa",
      text:"With dealers in revolt and inventory bloated, you need to rebuild the sales channel — the same network whose collapse pattern will recur, at far greater scale, in 2025.",
      choices:[
       {label:"Cut dealer count sharply and lean harder into fleet sales (taxis, buses)", fx:{cash:-4,prod:+8,trust:+8}, set:["fleet_pivot"],

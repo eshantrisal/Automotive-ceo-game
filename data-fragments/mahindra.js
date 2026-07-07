@@ -180,7 +180,7 @@ DATA.mahindra = {
       {label:"Continue limited operations to protect market share", fx:{capital:-8,suv:+5,global:-3}, result:"A defiant skeleton crew keeps lines moving. Regulators and the headlines are not impressed."},
       {label:"Keep funding SsangYong regardless of group cash pressure", fx:{capital:-15,global:+5}, result:"Loyalty to the Korean bet, at a moment the Indian core can least afford it."}
      ]},
-    {id:"ssangyong_no", year:"APR 2020", title:"Cutting SsangYong Loose: The Board Says No", cond:"ssangyong",
+    {id:"ssangyong_no", year:"APR 2020", title:"Cutting SsangYong Loose: The Board Says No",
      text:"SsangYong needs a fresh equity injection of around $406 million (Rs 3,078 crore) to stay solvent, just as Mahindra itself is reeling from COVID-19's hit to its core Indian business. The board must decide whether to keep bailing out the Korean subsidiary or finally cut the cord.",
      alt:[{if:"covid_conserve", text:"Having already chosen liquidity preservation over keeping every line running, the board walks into this SsangYong vote having already proven, to itself, that it can say no to a cash drain. The discipline built in March makes April's decision easier — and harder to walk back from."}],
      voice:"Mahindra & Mahindra company statement, April 2020: \"The magnitude of the unfortunate and unforeseen crisis created by Covid-19 has compelled us to take the difficult decision.\"",

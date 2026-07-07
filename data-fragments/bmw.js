@@ -154,7 +154,6 @@ DATA.bmw = {
    intro:"Harald Krüger inherits a company at its profitability peak, but a brand-new electric sub-brand that isn't scaling into mass-market volume. His tenure becomes synonymous, fairly or not, with caution read as paralysis — even as BMW quietly executes one of its most important real strategic moves of the decade in China.",
    scenarios:[
     {id:"frankfurt_collapse", year:"15 SEP 2015", title:"The Frankfurt Collapse", text:"At his very first IAA Frankfurt Motor Show press conference as new CEO, only minutes into his presentation, Krüger had been traveling heavily and was feeling unwell beforehand.",
-     cond:"kruger_ceo",
      choices:[
       {label:"Proceed with the press conference as scheduled rather than signal weakness", fx:{brand:-8}, set:["frankfurt_fell"],
        result:"Krüger collapses roughly five minutes in, is examined by a doctor on-site, and the day's remaining appointments are cancelled. BMW's statement cites \"a moment of dizziness\"; a spokesman says doctors \"ruled out anything serious.\" The incident becomes a much-replayed symbol that dogs perceptions of his leadership for years, fairly or not.",
@@ -235,7 +234,7 @@ DATA.bmw = {
       {label:"Use the downtime purely for maintenance, not future-product prep", fx:{margin:+4,future:-6},
        result:"A missed opportunity — idle factory time that could have shortened the i4 timeline is instead spent on routine upkeep."}
      ]},
-    {id:"china_majority", year:"11 FEB 2022", title:"Taking 75% Control of BMW Brilliance", cond:"china_committed", text:"Building on Krüger's 2018 agreement, China's foreign-ownership rules in autos finally relax enough to let BMW exercise its option to move from a 50/50 joint venture to majority control of BMW Brilliance Automotive (BBA) — at a politically sensitive moment for foreign companies in China.",
+    {id:"china_majority", year:"11 FEB 2022", title:"Taking 75% Control of BMW Brilliance", text:"Building on Krüger's 2018 agreement, China's foreign-ownership rules in autos finally relax enough to let BMW exercise its option to move from a 50/50 joint venture to majority control of BMW Brilliance Automotive (BBA) — at a politically sensitive moment for foreign companies in China.",
      voice:"Oliver Zipse: \"Today marks an important step, as we continue to expand our long and successful commitment to China.\"",
      choices:[
       {label:"Exercise the option immediately, consolidating BBA's full financials onto BMW's books", fx:{margin:+15,future:+5}, set:["china_majority_done"],
@@ -246,7 +245,7 @@ DATA.bmw = {
       {label:"Renegotiate terms rather than proceed as originally agreed", fx:{margin:-3},
        result:"Brilliance is in no mood to renegotiate a deal it already signed. The relationship sours for no real gain."}
      ]},
-    {id:"clar_evs", year:"2021", title:"Building i4 and iX on Adapted CLAR Architecture", cond:"power_of_choice", text:"BMW needs real-volume EVs to answer Tesla's Model 3/Y and Mercedes' EQ range. The question: launch them on a heavily modified version of the existing combustion-derived CLAR platform, or wait longer for a truly dedicated EV architecture.",
+    {id:"clar_evs", year:"2021", title:"Building i4 and iX on Adapted CLAR Architecture", text:"BMW needs real-volume EVs to answer Tesla's Model 3/Y and Mercedes' EQ range. The question: launch them on a heavily modified version of the existing combustion-derived CLAR platform, or wait longer for a truly dedicated EV architecture.",
      alt:[{if:"!power_of_choice", text:"BMW needs real-volume EVs to answer Tesla's Model 3/Y and Mercedes' EQ range. Having already invested in dedicated-EV development earlier in the decade, the question is whether to fold that work into the mainstream i4/iX launch or hold it back for something bigger."}],
      choices:[
       {label:"Ship the i4 (sedan) and iX (SUV) in 2021 on an updated CLAR architecture with a redesigned central floor section", fx:{margin:+10,future:+2}, set:["clar_ev_done"],

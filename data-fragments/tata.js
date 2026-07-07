@@ -179,8 +179,9 @@ DATA.tata = {
       {label:"Temporarily split MD duties among existing divisional heads", fx:{trust:-3},
        result:"A committee runs the company for a while. Nobody is in charge of the whole, and everyone notices."}
      ]},
-    {id:"butschek", year:"LATE 2015–FEB 2016", title:"Turnaround 2.0", cond:"global_search",
-     text:"After nearly two years without a permanent operating chief, the search concludes: Guenter Butschek, at the time Airbus's COO with 25 years' prior experience at Daimler, is recruited as CEO and MD.",
+    {id:"butschek", year:"LATE 2015–FEB 2016", title:"Turnaround 2.0",
+     text:"The domestic passenger-vehicle business is still losing ground, and the board wants an operator with global manufacturing credentials. Guenter Butschek — at the time Airbus's COO, with 25 years' prior experience at Daimler — is available.",
+     alt:[{if:"global_search", text:"After nearly two years without a permanent operating chief, the search concludes: Guenter Butschek, at the time Airbus's COO with 25 years' prior experience at Daimler, is recruited as CEO and MD."}],
      choices:[
       {label:"Bring in Butschek and launch a full cost-reduction and portfolio-rationalization program", fx:{cash:+10,future:+12}, set:["butschek_hired"],
        result:"Butschek takes charge effective February 15, 2016 and launches 'Turnaround 2.0'. Under his 2016–2021 tenure, Tata Motors introduces the Nexon, Harrier, Altroz and Safari and regains meaningful domestic market share.",
@@ -192,12 +193,11 @@ DATA.tata = {
      ]},
     {id:"mistry_ouster", year:"OCT 24 2016", title:"The Board Votes Him Out",
      text:"After nearly four years as Chairman, Cyrus Mistry is removed by the Tata Sons board in a vote where six of nine members — including you, returning as interim chairman — vote to remove him, and two abstain. Board member Nitin Nohria reportedly tells Mistry beforehand that 'the relationship between you and Ratan Tata has not been working' and offers him the chance to resign first.",
-     cond:"mistry_named",
      choices:[
       {label:"Proceed with the board vote to remove Mistry", fx:{trust:-12,future:+5}, set:["mistry_ousted"],
        result:"The board votes to remove Mistry on October 24, 2016. He refuses to go quietly — he will publish an explosive letter to the board and launch a multi-year legal battle that exposes deep governance tensions inside India's largest conglomerate.",
        hist:"Real: the Tata Sons board removed Cyrus Mistry as Chairman on Oct 24, 2016, in a 6-2 vote (with one abstention reported variably); litigation followed for years, ultimately upheld by the Supreme Court in 2021."},
-      {label:"Negotiate a managed transition or resignation instead of a board vote", fx:{trust:+5,future:-3},
+      {label:"Negotiate a managed transition or resignation instead of a board vote", fx:{trust:+5,future:-3}, set:["mistry_ousted"],
        result:"Mistry declines the offer to resign quietly. You're left with the same outcome, minus the option of looking decisive about it."},
       {label:"Retain Mistry but force a change in strategic direction and personnel under him", fx:{trust:-3,future:-5},
        result:"An uneasy compromise that satisfies nobody — least of all the board members who wanted this fight resolved, not postponed."}
