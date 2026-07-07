@@ -218,6 +218,34 @@
   .echo{border:1px dashed var(--brass);background:rgba(200,168,90,.06);padding:13px 15px;margin-bottom:16px}
   .echo .eh{font-family:var(--disp);font-weight:600;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--brass);margin-bottom:5px}
   .echo i{font-family:var(--serif);font-style:italic;font-size:14.5px;line-height:1.55;color:var(--ink-2)}
+
+  /* Intro / command brief / how-to */
+  .skip{position:fixed;z-index:20;right:20px;top:18px;font-family:var(--disp);font-weight:600;font-size:10px;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);background:rgba(0,0,0,.4);
+    padding:9px 12px;cursor:pointer;backdrop-filter:blur(8px)}
+  .skip:hover{color:var(--ink);border-color:var(--brass)}
+  .intro{min-height:calc(100vh - 80px);display:flex;flex-direction:column;justify-content:center;max-width:900px;margin:0 auto}
+  .eyebrow{font-family:var(--disp);font-weight:600;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ox-2);margin-bottom:14px}
+  .hero{font-family:var(--serif);font-weight:500;font-size:clamp(2.1rem,6vw,3.9rem);line-height:1.02;letter-spacing:-.02em;color:var(--ink);max-width:15ch}
+  .intro .lead{font-family:var(--serif);font-size:clamp(15px,1.6vw,18px);line-height:1.55;color:var(--ink-2);max-width:50ch;margin-top:18px}
+  .metrics{display:flex;flex-wrap:wrap;gap:9px;margin:30px 0 4px}
+  .metric{min-width:140px;flex:1;padding:11px 13px;border:1px solid var(--line);background:rgba(0,0,0,.18)}
+  .metric span{display:block;font-family:var(--disp);font-weight:600;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+  .metric b{display:block;margin-top:7px;font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:.03em;color:var(--ink)}
+  .metric b.ox{color:var(--ox-2)} .metric b.brass{color:var(--brass)}
+  .horizon{width:100%;max-width:860px;height:120px;margin-top:30px;overflow:visible}
+  .horizon .axis{stroke:var(--line);stroke-width:1}
+  .horizon .ghost{fill:none;stroke:rgba(234,241,251,.18);stroke-width:1}
+  .horizon .trace{fill:none;stroke:var(--brass);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+    filter:drop-shadow(0 0 6px rgba(200,168,90,.5));stroke-dasharray:900;animation:draw 4.2s ease-in-out infinite}
+  .horizon .node{fill:var(--ground);stroke:var(--ox);stroke-width:2}
+  @keyframes draw{0%,100%{stroke-dashoffset:850;opacity:.4}48%,60%{stroke-dashoffset:0;opacity:1}}
+  .howsteps{display:grid;gap:9px;margin:24px 0 6px;max-width:660px}
+  .howstep{display:grid;grid-template-columns:30px 1fr;gap:14px;align-items:start;border:1px solid var(--line);background:var(--panel);padding:13px 15px}
+  .howstep .num{font-family:var(--disp);font-weight:800;font-size:14px;color:var(--brass);border:1px solid var(--line);width:30px;height:30px;display:grid;place-items:center}
+  .howstep .ht{font-family:var(--disp);font-weight:700;font-size:14px;color:var(--ink)}
+  .howstep .hd{font-size:12.5px;color:var(--dim);margin-top:2px;line-height:1.45}
+  @media(prefers-reduced-motion:reduce){.horizon .trace{animation:none;stroke-dashoffset:0}}
   @media(max-width:680px){
     .stat{min-width:33%}
     .choice{grid-template-columns:30px 1fr;gap:10px}
@@ -358,15 +386,55 @@ function masthead(org, stamp, stampRed){
   </div>`;
 }
 
+/* ============================ COMMAND BRIEF (intro) ============================ */
+function briefScreen(){
+  S = null;
+  app.innerHTML = `<button class="skip" onclick="titleScreen()">Skip intro →</button>
+  <div class="intro screen">
+    <div class="eyebrow">Executive succession · secure channel</div>
+    <h1 class="hero">A leadership vacancy has been confirmed.</h1>
+    <p class="lead">The board has opened a private mandate. Twelve automotive empires, one chair. The next decision is yours.</p>
+    <div class="metrics">
+      <div class="metric"><span>Market Signal</span><b class="ox">Unstable · 74.2</b></div>
+      <div class="metric"><span>Board Quorum</span><b>12 / 12 online</b></div>
+      <div class="metric"><span>Decision Window</span><b class="brass">Open now</b></div>
+    </div>
+    <div class="foot"><button class="btn solid" onclick="howTo()">Access the brief →</button></div>
+    <svg class="horizon" viewBox="0 0 900 134" aria-hidden="true">
+      <path class="axis" d="M0 110H900M0 71H900M0 32H900"/>
+      <path class="ghost" d="M0 92L74 74L135 89L208 46L295 69L372 36L464 82L540 58L622 75L724 24L814 53L900 17"/>
+      <path class="trace" d="M0 106L74 91L135 98L208 57L295 74L372 42L464 89L540 63L622 82L724 30L814 58L900 21"/>
+      <circle class="node" cx="724" cy="30" r="5"/>
+    </svg>
+  </div>`;
+  window.scrollTo({top:0});
+}
+function howTo(){
+  app.innerHTML = `<button class="skip" onclick="titleScreen()">Skip →</button>
+  <div class="intro screen">
+    <div class="eyebrow">The brief · how it works</div>
+    <h1 class="hero" style="font-size:clamp(1.8rem,4.6vw,3rem)">A minute to learn. A tenure to master.</h1>
+    <div class="howsteps">
+      <div class="howstep"><div class="num">1</div><div><div class="ht">Choose a company</div><div class="hd">Twelve automakers, each under its own pressure.</div></div></div>
+      <div class="howstep"><div class="num">2</div><div><div class="ht">Pick a door</div><div class="hd">The History — replay real decisions. The Future — survive eight shocks, 2027–2038.</div></div></div>
+      <div class="howstep"><div class="num">3</div><div><div class="ht">Pick one of three</div><div class="hd">The strongest call is hidden until you commit. Then the record reveals what really happened.</div></div></div>
+      <div class="howstep"><div class="num">4</div><div><div class="ht">Keep the chair</div><div class="hd">In the Future, survival starts at 50%. Two worst-of-three calls in a row and you're out.</div></div></div>
+    </div>
+    <div class="foot"><button class="btn solid" onclick="titleScreen()">Take command →</button>
+      <button class="btn" onclick="briefScreen()">← Back</button></div>
+  </div>`;
+  window.scrollTo({top:0});
+}
+
 /* ============================ TITLE ============================ */
 function titleScreen(){
   S = null;
   const cos = ORDER.filter(c=>DATA[c]);
   app.innerHTML = `<div class="screen">
     ${masthead("The Executive Archive", "Confidential")}
-    <div class="kicker">The Archive · v8</div>
-    <h1 class="disp">You have been handed the keys.</h1>
-    <p class="lede">Twelve companies. Each comes with its archive — the real, irreversible decisions its leaders actually faced — and a door into the years still unwritten. Choose an institution. The board is already seated.</p>
+    <div class="kicker">Select your mandate</div>
+    <h1 class="disp">Choose the company you will lead.</h1>
+    <p class="lede">Twelve real companies. Their decisions, and the years still unwritten.</p>
     <div class="grid">
       ${cos.map(co=>{const c=DATA[co];return `<button class="co" onclick="oracle('${co}')">
         <div class="co-top"><div class="mono">${MONO[co]||c.ticker||'·'}</div><div class="co-tk">${esc(c.ticker||'')}</div></div>
@@ -387,17 +455,17 @@ function oracle(co){
     ${masthead(ORG[co]||c.name, "Office of the Chief Executive")}
     <div class="kicker">${esc(c.ticker||'')} · ${esc(c.name)}</div>
     <h1 class="disp">Two records lie before you.</h1>
-    <p class="lede">The past is written and known — relive it, and try to match history or better it. The future is fog, and it does not forgive. Which will you read into the record, Chief Executive?</p>
+    <p class="lede">The past is written. The future is fog. Which do you walk?</p>
     <div class="doors">
       <div class="door past" onclick="historyEras('${co}')">
         <div class="dt">The History</div>
-        <div class="dd">${esc(c.short||c.name)}'s real campaigns — every crisis and reckoning the board actually faced, with what truly happened revealed after each decision.</div>
+        <div class="dd">Replay the real decisions the board faced — the verdict revealed after each call.</div>
       </div>
       <div class="door future" ${hasFuture?`onclick="startRun('${co}','future')"`:''}>
         <div class="dt">The Future</div>
         <div class="dd">${hasFuture
-          ? "2027–2038. Eight synchronized shocks strike every automaker in the same years. The same world, answered from your chair."
-          : "<span class='disabled'>No future dossier is on file for this company yet.</span>"}</div>
+          ? "2027–2038. Eight shocks, one survival meter. Most who sit down don't finish."
+          : "<span class='disabled'>No future dossier on file yet.</span>"}</div>
       </div>
     </div>
     <div class="foot"><button class="btn" onclick="titleScreen()">← Choose another company</button></div>
@@ -413,7 +481,7 @@ function historyEras(co){
     ${masthead(ORG[co]||c.name, "The Archive")}
     <div class="kicker">${esc(c.ticker||'')} · The History</div>
     <h1 class="disp">${esc(c.short||c.name)} — the campaigns on file.</h1>
-    <p class="lede">Each era is a real chapter of this company's life. Select one to take the chair at its opening, with the stat ledger visible and the verdict of history revealed after every call.</p>
+    <p class="lede">Each era is a real chapter. Take the chair at its opening.</p>
     <div class="eras">
       ${eraKeys.map(ek=>{const e=c.eras[ek];return `<button class="era" onclick="startRun('${co}','${ek}')">
         <span class="en">${esc(e.name)}</span><span class="ey">${esc(e.years||'')}</span>
@@ -445,7 +513,7 @@ function introScreen(){
     <div class="kicker ${fut?'red':''}">${esc(c.ticker)} · ${esc(e.name)} · ${esc(e.years||'')}</div>
     <h1 class="disp">${esc(e.name)}</h1>
     <p class="lede">${esc(e.intro)}</p>
-    ${fut?`<div class="voice">"I have seen where ${esc(c.short||c.name)} may go, Chief Executive. Eight shocks are coming, and the world will not wait for you to be ready."</div>`:''}
+    ${fut?`<div class="voice">"Eight shocks are coming, Chief Executive. The world will not wait."</div>`:''}
     <div class="foot">
       <button class="btn ${fut?'solid':'brass'}" onclick="renderScenario()">Take the chair →</button>
       <button class="btn" onclick="oracle('${S.co}')">← Back</button>
@@ -503,7 +571,7 @@ function renderScenario(){
       <h2>${esc(sc.title)}</h2>
       <p class="sit">${esc(text)}</p>
       ${sc.voice?`<div class="voice">${esc(sc.voice)}</div>`:''}
-      <div class="ask">Your decision${fut?` <span style="color:var(--dim);font-weight:500;letter-spacing:0;text-transform:none;font-family:var(--serif);font-style:italic">— you will not know which call was strongest until you commit</span>`:""}</div>
+      <div class="ask">Your decision${fut?` <span style="color:var(--dim);font-weight:500;letter-spacing:0;text-transform:none;font-family:var(--serif);font-style:italic">— strongest call hidden until you commit</span>`:""}</div>
       <div class="choices" id="choices">
         ${sc.choices.map((ch,n)=>`<button class="choice" data-n="${n}" onclick="selectChoice(${n})">
           <span class="mark">${String.fromCharCode(65+n)}</span>
@@ -525,16 +593,6 @@ function selectChoice(n){
   S.selected = n;
   document.querySelectorAll('.choice').forEach(b=>b.classList.toggle('sel', +b.dataset.n===n));
   document.getElementById('commit').disabled = false;
-}
-
-/* ---- reaction voices ---- */
-function reactions(fx){
-  const labels = kpiLabels(S.co,S.ek), keys = kpiKeys(S.co,S.ek);
-  const ks = keys.filter(k=>fx[k]).sort((a,b)=>Math.abs(fx[b])-Math.abs(fx[a])).slice(0,3);
-  return ks.map(k=>{ const d=fx[k], a=Math.abs(d), up=d>0; const lab=labels[keys.indexOf(k)];
-    let v; if(a>=10) v=up?"surges":"buckles"; else if(a>=6) v=up?"strengthens":"slips hard"; else if(a>=3) v=up?"firms":"softens"; else v=up?"ticks up":"ticks down";
-    return {cls:up?'up':'dn', t:`${lab} ${v}. ${up?'+':'−'}${a}`};
-  });
 }
 
 function commit(){
@@ -609,11 +667,9 @@ function commit(){
 
   const reveal = ch.hist ? ch.hist : "";
   const revealLabel = fut ? "The analysts' consensus" : "What really happened";
-  const rs = reactions(fx);
   document.getElementById('resultZone').innerHTML = `
     <div class="result">
       <div class="rtag">Recorded · ${esc(sc.year)}</div>
-      <div class="react">${rs.map(r=>`<p class="${r.cls}">${r.t}</p>`).join("")||"<p>The room barely stirs.</p>"}</div>
       <p class="verdict">${esc(ch.result||"")}</p>
       ${rankHtml}${consHtml}${streakWarn}${deathHtml}
       ${reveal?`<div class="ractions"><button class="btn" onclick="document.getElementById('histbox').classList.toggle('show')">${revealLabel}</button></div>
@@ -735,7 +791,7 @@ function eraSummary(){
       <p class="lede">Open this file from the same folder as <b>future-eras.js</b> and the <b>data-fragments</b> directory.</p></div>`;
     return;
   }
-  titleScreen();
+  briefScreen();
 })();
 </script>
 </body>
